@@ -1,3 +1,4 @@
+import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { emailPattern, passwordPattern } from "@/shared/lib/utils/patterns"
 import { Button } from "@/shared/ui/Button/button"
 import { Field } from "@/shared/ui/Field"
@@ -11,13 +12,16 @@ interface IFormInput {
 	password: string
 	name: string
 	email: string
-	bio: string
 	phone: string
+	bio?: string
 }
 
 interface IRegisterProps {}
 
 export const Register: FC<IRegisterProps> = () => {
+	const { register: registerAuth } = useAuthQuery()
+	const { mutateAsync } = registerAuth
+
 	const {
 		register,
 		handleSubmit,
@@ -27,22 +31,24 @@ export const Register: FC<IRegisterProps> = () => {
 	} = useForm<IFormInput>()
 
 	const onSubmit: SubmitHandler<IFormInput> = async data => {
-		console.log({ data })
+		await mutateAsync(data)
 		reset()
 	}
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex flex-col gap-3 w-[300px]">
+			<div className="flex flex-col gap-2 w-[300px]">
 				<Field
-					type="email"
-					placeholder="Email"
-					register={register("email", {
-						required: "Email is required",
-						pattern: emailPattern,
+					type="text"
+					placeholder="Username"
+					minLength={2}
+					maxLength={16}
+					register={register("username", {
+						required: "Username is required",
 					})}
-					errors={errors.email}
+					errors={errors.username}
 				/>
+
 				<Field
 					type="password"
 					placeholder="Password"
@@ -57,20 +63,20 @@ export const Register: FC<IRegisterProps> = () => {
 					})}
 					errors={errors.password}
 				/>
+
 				<Field
-					type="text"
-					placeholder="Username"
-					minLength={2}
-					maxLength={16}
-					register={register("username", {
-						required: "Username is required",
+					type="email"
+					placeholder="Email"
+					register={register("email", {
+						required: "Email is required",
+						pattern: emailPattern,
 					})}
-					errors={errors.username}
+					errors={errors.email}
 				/>
 
 				<Field
 					type="name"
-					placeholder="name"
+					placeholder="Name"
 					register={register("name", {
 						required: "Name is required",
 					})}
@@ -98,10 +104,8 @@ export const Register: FC<IRegisterProps> = () => {
 				/>
 
 				<Field
-					placeholder="Bio"
-					register={register("bio", {
-						required: "Bio is required",
-					})}
+					placeholder="Bio (not required)"
+					register={register("bio")}
 					isType="textarea"
 					errors={errors.bio}
 					maxLength={70}

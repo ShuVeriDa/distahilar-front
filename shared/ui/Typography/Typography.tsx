@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode, forwardRef } from "react"
+import { ComponentProps, ReactNode, Ref, forwardRef } from "react"
 import { twMerge } from "tailwind-merge"
 
 type TypographyTag =
@@ -24,14 +24,14 @@ export type TypographyProps<Tag extends TypographyTag = "div"> = Omit<
 export const Typography = forwardRef(
 	<Tag extends TypographyTag = "div">(
 		{ tag, children, className, ...props }: TypographyProps<Tag>,
-		ref: React.Ref<HTMLElement>
+		ref: Ref<HTMLElement>
 	) => {
 		const Component = tag || "div"
 		const DEFAULT_CLASSES = twMerge("")
 
 		return (
 			<Component
-				ref={ref as React.Ref<any>}
+				ref={ref as Ref<any>}
 				className={twMerge(className, DEFAULT_CLASSES)}
 				{...props}
 			>

@@ -1,13 +1,11 @@
-import { cn } from "@/shared/lib/utils/cn"
 import { Providers } from "@/shared/providers/providers"
 import type { Metadata } from "next"
-import localFont from "next/font/local"
+import { Roboto } from "next/font/google"
 import "./globals.scss"
 
-const robotoMono = localFont({
-	src: "../public/fonts/Roboto-Regular.ttf",
-	variable: "--font-geist-sans",
-	weight: "400",
+const robotoMono = Roboto({
+	weight: ["100", "300", "400", "500", "700", "900"],
+	subsets: ["latin"],
 })
 
 export const metadata: Metadata = {
@@ -22,7 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={cn(robotoMono.variable, "antialiased")}>
+			<body className={`${robotoMono.className} antialiased`}>
 				<Providers>{children}</Providers>
 			</body>
 		</html>

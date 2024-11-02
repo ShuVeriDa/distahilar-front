@@ -1,0 +1,254 @@
+generator client {
+  provider = "prisma-client-js"
+  // TODO:for deploy
+  // output   = "./generated/client"
+  // binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  username String  @unique
+  password String
+  name     String
+  bio      String?
+  email    String
+  phone    String
+  imageUrl String? @db.Text
+
+  chats    ChatMember[]
+  settings UserSettings?
+
+  messages  Message[]
+  reactions Reaction[]
+  folders   Folder[]
+  AuditLog  AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Настройки пользователя
+model UserSettings {
+  id            String   @id @default(uuid())
+  notifications Boolean  @default(true)
+  language      Language @default(RU)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+enum Language {
+  EN
+  RU
+  CHE
+}
+
+model Chat {
+  id          String   @id @default(uuid())
+  name        String
+  imageUrl    String?  @db.Text
+  description String?
+  link        String   @unique
+  type        ChatRole @default(DIALOG)
+
+  pinnedMessage Message?  @relation("pinnedMessage")
+  messages      Message[] @relation("chatMessages")
+
+  members ChatMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  folders Folder[] @relation("ChatFolders")
+
+  auditLog AuditLog[]
+
+  @@index([type, createdAt])
+  @@map("chats")
+}
+
+// Участник чата с ролями
+model ChatMember {
+  id   String     @id @default(uuid())
+  role MemberRole @default(GUEST)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  joinedAt  DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@map("chat_members")
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MODERATOR
+  GUEST
+}
+
+// Сообщения
+model Message {
+  id            String         @id @default(uuid())
+  content       String?
+  messageType   MessageType    @default(TEXT)
+  reactions     Reaction[]
+  voiceMessages VoiceMessage[]
+  videoMessages VideoMessage[]
+  isPinned      Boolean        @default(false)
+  // fileUrl       String?        @db.Text
+
+  isRead      Boolean  @default(false) // статус прочтения
+  readByUsers String[] @default([])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  chatId String
+  chat   Chat   @relation("chatMessages", fields: [chatId], references: [id], onDelete: Cascade)
+
+  media Media[]
+
+  createdAt DateTime @default(now())
+
+  deletedByUsers String[] @default([])
+
+  pinnedChatId String?
+  pinnedChat   Chat?   @relation("pinnedMessage", fields: [pinnedChatId], references: [id], onDelete: Cascade)
+
+  @@unique([pinnedChatId])
+  @@index([chatId, createdAt])
+  @@map("messages")
+}
+
+// Медиафайлы
+model Media {
+  id       String    @id @default(uuid())
+  url      String
+  duration Int?
+  type     MediaType
+
+  messageId String?
+  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("media")
+}
+
+// Голосовые сообщения
+model VoiceMessage {
+  id       String @id @default(uuid())
+  url      String
+  duration Int
+
+  messageId String?
+  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("voice_messages")
+}
+
+// Видеосообщения
+model VideoMessage {
+  id       String @id @default(uuid())
+  url      String
+  duration Int
+
+  messageId String?
+  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("video_messages")
+}
+
+// Файлы
+// model FileMessage {
+//   id        String   @id @default(uuid())
+//   url       String
+//   fileName  String
+//   fileSize  Int
+//   createdAt DateTime @default(now())
+
+//   messageId String?
+//   message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+//   @@map("file_messages")
+// }
+
+// Реакции на сообщения
+model Reaction {
+  id    String @id @default(uuid())
+  emoji String
+
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@map("reactions")
+}
+
+// Папки для чатов
+model Folder {
+  id    String @id @default(uuid())
+  name  String
+  chats Chat[] @relation("ChatFolders")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("folders")
+}
+
+// Аудит логов
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  timestamp DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@map("audit_logs")
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  VOICE
+  FILE
+}
+
+enum MessageType {
+  TEXT
+  VIDEO
+  VOICE
+  FILE
+}
+
+enum ChatRole {
+  DIALOG
+  CHANNEL
+  GROUP
+}

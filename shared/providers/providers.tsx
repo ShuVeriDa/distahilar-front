@@ -12,16 +12,14 @@ export const Providers: FC<IProvidersProps> = ({ children }) => {
 	return (
 		<TanStackQueryProvider>
 			<StoreProvider>
-				<MainLayout>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
-					>
-						{children}
-					</ThemeProvider>
-				</MainLayout>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<MainLayout>{children}</MainLayout>
+				</ThemeProvider>
 			</StoreProvider>
 		</TanStackQueryProvider>
 	)

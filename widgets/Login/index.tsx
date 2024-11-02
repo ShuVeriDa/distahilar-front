@@ -1,3 +1,4 @@
+import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { passwordPattern } from "@/shared/lib/utils/patterns"
 import { Button } from "@/shared/ui/Button/button"
 import { Field } from "@/shared/ui/Field"
@@ -12,6 +13,9 @@ interface IFormInput {
 interface ILoginProps {}
 
 export const Login: FC<ILoginProps> = () => {
+	const { login } = useAuthQuery()
+	const { mutateAsync } = login
+
 	const {
 		register,
 		handleSubmit,
@@ -20,13 +24,13 @@ export const Login: FC<ILoginProps> = () => {
 	} = useForm<IFormInput>()
 
 	const onSubmit: SubmitHandler<IFormInput> = async data => {
-		console.log({ data })
+		await mutateAsync(data)
 		reset()
 	}
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex flex-col gap-3 w-[300px]">
+			<div className="flex flex-col gap-2 w-[300px]">
 				<Field
 					type="text"
 					placeholder="Username"

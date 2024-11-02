@@ -12,7 +12,7 @@ export const Textarea: FC<ITextareaProps> = ({
 	...rest
 }) => {
 	const DEFAULT_CLASSES =
-		"text-black outline-none w-full rounded-lg py-2 px-3 min-h-[60px] dark:bg-white/10 bg-black/10 dark:text-white"
+		"text-black outline-none w-full rounded-lg py-2 px-3 min-h-[60px] dark:bg-white/10 bg-black/10 dark:text-white placeholder:text-[13px]"
 
 	return (
 		<textarea

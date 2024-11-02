@@ -5,5 +5,5 @@ interface IMainLayoutProps {
 }
 
 export const MainLayout: FC<IMainLayoutProps> = ({ children }) => {
-	return <div>{children}</div>
+	return <>{children}</>
 }
