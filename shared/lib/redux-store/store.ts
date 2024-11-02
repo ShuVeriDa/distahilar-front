@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
+import { TypedUseSelectorHook, useSelector } from "react-redux"
 import { persistReducer, persistStore } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import { userReducer } from "./slices/user-slice/userSlice"
@@ -29,3 +30,5 @@ export type AppStore = typeof store
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<AppStore["getState"]>
 export type AppDispatch = AppStore["dispatch"]
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

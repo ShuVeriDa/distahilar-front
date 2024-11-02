@@ -1,19 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { UserType } from "@/prisma/models"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-export type IUserSlice = {}
+export type IUserSlice = {
+	user: UserType | null
+}
 
-const initialState: IUserSlice = {}
+const initialState: IUserSlice = {
+	user: null,
+}
 
 export const userSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
-		// setAge: (state, action: PayloadAction<IUserSlice["age"]>) => {
-		// 	state.age = action.payload;
-		// },
+		setUser: (state, action: PayloadAction<IUserSlice["user"]>) => {
+			state.user = action.payload
+		},
 	},
 })
 
-export const {} = userSlice.actions
+export const { setUser } = userSlice.actions
 export const userReducer = userSlice.reducer
 export type Type = IUserSlice

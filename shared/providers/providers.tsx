@@ -16,7 +16,7 @@ export const Providers: FC<IProvidersProps> = ({ children }) => {
 					attribute="class"
 					defaultTheme="system"
 					enableSystem
-					disableTransitionOnChange
+					// disableTransitionOnChange
 				>
 					<MainLayout>{children}</MainLayout>
 				</ThemeProvider>
