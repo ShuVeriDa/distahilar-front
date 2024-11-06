@@ -1,3 +1,4 @@
+import { cn } from "@/shared/lib/utils/cn"
 import { FC, InputHTMLAttributes } from "react"
 import {
 	FieldError,
@@ -14,23 +15,50 @@ interface IFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 	errors: Merge<FieldError, FieldErrorsImpl<{ value: number }>> | undefined
 	colorScheme?: string
 	isType?: "input" | "textarea"
+	label?: string
+	classNameLabel?: string
+	className?: string
+	classNameField?: string
 }
 
 export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
-	const { placeholder, register, errors, type, onChange, ...rest } = props
+	const {
+		placeholder,
+		register,
+		errors,
+		type,
+		onChange,
+		label,
+		classNameLabel,
+		className,
+		classNameField,
+		...rest
+	} = props
 
 	return (
-		<div className="flex flex-col gap-1">
+		<div className={cn("w-full flex flex-col gap-0.5", classNameField)}>
+			{label && (
+				<Typography tag="p" className={cn(classNameLabel)}>
+					{label}
+				</Typography>
+			)}
+
 			{isType === "input" ? (
 				<Input
 					placeholder={placeholder}
 					type={type}
 					register={register}
 					onChange={onChange}
+					className={className}
 					{...rest}
 				/>
 			) : (
-				<Textarea placeholder={placeholder} register={register} {...rest} />
+				<Textarea
+					className={className}
+					placeholder={placeholder}
+					register={register}
+					{...rest}
+				/>
 			)}
 
 			{errors && (

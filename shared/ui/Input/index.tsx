@@ -21,8 +21,9 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 	)
 
 	const DEFAULT_CLASSES =
-		"text-black outline-none w-full h-[40px] rounded-lg py-2 px-3 dark:bg-white/10 bg-black/10 dark:text-white placeholder:text-[13px]"
-	const DEFAULT_WRAPPER_LASSES = "w full"
+		"text-black outline-none text-[14px] w-full h-[40px] rounded-lg py-2 px-3 dark:bg-white/10 bg-black/10 dark:text-white placeholder:text-[13px]"
+
+	const DEFAULT_WRAPPER_LASSES = "w-full"
 
 	return (
 		<div className={cn(DEFAULT_WRAPPER_LASSES)}>

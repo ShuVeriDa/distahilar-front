@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useSelector } from "react-redux"
 import { persistReducer, persistStore } from "redux-persist"
 import storage from "redux-persist/lib/storage"
+import { modalReducer } from "./slices/model-slice/modalSlice"
 import { userReducer } from "./slices/user-slice/userSlice"
 
 const persistConfig = {
@@ -15,6 +16,7 @@ const persistedUserReducer = persistReducer(persistConfig, userReducer)
 export const store = configureStore({
 	reducer: {
 		user: persistedUserReducer,
+		modal: modalReducer,
 	},
 	/**
 	 * You cant set up more middlewares

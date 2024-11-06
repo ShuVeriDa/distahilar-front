@@ -1,6 +1,5 @@
 "use client"
 
-import { ThemeToggle } from "@/shared/ui/Theme"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { Login } from "@/widgets/Login"
 import { Register } from "@/widgets/Register"
@@ -41,8 +40,6 @@ const Auth: NextPage<IAuthProps> = () => {
 				</div>
 
 				{type === "login" ? <Login /> : <Register />}
-
-				<ThemeToggle />
 
 				<div className="">
 					<Typography tag="div" className="text-gray-400 text-[14px]">

@@ -1,5 +1,6 @@
 import { FC, ReactNode } from "react"
 import { MainLayout } from "../layout/MainLayout"
+import { ModalProvider } from "./ModalProvider"
 import StoreProvider from "./StoreProvider"
 import { TanStackQueryProvider } from "./TanStackQueryProvider"
 import { ThemeProvider } from "./ThemeProvider"
@@ -18,6 +19,7 @@ export const Providers: FC<IProvidersProps> = ({ children }) => {
 					enableSystem
 					// disableTransitionOnChange
 				>
+					<ModalProvider />
 					<MainLayout>{children}</MainLayout>
 				</ThemeProvider>
 			</StoreProvider>

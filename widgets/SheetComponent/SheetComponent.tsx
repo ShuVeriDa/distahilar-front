@@ -7,7 +7,7 @@ import {
 } from "@/shared/ui/Sheet/sheet"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import Image from "next/image"
-import { FC } from "react"
+import { FC, useState } from "react"
 import { IoMdMenu } from "react-icons/io"
 import { SheetLinks } from "./entities/Links"
 import { CopyClickBoard } from "./features/clickboard"
@@ -15,11 +15,12 @@ import { CopyClickBoard } from "./features/clickboard"
 interface ISheetComponentProps {}
 
 export const SheetComponent: FC<ISheetComponentProps> = () => {
-	const username = "shuverida"
+	const [isOpen, setIsOpen] = useState(false)
 
+	const closeSheet = () => setIsOpen(false)
 	return (
 		<div className="w-12 h-12 flex flex-col justify-center items-center ">
-			<Sheet>
+			<Sheet open={isOpen} onOpenChange={setIsOpen}>
 				<SheetTrigger>
 					<IoMdMenu className="w-5 h-5 dark:[&>path]:fill-white" />
 				</SheetTrigger>
@@ -45,7 +46,7 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 									ShuVeriDa
 								</Typography>
 
-								<CopyClickBoard username={username} />
+								<CopyClickBoard />
 							</div>
 						</div>
 
@@ -53,7 +54,7 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 					</div>
 					{/* <ThemeToggle /> */}
 
-					<SheetLinks />
+					<SheetLinks closeSheet={closeSheet} />
 				</SheetContent>
 			</Sheet>
 		</div>

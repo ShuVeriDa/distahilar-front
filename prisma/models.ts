@@ -43,3 +43,35 @@ export type FolderType = Prisma.FolderGetPayload<{
 export type AuditLogType = Prisma.AuditLogGetPayload<{
 	include: Prisma.AuditLogInclude
 }>
+
+export enum MemberRole {
+	OWNER,
+	ADMIN,
+	MODERATOR,
+	GUEST,
+}
+export enum Language {
+	EN,
+	RU,
+	CHE,
+}
+
+export enum MediaType {
+	IMAGE,
+	VIDEO,
+	VOICE,
+	FILE,
+}
+
+export enum MessageType {
+	TEXT,
+	VIDEO,
+	VOICE,
+	FILE,
+}
+
+export enum ChatRole {
+	DIALOG = "DIALOG",
+	CHANNEL = "CHANNEL",
+	GROUP = "GROUP",
+}
