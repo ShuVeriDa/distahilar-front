@@ -44,6 +44,10 @@ export type AuditLogType = Prisma.AuditLogGetPayload<{
 	include: Prisma.AuditLogInclude
 }>
 
+export type ContactType = Prisma.ContactGetPayload<{
+	include: Prisma.ContactInclude
+}>
+
 export enum MemberRole {
 	OWNER,
 	ADMIN,

@@ -24,7 +24,7 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 				<SheetTrigger>
 					<IoMdMenu className="w-5 h-5 dark:[&>path]:fill-white" />
 				</SheetTrigger>
-				<SheetContent className="flex flex-col gap-2">
+				<SheetContent className="flex flex-col gap-2 dark:bg-[#17212B]">
 					<SheetHeader className="hidden">
 						<SheetTitle></SheetTitle>
 					</SheetHeader>
@@ -52,7 +52,6 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 
 						<div className="h-[1px] w-full left-[-24px] dark:bg-[#2c3241] bg-gray-300" />
 					</div>
-					{/* <ThemeToggle /> */}
 
 					<SheetLinks closeSheet={closeSheet} />
 				</SheetContent>

@@ -8,7 +8,7 @@ interface IChatLayoutProps {
 
 const ChatLayout: NextPage<IChatLayoutProps> = ({ children }) => {
 	return (
-		<div className="w-screen h-screen flex  ">
+		<div className="w-screen h-screen flex">
 			<LeftBar />
 			{children}
 		</div>

@@ -49,6 +49,7 @@ export const SheetLinks: FC<ISheetLinksProps> = ({ closeSheet }) => {
 	const { onOpenModal } = useModal()
 
 	const onClickModal = (type: ModelType) => {
+		if (!type) return
 		onOpenModal(type)
 		closeSheet()
 	}

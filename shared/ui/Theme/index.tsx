@@ -22,7 +22,7 @@ export function ThemeToggle() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="flex items-center">
-				<Switch checked={theme === "dark"} onClick={onToggleTheme} />
+				<Switch onClick={onToggleTheme} />
 			</DropdownMenuTrigger>
 		</DropdownMenu>
 	)
