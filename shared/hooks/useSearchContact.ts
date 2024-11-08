@@ -15,10 +15,11 @@ export const useSearchContact = (isModalOpen?: boolean) => {
 		debouncedValue,
 		isModalOpen
 	)
-	const { data: contacts } = searchContactsQuery
+	const { data: contacts, isSuccess } = searchContactsQuery
 
 	return {
 		value,
+		isSuccess,
 		debouncedValue,
 		onChangeValue,
 		contacts,
