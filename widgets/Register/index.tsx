@@ -4,6 +4,7 @@ import { Button } from "@/shared/ui/Button/button"
 import { Field } from "@/shared/ui/Field"
 import { FC } from "react"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { VscLoading } from "react-icons/vsc"
 import PhoneInput from "react-phone-input-2"
 import "react-phone-input-2/lib/style.css"
 
@@ -11,6 +12,7 @@ interface IFormInput {
 	username: string
 	password: string
 	name: string
+	surname: string
 	email: string
 	phone: string
 	bio?: string
@@ -20,7 +22,7 @@ interface IRegisterProps {}
 
 export const Register: FC<IRegisterProps> = () => {
 	const { register: registerAuth } = useAuthQuery()
-	const { mutateAsync } = registerAuth
+	const { mutateAsync, isPending, isSuccess } = registerAuth
 
 	const {
 		register,
@@ -75,7 +77,7 @@ export const Register: FC<IRegisterProps> = () => {
 				/>
 
 				<Field
-					type="name"
+					type="text"
 					placeholder="Name"
 					register={register("name", {
 						required: "Name is required",
@@ -83,6 +85,17 @@ export const Register: FC<IRegisterProps> = () => {
 					minLength={2}
 					maxLength={32}
 					errors={errors.name}
+				/>
+
+				<Field
+					type="text"
+					placeholder="Surname"
+					register={register("surname", {
+						required: "Surname is required",
+					})}
+					minLength={2}
+					maxLength={32}
+					errors={errors.surname}
 				/>
 
 				<Controller
@@ -112,7 +125,11 @@ export const Register: FC<IRegisterProps> = () => {
 				/>
 
 				<Button className="bg-blue-500 hover:bg-blue-600 text-white">
-					Sign up
+					{isPending || isSuccess ? (
+						<VscLoading className="animate-spin" />
+					) : (
+						"Sign up"
+					)}
 				</Button>
 			</div>
 		</form>

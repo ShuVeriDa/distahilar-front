@@ -2,10 +2,15 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
 import { contactService } from "./contact.service"
 
-export const useContactQuery = (contactId?: string) => {
+export const useContactQuery = (
+	contactId?: string,
+	value?: string,
+	isSearch?: boolean
+) => {
 	const searchContactsQuery = useQuery({
-		queryFn: async () => contactService.searchContact(),
-		queryKey: ["searchContacts"],
+		queryFn: async () => contactService.searchContact(value ? value : ""),
+		queryKey: ["searchContacts", value],
+		enabled: !!isSearch,
 	})
 
 	const fetchFolderQuery = useQuery({

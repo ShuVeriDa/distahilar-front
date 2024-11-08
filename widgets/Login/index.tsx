@@ -4,6 +4,7 @@ import { Button } from "@/shared/ui/Button/button"
 import { Field } from "@/shared/ui/Field"
 import { FC } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { VscLoading } from "react-icons/vsc"
 
 interface IFormInput {
 	username: string
@@ -14,7 +15,7 @@ interface ILoginProps {}
 
 export const Login: FC<ILoginProps> = () => {
 	const { login } = useAuthQuery()
-	const { mutateAsync } = login
+	const { mutateAsync, isPending, isSuccess } = login
 
 	const {
 		register,
@@ -59,7 +60,11 @@ export const Login: FC<ILoginProps> = () => {
 					className="bg-blue-500 hover:bg-blue-600 text-white text-[16px]"
 					type="submit"
 				>
-					Sign in
+					{isPending || isSuccess ? (
+						<VscLoading className="animate-spin" />
+					) : (
+						"Sign in"
+					)}
 				</Button>
 			</div>
 		</form>

@@ -1,11 +1,11 @@
 import { ContactType } from "@/prisma/models"
-import { getFolderUrl } from "../../axios/api.config"
+import { getContactUrl } from "../../axios/api.config"
 import { instance } from "../../axios/axios"
 
 export const contactService = {
-	async searchContact(value?: string) {
+	async searchContact(value: string) {
 		const { data } = await instance.get<ContactType[]>(
-			getFolderUrl(`?name=${value}`)
+			getContactUrl(`?name=${value}`)
 		)
 
 		return data
@@ -13,14 +13,14 @@ export const contactService = {
 
 	async getContact(contactId: string) {
 		const { data } = await instance.get<ContactType>(
-			getFolderUrl(`/${contactId}`)
+			getContactUrl(`/${contactId}`)
 		)
 
 		return data
 	},
 
 	async createContact(userId: string) {
-		const { data } = await instance.post<ContactType>(getFolderUrl(``), {
+		const { data } = await instance.post<ContactType>(getContactUrl(``), {
 			userId,
 		})
 
@@ -29,7 +29,7 @@ export const contactService = {
 
 	async deleteContact(contactId: string) {
 		const { data } = await instance.delete<string>(
-			getFolderUrl(`/${contactId}`)
+			getContactUrl(`/${contactId}`)
 		)
 
 		return data

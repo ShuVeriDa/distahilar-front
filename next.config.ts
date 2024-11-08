@@ -8,6 +8,13 @@ const nextConfig: NextConfig = {
 		})
 		return config
 	},
+	images: {
+		remotePatterns: [
+			{
+				hostname: "avatars.githubusercontent.com",
+			},
+		],
+	},
 }
 
 export default nextConfig

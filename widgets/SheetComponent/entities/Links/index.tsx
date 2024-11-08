@@ -1,11 +1,11 @@
 import { useModal } from "@/shared/hooks/useModal"
-import { ModelType } from "@/shared/lib/redux-store/slices/model-slice/type"
-import { ThemeToggle } from "@/shared/ui/Theme"
-import { Typography } from "@/shared/ui/Typography/Typography"
+import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
+
 import { FC, ReactNode } from "react"
 import { FaRegCircleUser, FaRegMoon } from "react-icons/fa6"
 import { IoMegaphoneOutline, IoSettingsOutline } from "react-icons/io5"
 import { RiGroupLine } from "react-icons/ri"
+import { Link } from "./ui/Link"
 
 interface ISheetLinksProps {
 	closeSheet: () => void
@@ -14,66 +14,55 @@ interface ISheetLinksProps {
 export type IItem = {
 	name: string
 	icon: ReactNode
-	type: ModelType
+	type: EnumModel
 }
 
 const items: IItem[] = [
 	{
 		name: "New Group",
 		icon: <RiGroupLine size={20} className={"group-hover:text-white"} />,
-		type: "group",
+		type: EnumModel.GROUP,
 	},
 	{
 		name: "New Channel",
 		icon: <IoMegaphoneOutline size={20} className={"group-hover:text-white"} />,
-		type: "channel",
+		type: EnumModel.CHANNEL,
 	},
 	{
 		name: "Contacts",
 		icon: <FaRegCircleUser size={20} className={"group-hover:text-white"} />,
-		type: "contacts",
+		type: EnumModel.CONTACTS,
 	},
 	{
 		name: "Settings",
 		icon: <IoSettingsOutline size={20} className={"group-hover:text-white"} />,
-		type: "settings",
+		type: EnumModel.SETTINGS,
 	},
 	{
 		name: "Night Mode",
 		icon: <FaRegMoon size={20} className={"group-hover:text-white"} />,
-		type: null,
+		type: EnumModel.NO_TYPE,
 	},
 ]
 
 export const SheetLinks: FC<ISheetLinksProps> = ({ closeSheet }) => {
 	const { onOpenModal } = useModal()
 
-	const onClickModal = (type: ModelType) => {
-		if (!type) return
+	const onClickModal = (type: EnumModel) => {
+		if (type === EnumModel.NO_TYPE) return
 		onOpenModal(type)
 		closeSheet()
 	}
 
 	return (
 		<div className="p-[5px] flex flex-col">
-			{items.map(item => (
-				<button
-					key={item.type}
-					className="group flex px-4 h-[34px] rounded-[3px] justify-between items-center cursor-pointer dark:hover:bg-[#292d35] hover:bg-[rgba(0,0,0,0.6)] relative"
+			{items.map((item, index) => (
+				<Link
+					key={index}
+					item={item}
 					onClick={() => onClickModal(item.type)}
-				>
-					<div className="flex gap-3">
-						<div>{item.icon}</div>
-
-						<Typography tag="p" className="text-[14px] group-hover:text-white">
-							{item.name}
-						</Typography>
-					</div>
-
-					<div className="w-[3px] h-[16px] group-hover:bg-[#60cdff] rounded-full absolute left-0" />
-
-					{!item.type && <ThemeToggle />}
-				</button>
+					tag={item.type === EnumModel.NO_TYPE ? "div" : "button"}
+				/>
 			))}
 		</div>
 	)

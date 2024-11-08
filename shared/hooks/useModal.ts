@@ -4,8 +4,8 @@ import {
 	setOpenModal,
 } from "../lib/redux-store/slices/model-slice/modalSlice"
 import {
+	EnumModel,
 	IModalData,
-	ModelType,
 } from "../lib/redux-store/slices/model-slice/type"
 import { useAppSelector } from "../lib/redux-store/store"
 
@@ -20,7 +20,7 @@ export const useModal = () => {
 		}, 200)
 	}
 
-	const onOpenModal = (type: ModelType, data?: IModalData) => {
+	const onOpenModal = (type: EnumModel, data?: IModalData) => {
 		dispatch(
 			setOpenModal({
 				isOpen: true,

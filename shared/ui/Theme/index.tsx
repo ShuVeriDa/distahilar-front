@@ -2,10 +2,6 @@
 
 import { useTheme } from "next-themes"
 
-import {
-	DropdownMenu,
-	DropdownMenuTrigger,
-} from "@/shared/ui/Dropdown-menu/dropdown-menu"
 import { Switch } from "../Switch/switch"
 
 export function ThemeToggle() {
@@ -20,10 +16,10 @@ export function ThemeToggle() {
 	}
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger className="flex items-center">
-				<Switch onClick={onToggleTheme} />
-			</DropdownMenuTrigger>
-		</DropdownMenu>
+		// <DropdownMenu>
+		// 	<DropdownMenuTrigger className="flex items-center">
+		<Switch checked={theme === "dark"} onClick={onToggleTheme} />
+		// 	</DropdownMenuTrigger>
+		// </DropdownMenu>
 	)
 }

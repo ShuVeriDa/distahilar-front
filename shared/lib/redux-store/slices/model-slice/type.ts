@@ -1,9 +1,15 @@
-export type ModelType = "channel" | "group" | "contacts" | "settings" | null
+export enum EnumModel {
+	CHANNEL = "CHANNEL",
+	GROUP = "GROUP",
+	CONTACTS = "CONTACTS",
+	SETTINGS = "SETTINGS",
+	NO_TYPE = "NO_TYPE",
+}
 
 export interface IModalData {}
 
 export interface IModelSlice {
-	type: ModelType | null
+	type: EnumModel | null
 	isOpen: boolean
 	data?: IModalData | null
 }
