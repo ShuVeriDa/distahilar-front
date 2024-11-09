@@ -7,7 +7,7 @@ import { useSearchContact } from "@/shared/hooks/useSearchContact"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { cn } from "@/shared/lib/utils/cn"
-import { Button } from "@/shared/ui/Button/button"
+import { Button } from "@/shared/ui/Button"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { Search } from "../Search"
 import { ContactList } from "./entities/ContactList"
@@ -27,7 +27,7 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 	return (
 		<ModalLayout isModalOpen={isModalOpen} onClose={onClose} className="p-0 ">
 			<div className={cn("flex flex-col gap-4 px-4 pt-4", CLASSNAME_UNDERLINE)}>
-				<Typography tag="h4" className="!font-normal">
+				<Typography tag="h4" className="font-normal">
 					Contacts
 				</Typography>
 
@@ -40,7 +40,7 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 				/>
 			</div>
 
-			<ContactList contacts={isSuccess && contacts ? [] : []} />
+			<ContactList contacts={isSuccess && contacts ? contacts : []} />
 
 			<div
 				className={cn(
@@ -49,12 +49,11 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 				)}
 			>
 				<Button
-					className="bg-transition h-[36px] text-[#168ACD] dark:text-[#5DB2F2] hover:bg-[rgba(106,139,172,0.2)] hover:dark:bg-[rgba(23,63,103,0.2)]"
-					type="button"
+					title="Close"
+					variant="withoutBg"
+					size="default"
 					onClick={onClose}
-				>
-					Close
-				</Button>
+				/>
 			</div>
 		</ModalLayout>
 	)

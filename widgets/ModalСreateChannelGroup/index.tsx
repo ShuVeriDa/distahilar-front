@@ -10,7 +10,7 @@ import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useCommunityQuery } from "@/shared/lib/services/chat/community/useCommunityQuery"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
-import { Button } from "@/shared/ui/Button/button"
+import { Button } from "@/shared/ui/ButtonShadCN/button"
 import Image from "next/image"
 import { SubmitHandler, useForm } from "react-hook-form"
 

@@ -1,6 +1,6 @@
 import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { passwordPattern } from "@/shared/lib/utils/patterns"
-import { Button } from "@/shared/ui/Button/button"
+import { Button } from "@/shared/ui/ButtonShadCN/button"
 import { Field } from "@/shared/ui/Field"
 import { FC } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -40,6 +40,7 @@ export const Login: FC<ILoginProps> = () => {
 					register={register("username", {
 						required: "Username is required",
 					})}
+					disabled={isPending}
 					errors={errors.username}
 				/>
 				<Field
@@ -54,6 +55,7 @@ export const Login: FC<ILoginProps> = () => {
 						},
 						pattern: passwordPattern,
 					})}
+					disabled={isPending}
 					errors={errors.password}
 				/>
 				<Button

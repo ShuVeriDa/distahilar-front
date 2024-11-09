@@ -1,6 +1,6 @@
 import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { emailPattern, passwordPattern } from "@/shared/lib/utils/patterns"
-import { Button } from "@/shared/ui/Button/button"
+import { Button } from "@/shared/ui/ButtonShadCN/button"
 import { Field } from "@/shared/ui/Field"
 import { FC } from "react"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
@@ -48,6 +48,7 @@ export const Register: FC<IRegisterProps> = () => {
 					register={register("username", {
 						required: "Username is required",
 					})}
+					disabled={isPending}
 					errors={errors.username}
 				/>
 
@@ -63,6 +64,7 @@ export const Register: FC<IRegisterProps> = () => {
 						},
 						pattern: passwordPattern,
 					})}
+					disabled={isPending}
 					errors={errors.password}
 				/>
 
@@ -73,6 +75,7 @@ export const Register: FC<IRegisterProps> = () => {
 						required: "Email is required",
 						pattern: emailPattern,
 					})}
+					disabled={isPending}
 					errors={errors.email}
 				/>
 
@@ -84,6 +87,7 @@ export const Register: FC<IRegisterProps> = () => {
 					})}
 					minLength={2}
 					maxLength={32}
+					disabled={isPending}
 					errors={errors.name}
 				/>
 
@@ -95,6 +99,7 @@ export const Register: FC<IRegisterProps> = () => {
 					})}
 					minLength={2}
 					maxLength={32}
+					disabled={isPending}
 					errors={errors.surname}
 				/>
 
@@ -114,6 +119,7 @@ export const Register: FC<IRegisterProps> = () => {
 							containerClass="dark:!bg-[#252322] !bg-[#E5E5E5] !rounded-lg dark:!text-white"
 						/>
 					)}
+					disabled={isPending}
 				/>
 
 				<Field
@@ -122,6 +128,7 @@ export const Register: FC<IRegisterProps> = () => {
 					isType="textarea"
 					errors={errors.bio}
 					maxLength={70}
+					disabled={isPending}
 				/>
 
 				<Button className="bg-blue-500 hover:bg-blue-600 text-white">
