@@ -1,3 +1,5 @@
+import { ModalHeaderInfo } from "@/entities/ModalHeaderInfo"
+import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import {
 	Sheet,
 	SheetContent,
@@ -5,14 +7,42 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/shared/ui/Sheet/sheet"
-import { Typography } from "@/shared/ui/Typography/Typography"
-import Image from "next/image"
 import { FC, useState } from "react"
+import { FaRegCircleUser, FaRegMoon } from "react-icons/fa6"
 import { IoMdMenu } from "react-icons/io"
-import { SheetLinks } from "./entities/Links"
-import { CopyClickBoard } from "./features/clickboard"
+import { IoMegaphoneOutline, IoSettingsOutline } from "react-icons/io5"
+import { RiGroupLine } from "react-icons/ri"
+import { IItem, SheetLinks } from "./entities/Links"
 
 interface ISheetComponentProps {}
+
+const items: IItem[] = [
+	{
+		name: "New Group",
+		icon: <RiGroupLine size={20} />,
+		type: EnumModel.GROUP,
+	},
+	{
+		name: "New Channel",
+		icon: <IoMegaphoneOutline size={20} />,
+		type: EnumModel.CHANNEL,
+	},
+	{
+		name: "Contacts",
+		icon: <FaRegCircleUser size={20} />,
+		type: EnumModel.CONTACTS,
+	},
+	{
+		name: "Settings",
+		icon: <IoSettingsOutline size={20} />,
+		type: EnumModel.SETTINGS,
+	},
+	{
+		name: "Night Mode",
+		icon: <FaRegMoon size={20} />,
+		type: EnumModel.NO_TYPE,
+	},
+]
 
 export const SheetComponent: FC<ISheetComponentProps> = () => {
 	const [isOpen, setIsOpen] = useState(false)
@@ -30,30 +60,11 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 					</SheetHeader>
 
 					<div className="flex flex-col gap-2 relative p-5 pb-0">
-						<div className="flex gap-2.5 items-center">
-							<div>
-								<Image
-									src={"/images/icon.png"}
-									alt={"avatar"}
-									width={60}
-									height={60}
-									className={"rounded-full"}
-								/>
-							</div>
-
-							<div className="flex flex-col items-start gap-1">
-								<Typography tag="h1" className="text-[14px] font-normal">
-									ShuVeriDa
-								</Typography>
-
-								<CopyClickBoard />
-							</div>
-						</div>
-
+						<ModalHeaderInfo variant="sheet" />
 						<div className="h-[1px] w-full left-[-24px] dark:bg-[#2c3241] bg-gray-300" />
 					</div>
 
-					<SheetLinks closeSheet={closeSheet} />
+					<SheetLinks closeSheet={closeSheet} items={items} />
 				</SheetContent>
 			</Sheet>
 		</div>

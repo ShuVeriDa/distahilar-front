@@ -48,12 +48,9 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 					CLASSNAME_UNDERLINE
 				)}
 			>
-				<Button
-					title="Close"
-					variant="withoutBg"
-					size="default"
-					onClick={onClose}
-				/>
+				<Button variant="withoutBg" size="default" onClick={onClose}>
+					Close
+				</Button>
 			</div>
 		</ModalLayout>
 	)

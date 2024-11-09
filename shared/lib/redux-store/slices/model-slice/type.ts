@@ -3,6 +3,9 @@ export enum EnumModel {
 	GROUP = "GROUP",
 	CONTACTS = "CONTACTS",
 	SETTINGS = "SETTINGS",
+	ACCOUNT = "ACCOUNT",
+	FOLDERS = "FOLDERS",
+	LANGUAGE = "LANGUAGE",
 	NO_TYPE = "NO_TYPE",
 }
 

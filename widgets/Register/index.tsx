@@ -1,6 +1,6 @@
 import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { emailPattern, passwordPattern } from "@/shared/lib/utils/patterns"
-import { Button } from "@/shared/ui/ButtonShadCN/button"
+import { Button } from "@/shared/ui/Button"
 import { Field } from "@/shared/ui/Field"
 import { FC } from "react"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
@@ -131,7 +131,7 @@ export const Register: FC<IRegisterProps> = () => {
 					disabled={isPending}
 				/>
 
-				<Button className="bg-blue-500 hover:bg-blue-600 text-white">
+				<Button variant="primary" type="submit">
 					{isPending || isSuccess ? (
 						<VscLoading className="animate-spin" />
 					) : (

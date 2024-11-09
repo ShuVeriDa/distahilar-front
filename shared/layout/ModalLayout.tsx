@@ -2,6 +2,7 @@ import { useClickOutside } from "@siberiacancode/reactuse"
 import { AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { FC, ReactNode, useRef } from "react"
+import { IoIosClose } from "react-icons/io"
 import { cn } from "../lib/utils/cn"
 
 const MotionDiv = dynamic(() =>
@@ -12,7 +13,9 @@ interface IModalLayoutProps {
 	isModalOpen: boolean
 	onClose: () => void
 	children: ReactNode
+	popoverRef?: React.RefObject<HTMLDivElement>
 	className?: string
+	isXClose?: boolean
 }
 
 export const ModalLayout: FC<IModalLayoutProps> = ({
@@ -20,10 +23,21 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 	onClose,
 	children,
 	className,
+	isXClose,
+	popoverRef,
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 
-	useClickOutside(ref, () => onClose())
+	useClickOutside(ref, event => {
+		if (
+			popoverRef &&
+			popoverRef.current &&
+			popoverRef.current.contains(event.target as Node)
+		) {
+			return
+		}
+		onClose()
+	})
 
 	return (
 		<AnimatePresence>
@@ -45,6 +59,16 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 						)}
 					>
 						{children}
+
+						{isXClose && (
+							<div className="absolute top-3 right-3 cursor-pointer">
+								<IoIosClose
+									size={35}
+									onClick={onClose}
+									className="text-[#737E87] hover:text-[#c7d0d7] hover:dark:text-white"
+								/>
+							</div>
+						)}
 					</div>
 				</MotionDiv>
 			)}

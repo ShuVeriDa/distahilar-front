@@ -1,6 +1,7 @@
 "use client"
 
 import { ModalContacts } from "@/widgets/ModalContacts"
+import { ModalSettings } from "@/widgets/ModalSettings"
 import { ModalCreateChannelGroup } from "@/widgets/ModalСreateChannelGroup"
 import { usePathname } from "next/navigation"
 import { FC, useEffect, useState } from "react"
@@ -18,7 +19,6 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 	}, [])
 
 	useEffect(() => {
-		console.log(pathname)
 		if (pathname === "/auth") onClose()
 	}, [pathname])
 
@@ -30,6 +30,7 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 		<>
 			<ModalCreateChannelGroup />
 			<ModalContacts />
+			<ModalSettings />
 		</>
 	)
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import type { ComponentProps, FC } from "react"
+import type { ComponentProps, FC, ReactNode } from "react"
 import { twMerge } from "tailwind-merge"
 
 export const ButtonNS = {
@@ -20,15 +20,15 @@ export const ButtonNS = {
 }
 
 interface ButtonProps extends ComponentProps<"button"> {
-	title: string
+	children: ReactNode
 	size?: keyof typeof ButtonNS.size
 	variant?: keyof typeof ButtonNS.variants
 }
 
 export const Button: FC<ButtonProps> = ({ ...props }) => {
-	const { title, className, variant, size, ...rest } = props
+	const { children, className, variant, size, ...rest } = props
 
-	const DEFAULT_VARIANT = ""
+	const DEFAULT_VARIANT = "flex items-center justify-center"
 
 	const variantClassName = variant
 		? ButtonNS.variants[variant]
@@ -46,7 +46,7 @@ export const Button: FC<ButtonProps> = ({ ...props }) => {
 			)}
 			{...rest}
 		>
-			{title}
+			{children}
 		</button>
 	)
 }

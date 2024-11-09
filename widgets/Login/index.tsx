@@ -1,6 +1,6 @@
 import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { passwordPattern } from "@/shared/lib/utils/patterns"
-import { Button } from "@/shared/ui/ButtonShadCN/button"
+import { Button } from "@/shared/ui/Button"
 import { Field } from "@/shared/ui/Field"
 import { FC } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -58,10 +58,7 @@ export const Login: FC<ILoginProps> = () => {
 					disabled={isPending}
 					errors={errors.password}
 				/>
-				<Button
-					className="bg-blue-500 hover:bg-blue-600 text-white text-[16px]"
-					type="submit"
-				>
+				<Button variant="primary" type="submit">
 					{isPending || isSuccess ? (
 						<VscLoading className="animate-spin" />
 					) : (

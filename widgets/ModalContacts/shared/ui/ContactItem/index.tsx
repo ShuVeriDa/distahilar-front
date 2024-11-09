@@ -12,7 +12,7 @@ export const ContactItem: FC<IContactItemProps> = ({ contact }) => {
 	return (
 		<button
 			key={contact.id}
-			className="min-h-[52px] flex gap-2 items-center hover:bg-[#3b556f] px-4"
+			className="min-h-[52px] flex gap-2 items-center hover:bg-[rgba(0,0,0,0.1)] dark:hover:bg-[#292d35] px-4"
 		>
 			<div className="rounded-full w-[40px] h-[40px]">
 				<Image
