@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux"
 import {
-	setCloseModal,
-	setOpenModal,
+	closeModal,
+	pushModal,
+	removeLastModal,
 } from "../lib/redux-store/slices/model-slice/modalSlice"
 import {
 	EnumModel,
@@ -10,25 +11,41 @@ import {
 import { useAppSelector } from "../lib/redux-store/store"
 
 export const useModal = () => {
-	const modalData = useAppSelector(state => state.modal)
-
+	const modalStack = useAppSelector(state => state.modal.stack)
 	const dispatch = useDispatch()
 
 	const onClose = () => {
 		setTimeout(() => {
-			dispatch(setCloseModal())
+			dispatch(closeModal())
+		}, 200)
+	}
+
+	const onCloseCurrentModal = () => {
+		setTimeout(() => {
+			dispatch(removeLastModal())
 		}, 200)
 	}
 
 	const onOpenModal = (type: EnumModel, data?: IModalData) => {
 		dispatch(
-			setOpenModal({
-				isOpen: true,
-				type: type!,
-				data: data,
+			pushModal({
+				type,
+				data,
 			})
 		)
 	}
 
-	return { modalData, onClose, onOpenModal }
+	const currentModal = modalStack[modalStack.length - 1] || {
+		type: null,
+		data: null,
+	}
+	const isModalOpen = modalStack.length > 0
+
+	return {
+		currentModal,
+		isModalOpen,
+		onClose,
+		onOpenModal,
+		onCloseCurrentModal,
+	}
 }

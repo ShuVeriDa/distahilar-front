@@ -10,21 +10,23 @@ const MotionDiv = dynamic(() =>
 )
 
 interface IModalLayoutProps {
-	isModalOpen: boolean
+	isCurrentModal: boolean
 	onClose: () => void
 	children: ReactNode
 	popoverRef?: React.RefObject<HTMLDivElement>
 	className?: string
 	isXClose?: boolean
+	stackIndex?: number
 }
 
 export const ModalLayout: FC<IModalLayoutProps> = ({
-	isModalOpen,
+	isCurrentModal: isModalOpen,
 	onClose,
 	children,
 	className,
 	isXClose,
 	popoverRef,
+	stackIndex = 0, // принимаем значение стека
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -46,17 +48,18 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 					className={cn(
 						"fixed left-0 top-0 z-[100] flex h-full w-full flex-col items-center justify-center bg-black/80"
 					)}
-					initial={{ opacity: 0, translateX: "30%" }}
-					animate={{ opacity: 1, translateX: "0" }}
-					exit={{ opacity: 0 }}
-					transition={{ duration: 0.3 }}
+					style={{ zIndex: 1000 + stackIndex }} // Увеличиваем `z-index` по глубине стека
 				>
-					<div
+					<MotionDiv
 						ref={ref}
 						className={cn(
 							"relative z-[11] w-[400px] rounded-[7px] bg-white dark:bg-[#17212B] p-4 ",
 							className
 						)}
+						initial={{ opacity: 0, translateX: "30%" }}
+						animate={{ opacity: 1, translateX: "0" }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.3 }}
 					>
 						{children}
 
@@ -69,7 +72,7 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 								/>
 							</div>
 						)}
-					</div>
+					</MotionDiv>
 				</MotionDiv>
 			)}
 		</AnimatePresence>

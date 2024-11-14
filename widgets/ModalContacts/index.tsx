@@ -15,9 +15,9 @@ import { ContactList } from "./entities/ContactList"
 interface IModalContactsProps {}
 
 export const ModalContacts: FC<IModalContactsProps> = () => {
-	const { onClose, modalData } = useModal()
-	const { isOpen, type } = modalData
-	const isModalOpen = isOpen && type === EnumModel.CONTACTS
+	const { onClose, currentModal, isModalOpen } = useModal()
+	const { type } = currentModal
+	const isCurrentModal = isModalOpen && type === EnumModel.CONTACTS
 	const { contacts, onChangeValue, value, isSuccess } =
 		useSearchContact(isModalOpen)
 
@@ -25,7 +25,11 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:bottom-0 after:bg-[#E7E7E7] after:dark:bg-[#101921]"
 
 	return (
-		<ModalLayout isModalOpen={isModalOpen} onClose={onClose} className="p-0 ">
+		<ModalLayout
+			isCurrentModal={isCurrentModal}
+			onClose={onClose}
+			className="p-0 "
+		>
 			<div className={cn("flex flex-col gap-4 px-4 pt-4", CLASSNAME_UNDERLINE)}>
 				<Typography tag="h4" className="font-normal">
 					Contacts
@@ -48,7 +52,7 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 					CLASSNAME_UNDERLINE
 				)}
 			>
-				<Button variant="withoutBg" size="default" onClick={onClose}>
+				<Button variant="withoutBg" size="md" onClick={onClose}>
 					Close
 				</Button>
 			</div>

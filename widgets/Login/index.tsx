@@ -58,7 +58,7 @@ export const Login: FC<ILoginProps> = () => {
 					disabled={isPending}
 					errors={errors.password}
 				/>
-				<Button variant="primary" type="submit">
+				<Button variant="primary" type="submit" size="md">
 					{isPending || isSuccess ? (
 						<VscLoading className="animate-spin" />
 					) : (

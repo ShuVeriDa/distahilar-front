@@ -12,7 +12,9 @@ export enum EnumModel {
 export interface IModalData {}
 
 export interface IModelSlice {
-	type: EnumModel | null
-	isOpen: boolean
-	data?: IModalData | null
+	stack: {
+		type: EnumModel | null
+		data?: IModalData | null
+		priority: number
+	}[]
 }

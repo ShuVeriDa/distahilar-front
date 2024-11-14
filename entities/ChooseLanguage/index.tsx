@@ -31,13 +31,13 @@ export const ChooseLanguage: FC<IChooseLanguageProps> = ({ ref }) => {
 			</SelectTrigger>
 			<SelectContent className="!z-[100]" ref={ref}>
 				<SelectItem value="en" onClick={() => handleLanguageChange("en")}>
-					English
+					{langName.en}
 				</SelectItem>
 				<SelectItem value="ru" onClick={() => handleLanguageChange("ru")}>
-					Russian
+					{langName.ru}
 				</SelectItem>
 				<SelectItem value="che" onClick={() => handleLanguageChange("che")}>
-					Нохчийн
+					{langName.che}
 				</SelectItem>
 			</SelectContent>
 		</Select>

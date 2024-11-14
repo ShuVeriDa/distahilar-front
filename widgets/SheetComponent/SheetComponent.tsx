@@ -64,7 +64,7 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 						<div className="h-[1px] w-full left-[-24px] dark:bg-[#2c3241] bg-gray-300" />
 					</div>
 
-					<SheetLinks closeSheet={closeSheet} items={items} />
+					<SheetLinks variant="sheet" closeSheet={closeSheet} items={items} />
 				</SheetContent>
 			</Sheet>
 		</div>

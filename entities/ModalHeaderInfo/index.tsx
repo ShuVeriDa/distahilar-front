@@ -4,6 +4,7 @@ import { Typography } from "@/shared/ui/Typography/Typography"
 import { CopyClickBoard } from "@/widgets/SheetComponent/features/clickboard"
 import Image from "next/image"
 import { FC } from "react"
+import { twMerge } from "tailwind-merge"
 
 export const ModalHeaderInfoNS = {
 	variants: {
@@ -50,15 +51,15 @@ export const ModalHeaderInfo: FC<IModalHeaderInfoProps> = ({
 	return (
 		<div className={cn("flex items-center", variantValue.rootClassName)}>
 			<div
-				className={cn(
-					` max-w-[${variantValue.avatar.width}px] max-h-[${variantValue.avatar.height}px] `
+				className={twMerge(
+					`flex max-w-[${variantValue.avatar.width}px] max-h-[${variantValue.avatar.height}px]`
 				)}
 			>
 				<Image
 					src={user?.imageUrl ? user.imageUrl : "/images/no-avatar.png"}
 					alt={"avatar"}
 					className={cn(
-						`rounded-full max-w-[${variantValue.avatar.width}px] max-h-[${variantValue.avatar.height}px]`,
+						`w-full h-full rounded-full max-w-[${variantValue.avatar.width}px] max-h-[${variantValue.avatar.height}px]`,
 						classNameAvatar
 					)}
 					width={variantValue.avatar.width}

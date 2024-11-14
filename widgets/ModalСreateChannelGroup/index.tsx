@@ -10,7 +10,7 @@ import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useCommunityQuery } from "@/shared/lib/services/chat/community/useCommunityQuery"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
-import { Button } from "@/shared/ui/ButtonShadCN/button"
+import { Button } from "@/shared/ui/Button"
 import Image from "next/image"
 import { SubmitHandler, useForm } from "react-hook-form"
 
@@ -24,12 +24,13 @@ interface IModalCreateChannelGroupProps {}
 export const ModalCreateChannelGroup: FC<
 	IModalCreateChannelGroupProps
 > = () => {
-	const { onClose, modalData } = useModal()
-	const { isOpen, type } = modalData
 	const inputRef = useRef<HTMLInputElement>(null)
 
-	const isModalOpen =
-		isOpen && (type === EnumModel.CHANNEL || type === EnumModel.GROUP)
+	const { onClose, currentModal, isModalOpen } = useModal()
+	const { type } = currentModal
+
+	const isCurrentModal =
+		isModalOpen && (type === EnumModel.CHANNEL || type === EnumModel.GROUP)
 
 	const handleClickInput = () => {
 		inputRef.current?.click()
@@ -88,7 +89,7 @@ export const ModalCreateChannelGroup: FC<
 	const fieldName = type === EnumModel.CHANNEL ? "Channel name" : "Group name"
 
 	return (
-		<ModalLayout isModalOpen={isModalOpen} onClose={onClose}>
+		<ModalLayout isCurrentModal={isCurrentModal} onClose={onClose}>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-4">
@@ -148,16 +149,14 @@ export const ModalCreateChannelGroup: FC<
 
 					<div className="flex justify-end gap-2">
 						<Button
-							className="bg-transition text-[#168ADE] dark:text-[#5DB2F2] hover:bg-blue-200"
+							variant="withoutBg"
+							size="md"
 							type="button"
 							onClick={onClose}
 						>
 							Cancel
 						</Button>
-						<Button
-							className="bg-transition text-[#168ADE] dark:text-[#5DB2F2]  hover:bg-blue-200 dark:hover:bg-blue-900"
-							type="submit"
-						>
+						<Button variant="withoutBg" size="md" type="submit">
 							Create
 						</Button>
 					</div>
