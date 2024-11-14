@@ -89,7 +89,11 @@ export const ModalCreateChannelGroup: FC<
 	const fieldName = type === EnumModel.CHANNEL ? "Channel name" : "Group name"
 
 	return (
-		<ModalLayout isCurrentModal={isCurrentModal} onClose={onClose}>
+		<ModalLayout
+			isCurrentModal={isCurrentModal}
+			onClose={onClose}
+			isClickOutside
+		>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-4">

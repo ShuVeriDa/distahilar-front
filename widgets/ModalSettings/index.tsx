@@ -1,7 +1,7 @@
 "use client"
 
 import { useModal } from "@/shared/hooks/useModal"
-import { FC, useRef } from "react"
+import { FC } from "react"
 
 import { ModalHeaderInfo } from "@/entities/ModalHeaderInfo"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
@@ -34,8 +34,7 @@ const items: IItem[] = [
 interface IModalSettingsProps {}
 
 export const ModalSettings: FC<IModalSettingsProps> = () => {
-	const popoverRef = useRef<HTMLDivElement>(null) // Ref для popover
-	const { onClose, currentModal, isModalOpen } = useModal()
+	const { onClose, currentModal, isModalOpen, popoverRef } = useModal()
 	const { type } = currentModal
 	const isCurrentModal = isModalOpen && type === EnumModel.SETTINGS
 
@@ -49,6 +48,7 @@ export const ModalSettings: FC<IModalSettingsProps> = () => {
 			className="p-0"
 			isXClose
 			popoverRef={popoverRef}
+			isClickOutside
 		>
 			<div className={cn("flex flex-col gap-4 px-4 py-4", CLASSNAME_UNDERLINE)}>
 				<Typography tag="h4" className="font-normal">

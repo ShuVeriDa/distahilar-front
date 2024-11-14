@@ -29,7 +29,7 @@ export const ChooseLanguage: FC<IChooseLanguageProps> = ({ ref }) => {
 			<SelectTrigger className="w-auto border-none">
 				<SelectValue placeholder={langName[language]} defaultValue={language} />
 			</SelectTrigger>
-			<SelectContent className="!z-[100]" ref={ref}>
+			<SelectContent className="!z-[110]" ref={ref}>
 				<SelectItem value="en" onClick={() => handleLanguageChange("en")}>
 					{langName.en}
 				</SelectItem>

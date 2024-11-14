@@ -1,3 +1,4 @@
+import { useRef } from "react"
 import { useDispatch } from "react-redux"
 import {
 	closeModal,
@@ -11,6 +12,7 @@ import {
 import { useAppSelector } from "../lib/redux-store/store"
 
 export const useModal = () => {
+	const popoverRef = useRef<HTMLDivElement>(null)
 	const modalStack = useAppSelector(state => state.modal.stack)
 	const dispatch = useDispatch()
 
@@ -47,5 +49,6 @@ export const useModal = () => {
 		onClose,
 		onOpenModal,
 		onCloseCurrentModal,
+		popoverRef,
 	}
 }

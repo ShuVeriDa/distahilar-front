@@ -6,11 +6,12 @@ import {
 	Merge,
 	UseFormRegisterReturn,
 } from "react-hook-form"
-import { Input } from "../Input"
-import { Textarea } from "../Textarea"
+import { Input, InputNS } from "../Input"
+import { Textarea, TextAreaNS } from "../Textarea"
 import { Typography } from "../Typography/Typography"
 
-interface IFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+interface IFieldProps
+	extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
 	register: UseFormRegisterReturn<any>
 	errors: Merge<FieldError, FieldErrorsImpl<{ value: number }>> | undefined
 	colorScheme?: string
@@ -19,6 +20,8 @@ interface IFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 	classNameLabel?: string
 	className?: string
 	classNameField?: string
+	id?: string
+	variant?: keyof typeof InputNS.variants | keyof typeof TextAreaNS.variants
 }
 
 export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
@@ -32,17 +35,13 @@ export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
 		classNameLabel,
 		className,
 		classNameField,
+		id,
+		variant,
 		...rest
 	} = props
 
 	return (
-		<div className={cn("w-full flex flex-col gap-0.5", classNameField)}>
-			{label && (
-				<Typography tag="p" className={cn(classNameLabel)}>
-					{label}
-				</Typography>
-			)}
-
+		<div className={cn("w-full", classNameField)}>
 			{isType === "input" ? (
 				<Input
 					placeholder={placeholder}
@@ -50,10 +49,17 @@ export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
 					register={register}
 					onChange={onChange}
 					className={className}
+					classNameLabel={classNameLabel}
+					label={label}
+					id={id}
+					variant={variant}
 					{...rest}
 				/>
 			) : (
 				<Textarea
+					label={label}
+					id={id}
+					variant={variant}
 					className={className}
 					placeholder={placeholder}
 					register={register}

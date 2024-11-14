@@ -1,6 +1,7 @@
 "use client"
 
 import { ModalContacts } from "@/widgets/ModalContacts"
+import { ModalEditFolder } from "@/widgets/ModalEditFolder"
 import { ModalFolder } from "@/widgets/ModalFolder"
 import { ModalSettings } from "@/widgets/ModalSettings"
 import { ModalCreateChannelGroup } from "@/widgets/ModalСreateChannelGroup"
@@ -33,6 +34,7 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 			<ModalContacts />
 			<ModalSettings />
 			<ModalFolder />
+			<ModalEditFolder />
 		</>
 	)
 }

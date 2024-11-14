@@ -29,6 +29,7 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 			isCurrentModal={isCurrentModal}
 			onClose={onClose}
 			className="p-0 "
+			isClickOutside
 		>
 			<div className={cn("flex flex-col gap-4 px-4 pt-4", CLASSNAME_UNDERLINE)}>
 				<Typography tag="h4" className="font-normal">

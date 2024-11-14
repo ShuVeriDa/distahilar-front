@@ -1,5 +1,5 @@
-@import "../public/styles/normalize.scss";
-@import "../public/styles/fonts.scss";
+@use "../public/styles/normalize.scss" as *;
+@use "../public/styles/fonts.scss" as *;
 
 @tailwind base;
 @tailwind components;

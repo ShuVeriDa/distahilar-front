@@ -33,7 +33,6 @@ export const IconRenderer: FC<IIconRendererProps> = ({
 	className,
 }) => {
 	const IconComponent = icons.find(icon => icon.name === iconName)?.icon
-	console.log(IconComponent)
 
 	return IconComponent ? <IconComponent className={className} /> : null
 }

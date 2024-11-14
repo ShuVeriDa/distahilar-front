@@ -17,6 +17,7 @@ interface IModalLayoutProps {
 	className?: string
 	isXClose?: boolean
 	stackIndex?: number
+	isClickOutside: boolean
 }
 
 export const ModalLayout: FC<IModalLayoutProps> = ({
@@ -27,14 +28,16 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 	isXClose,
 	popoverRef,
 	stackIndex = 0, // принимаем значение стека
+	isClickOutside,
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 
 	useClickOutside(ref, event => {
 		if (
-			popoverRef &&
-			popoverRef.current &&
-			popoverRef.current.contains(event.target as Node)
+			(popoverRef &&
+				popoverRef.current &&
+				popoverRef.current.contains(event.target as Node)) ||
+			!isClickOutside
 		) {
 			return
 		}
@@ -48,7 +51,7 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 					className={cn(
 						"fixed left-0 top-0 z-[100] flex h-full w-full flex-col items-center justify-center bg-black/80"
 					)}
-					style={{ zIndex: 1000 + stackIndex }} // Увеличиваем `z-index` по глубине стека
+					style={{ zIndex: 100 + stackIndex }} // Увеличиваем `z-index` по глубине стека
 				>
 					<MotionDiv
 						ref={ref}
