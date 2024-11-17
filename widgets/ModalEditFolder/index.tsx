@@ -20,12 +20,15 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 	const isCurrentModal = isModalOpen && type === EnumModel.EDIT_FOLDER
 
 	const {
+		folder,
 		folderNameValue,
 		isLoading,
 		chatsLocale,
+		iconValue,
 		onDeleteChatLocale,
 		onChangeFolderName,
 		onSave,
+		onChangeIcon,
 	} = useEditFolder(id, onCloseCurrentModal)
 
 	const CLASSNAME_UPPERDERLINE =
@@ -39,7 +42,12 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 			isClickOutside={false}
 			translateX={0}
 		>
-			<Header folderName={folderNameValue} onChange={onChangeFolderName} />
+			<Header
+				folderName={folderNameValue}
+				onChangeFolderName={onChangeFolderName}
+				onChangeIcon={onChangeIcon}
+				iconUrl={iconValue}
+			/>
 			<div className="h-2 bg-[#F1F1F1] dark:bg-[#232E3C]" />
 
 			<IncludedChats
