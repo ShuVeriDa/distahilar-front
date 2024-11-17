@@ -18,6 +18,7 @@ interface IModalLayoutProps {
 	isXClose?: boolean
 	stackIndex?: number
 	isClickOutside: boolean
+	translateX?: number
 }
 
 export const ModalLayout: FC<IModalLayoutProps> = ({
@@ -29,6 +30,7 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 	popoverRef,
 	stackIndex = 0, // принимаем значение стека
 	isClickOutside,
+	translateX = 30,
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -59,7 +61,7 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 							"relative z-[11] w-[400px] rounded-[7px] bg-white dark:bg-[#17212B] p-4 ",
 							className
 						)}
-						initial={{ opacity: 0, translateX: "30%" }}
+						initial={{ opacity: 0, translateX: `${translateX}%` }}
 						animate={{ opacity: 1, translateX: "0" }}
 						exit={{ opacity: 0 }}
 						transition={{ duration: 0.3 }}

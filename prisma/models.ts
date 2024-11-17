@@ -14,7 +14,9 @@ export type ChatType = Prisma.ChatGetPayload<{
 
 export type ChatMemberType = Prisma.ChatMemberGetPayload<{
 	include: Prisma.ChatMemberInclude
-}>
+}> & {
+	user: UserType
+}
 
 export type MessageType = Prisma.MessageGetPayload<{
 	include: Prisma.MessageInclude
@@ -38,7 +40,7 @@ export type ReactionType = Prisma.ReactionGetPayload<{
 
 export type FolderType = Prisma.FolderGetPayload<{
 	include: Prisma.FolderInclude
-}>
+}> & { chats: ChatType[] }
 
 export type AuditLogType = Prisma.AuditLogGetPayload<{
 	include: Prisma.AuditLogInclude

@@ -1,3 +1,4 @@
+import { ChatType } from "@/prisma/models"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useMemo } from "react"
 import {
@@ -7,14 +8,21 @@ import {
 	IUpdateFolder,
 } from "./folder.service"
 
-export const useFolderQuery = (folderId?: string) => {
+export const useFolderQuery = (
+	folderId?: string,
+	onClick?: (chats: ChatType[]) => void
+) => {
 	const fetchFoldersQuery = useQuery({
 		queryFn: async () => folderService.fetchFolders(),
 		queryKey: ["fetchFolders"],
 	})
 
 	const fetchFolderQuery = useQuery({
-		queryFn: async () => folderService.fetchFolder(folderId!),
+		queryFn: async () => {
+			const data = await folderService.fetchFolder(folderId!)
+			if (onClick) onClick(data.chats)
+			return data
+		},
 		queryKey: ["fetchFolder", folderId],
 		enabled: !!folderId,
 	})

@@ -17,7 +17,7 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 	const { imageUrl, id, name, chatLength } = props
 
 	const onClickModal = () =>
-		onOpenModal(EnumModel.EDIT_FOLDER, { folderId: id })
+		onOpenModal(EnumModel.EDIT_FOLDER, { folderEdit: { id: id } })
 
 	return (
 		<Button

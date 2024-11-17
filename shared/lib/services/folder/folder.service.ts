@@ -48,17 +48,16 @@ export const folderService = {
 	},
 
 	async deleteChatFromFolder(data: IFolderData) {
-		const res = await instance.delete<string>(getFolderUrl(`/remove-chat`), {
-			data,
-		})
+		const res = await instance.patch<string>(getFolderUrl(`/remove-chat`), data)
 
 		return res.data
 	},
 
 	async updateFolder(folderId: string, data: IUpdateFolder) {
-		const res = await instance.patch<FolderType>(getFolderUrl(`/${folderId}`), {
-			data,
-		})
+		const res = await instance.patch<FolderType>(
+			getFolderUrl(`/${folderId}`),
+			data
+		)
 
 		return res.data
 	},

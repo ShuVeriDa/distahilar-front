@@ -10,7 +10,11 @@ export enum EnumModel {
 	NO_TYPE = "NO_TYPE",
 }
 
-export interface IModalData {}
+export interface IModalData {
+	folderEdit: {
+		id: string
+	}
+}
 
 export interface IModelSlice {
 	stack: {

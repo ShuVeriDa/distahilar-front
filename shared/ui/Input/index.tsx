@@ -85,8 +85,8 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 					`text-[14px] font-semibold absolute left-0 top-1/2 -translate-y-1/2 transform transition-all duration-200 ease-in-out`,
 					focused || value
 						? "text-[13px] -top-[4px] text-[#439DF3]"
-						: "text-base text-[#3E546A]",
-					value && "text-white",
+						: "text-base text-[#5C6E81]",
+					value && "text-[#5C6E81]",
 					focused && value && "text-[#439DF3]",
 					classNameLabel
 			  )

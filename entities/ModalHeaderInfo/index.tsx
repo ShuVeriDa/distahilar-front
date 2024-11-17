@@ -51,17 +51,16 @@ export const ModalHeaderInfo: FC<IModalHeaderInfoProps> = ({
 	return (
 		<div className={cn("flex items-center", variantValue.rootClassName)}>
 			<div
-				className={twMerge(
-					`flex max-w-[${variantValue.avatar.width}px] max-h-[${variantValue.avatar.height}px]`
-				)}
+				className={twMerge(`flex w-full h-full`)}
+				style={{
+					maxWidth: `${variantValue.avatar.width}px`,
+					maxHeight: `${variantValue.avatar.height}px`,
+				}}
 			>
 				<Image
 					src={user?.imageUrl ? user.imageUrl : "/images/no-avatar.png"}
 					alt={"avatar"}
-					className={cn(
-						`w-full h-full rounded-full max-w-[${variantValue.avatar.width}px] max-h-[${variantValue.avatar.height}px]`,
-						classNameAvatar
-					)}
+					className={cn(`w-full h-full rounded-full`, classNameAvatar)}
 					width={variantValue.avatar.width}
 					height={variantValue.avatar.height}
 				/>
