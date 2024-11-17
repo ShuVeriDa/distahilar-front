@@ -13,7 +13,7 @@ export interface ICreateFolder {
 }
 
 export interface IUpdateFolder {
-	folderName?: string
+	name?: string
 	imageUrl?: string
 }
 

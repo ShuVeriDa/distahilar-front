@@ -2,7 +2,7 @@ import { useFolderQuery } from "@/shared/lib/services/folder/useFolderQuery"
 import { cn } from "@/shared/lib/utils/cn"
 import { Skeleton } from "@/shared/ui/Skeleton/skeleton"
 import { Typography } from "@/shared/ui/Typography/Typography"
-import { FolderItem } from "./shared/ui/FolderItem"
+import { FolderItem } from "../../shared/ui/FolderItem"
 
 interface IMyFoldersProps {}
 

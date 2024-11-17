@@ -23,7 +23,7 @@ export const TextAreaNS = {
 }
 
 interface ITextareaProps extends ComponentProps<"textarea"> {
-	register: UseFormRegisterReturn<any>
+	register?: UseFormRegisterReturn<any>
 	label?: string
 	id?: string
 	variant?: keyof typeof TextAreaNS.variants

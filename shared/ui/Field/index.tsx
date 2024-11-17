@@ -12,8 +12,8 @@ import { Typography } from "../Typography/Typography"
 
 interface IFieldProps
 	extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
-	register: UseFormRegisterReturn<any>
-	errors: Merge<FieldError, FieldErrorsImpl<{ value: number }>> | undefined
+	register?: UseFormRegisterReturn<any>
+	errors?: Merge<FieldError, FieldErrorsImpl<{ value: number }>> | undefined
 	colorScheme?: string
 	isType?: "input" | "textarea"
 	label?: string

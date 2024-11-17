@@ -10,7 +10,7 @@ import {
 
 export const useFolderQuery = (
 	folderId?: string,
-	onClick?: (chats: ChatType[]) => void
+	onClick?: (chats: ChatType[], folderName: string) => void
 ) => {
 	const fetchFoldersQuery = useQuery({
 		queryFn: async () => folderService.fetchFolders(),
@@ -20,7 +20,7 @@ export const useFolderQuery = (
 	const fetchFolderQuery = useQuery({
 		queryFn: async () => {
 			const data = await folderService.fetchFolder(folderId!)
-			if (onClick) onClick(data.chats)
+			if (onClick) onClick(data.chats, data.name)
 			return data
 		},
 		queryKey: ["fetchFolder", folderId],
