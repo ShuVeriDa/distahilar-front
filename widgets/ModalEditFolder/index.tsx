@@ -3,10 +3,9 @@
 import { useModal } from "@/shared/hooks/useModal"
 import { FC } from "react"
 
+import { ModalFooter } from "@/entities/ModalFooter"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
-import { cn } from "@/shared/lib/utils/cn"
-import { Button } from "@/shared/ui/Button"
 import { useEditFolder } from "../ModalFolder/shared/hooks/useEditFolder"
 import { Header } from "./entities/Header"
 import { IncludedChats } from "./entities/IncludedChats"
@@ -14,30 +13,48 @@ import { IncludedChats } from "./entities/IncludedChats"
 interface IModalEditFolderProps {}
 
 export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
-	const { onCloseCurrentModal, currentModal, isModalOpen } = useModal()
+	const {
+		onCloseCurrentModal,
+		currentModal,
+		isModalOpen,
+		onOpenModal,
+		onSetIsFetchModal,
+	} = useModal()
 	const { type, data } = currentModal
-	const id = data?.folderEdit.id
+	const folder = data?.folderEdit?.folder
+	const isFetching = data?.folderEdit?.isFetching
 	const isCurrentModal = isModalOpen && type === EnumModel.EDIT_FOLDER
 
 	const {
-		folder,
 		folderNameValue,
-		isLoading,
 		chatsLocale,
 		iconValue,
 		onDeleteChatLocale,
 		onChangeFolderName,
 		onSave,
 		onChangeIcon,
-	} = useEditFolder(id, onCloseCurrentModal)
+		onAddChatsIds,
+		onRemoveChatsIds,
+		onClose,
+	} = useEditFolder(folder, isFetching, onCloseCurrentModal, onSetIsFetchModal)
 
-	const CLASSNAME_UPPERDERLINE =
-		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:top-0 after:bg-[#E7E7E7] after:dark:bg-[#101921]"
+	const onOpenIncludeChats = () => {
+		if (folder) {
+			onOpenModal(EnumModel.INCLUDE_CHATS, {
+				includeChats: {
+					id: folder.id,
+					chats: chatsLocale,
+					onAddChatsIds,
+					onRemoveChatsIds,
+				},
+			})
+		}
+	}
 
 	return (
 		<ModalLayout
 			isCurrentModal={isCurrentModal}
-			onClose={onCloseCurrentModal}
+			onClose={onClose}
 			className="p-0"
 			isClickOutside={false}
 			translateX={0}
@@ -53,34 +70,11 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 			<IncludedChats
 				chats={chatsLocale}
 				onDeleteLocale={onDeleteChatLocale}
-				isLoading={isLoading}
+				isLoading={false}
+				onOpenIncludeChats={onOpenIncludeChats}
 			/>
 
-			<div
-				className={cn(
-					"flex justify-end gap-2 px-3 py-3",
-					CLASSNAME_UPPERDERLINE
-				)}
-			>
-				<Button
-					variant="withoutBg"
-					size="sm"
-					type="button"
-					onClick={onCloseCurrentModal}
-					disabled={isLoading}
-				>
-					Cancel
-				</Button>
-				<Button
-					variant="withoutBg"
-					size="sm"
-					type="submit"
-					onClick={onSave}
-					disabled={isLoading}
-				>
-					Save
-				</Button>
-			</div>
+			<ModalFooter isLoading={false} onClose={onClose} onSave={onSave} />
 		</ModalLayout>
 	)
 }

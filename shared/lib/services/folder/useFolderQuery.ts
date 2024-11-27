@@ -14,7 +14,7 @@ export const useFolderQuery = (
 	onClick?: (
 		chats: ChatType[],
 		folderName: string,
-		icon: IconsRendererType | string
+		icon: IconsRendererType | string | null
 	) => void
 ) => {
 	const fetchFoldersQuery = useQuery({
@@ -25,7 +25,7 @@ export const useFolderQuery = (
 	const fetchFolderQuery = useQuery({
 		queryFn: async () => {
 			const data = await folderService.fetchFolder(folderId!)
-			if (onClick) onClick(data.chats, data.name, data?.imageUrl!)
+			if (onClick) onClick(data.chats, data.name, data?.imageUrl)
 			return data
 		},
 		queryKey: ["fetchFolder", folderId],
@@ -36,6 +36,7 @@ export const useFolderQuery = (
 
 	const createFolderQuery = useMutation({
 		mutationFn: (data: ICreateFolder) => folderService.createFolder(data),
+		mutationKey: ["createFolderQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
@@ -43,6 +44,7 @@ export const useFolderQuery = (
 
 	const addChatToFolderQuery = useMutation({
 		mutationFn: (data: IFolderData) => folderService.addChatToFolder(data),
+		mutationKey: ["addChatToFolderQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
@@ -50,6 +52,7 @@ export const useFolderQuery = (
 
 	const deleteChatFromFolderQuery = useMutation({
 		mutationFn: (data: IFolderData) => folderService.deleteChatFromFolder(data),
+		mutationKey: ["deleteChatFromFolderQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
@@ -58,6 +61,7 @@ export const useFolderQuery = (
 	const updateFolderQuery = useMutation({
 		mutationFn: (data: IUpdateFolder) =>
 			folderService.updateFolder(folderId!, data),
+		mutationKey: ["updateFolderQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
@@ -65,6 +69,7 @@ export const useFolderQuery = (
 
 	const deleteFolderByIdQuery = useMutation({
 		mutationFn: () => folderService.deleteFolderById(folderId!),
+		mutationKey: ["deleteFolderByIdQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},

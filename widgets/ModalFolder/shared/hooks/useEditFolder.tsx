@@ -1,31 +1,71 @@
-import { ChatType } from "@/prisma/models"
+import { ChatType, FolderType } from "@/prisma/models"
 import { useFolderQuery } from "@/shared/lib/services/folder/useFolderQuery"
 import { IconsRendererType } from "@/shared/ui/IconRenderer/data"
-import { useState } from "react"
+import { mapToCutChat } from "@/widgets/ModalFolderIncludeChats/shared/lib/mapToCutChat"
+import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared/types/types.type"
+import { useEffect, useState } from "react"
 
 export const useEditFolder = (
-	folderId: string | undefined,
-	onCloseCurrentModal: () => void
+	folder: FolderType | undefined,
+	isFetching: boolean | undefined,
+	onCloseCurrentModal: (onFunc?: () => void) => void,
+	onSetIsFetchModal: (value: boolean) => void
 ) => {
 	const [folderNameValue, setFolderNameValue] = useState<string>("")
 	const [iconValue, setIconValue] = useState<string>("")
-	const [chatsLocale, setChatsLocale] = useState<ChatType[]>([])
+	const [chatsLocale, setChatsLocale] = useState<ICutChat[]>([])
+	const [addedChatsIds, setAddedChatsIds] = useState<string[]>([])
 	const [deletedChatIds, setDeletedChatIds] = useState<string[]>([])
 
-	const onAddChatLocale = (
-		chats: ChatType[],
-		folderName: string,
-		icon: IconsRendererType | string
-	) => {
+	const onAddChatsIds = (chats: ICutChat[], ids: string[]) => {
 		setChatsLocale(chats)
-		setFolderNameValue(folderName)
-		setIconValue(icon)
+		setAddedChatsIds([...addedChatsIds, ...ids])
 	}
 
-	const { fetchFolderQuery, deleteChatFromFolderQuery, updateFolderQuery } =
-		useFolderQuery(folderId, onAddChatLocale)
+	useEffect(() => {
+		if (isFetching && folder) {
+			const mutatedChats = folder.chats.map(obj =>
+				mapToCutChat(obj as ChatType)
+			)
+			setChatsLocale(mutatedChats)
+			setFolderNameValue(folder?.name)
+			setIconValue(folder?.imageUrl as string)
+			onSetIsFetchModal(false)
+		}
+	}, [isFetching, folder])
 
-	const { data: folder, isLoading } = fetchFolderQuery
+	console.log({ chatsLocale, deletedChatIds })
+
+	const onRemoveChatsIds = (ids: string[]) => {
+		console.log("1 stage", { ids, chatsLocale, deletedChatIds })
+
+		const updatedChatsLocale = chatsLocale.filter(
+			chat => !ids.includes(chat.chatId)
+		)
+		const updatedDeletedChatIds = deletedChatIds.filter(id => !ids.includes(id))
+
+		setChatsLocale(updatedChatsLocale)
+		setDeletedChatIds(updatedDeletedChatIds)
+
+		console.log("2 stage", { ids, chatsLocale, deletedChatIds })
+	}
+
+	// const onAddChatLocale = (
+	// 	chats: ChatType[],
+	// 	folderName: string,
+	// 	icon: IconsRendererType | string | null
+	// ) => {
+	// 	setChatsLocale(chats)
+	// 	setFolderNameValue(folderName)
+	// 	if (icon) setIconValue(icon)
+	// }
+
+	const { deleteChatFromFolderQuery, updateFolderQuery } = useFolderQuery(
+		folder?.id
+		// onAddChatLocale
+	)
+
+	// const { data: folder, isLoading } = fetchFolderQuery
 	const { mutateAsync: removeChat } = deleteChatFromFolderQuery
 	const { mutateAsync: editFolder } = updateFolderQuery
 
@@ -38,7 +78,7 @@ export const useEditFolder = (
 	}
 
 	const onDeleteChatLocale = (id: string) => {
-		setChatsLocale(chatsLocale.filter(chat => chat.id !== id))
+		setChatsLocale(chatsLocale.filter(chat => chat.chatId !== id))
 		setDeletedChatIds([...deletedChatIds, id])
 	}
 
@@ -58,21 +98,35 @@ export const useEditFolder = (
 		}
 	}
 
+	const onReset = () => {
+		setAddedChatsIds([])
+		setDeletedChatIds([])
+		setChatsLocale([])
+		setFolderNameValue("")
+		setIconValue("")
+	}
+
+	const onClose = () => {
+		onCloseCurrentModal(onReset)
+	}
+
 	const onSave = async () => {
 		await onDeleteChat()
 		await onSaveFolder()
-		onCloseCurrentModal()
+		onCloseCurrentModal(onReset)
 	}
 
 	return {
 		folder,
 		folderNameValue,
-		isLoading,
 		chatsLocale,
 		iconValue,
 		onSave,
 		onDeleteChatLocale,
 		onChangeFolderName,
 		onChangeIcon,
+		onAddChatsIds,
+		onRemoveChatsIds,
+		onClose,
 	}
 }

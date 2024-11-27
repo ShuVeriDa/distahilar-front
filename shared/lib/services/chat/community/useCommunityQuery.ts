@@ -19,6 +19,7 @@ export const useCommunityQuery = (communityId?: string) => {
 	const createCommunityQuery = useMutation({
 		mutationFn: (data: ICreateCommunity) =>
 			communityService.createCommunity(data),
+		mutationKey: ["createCommunityQuery"],
 	})
 
 	return useMemo(() => ({ createCommunityQuery }), [createCommunityQuery])

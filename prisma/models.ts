@@ -8,9 +8,21 @@ export type UserSettingsType = Prisma.UserSettingsGetPayload<{
 	include: Prisma.UserSettingsInclude
 }>
 
+export type FoundedChatsType = {
+	chatId: string
+	name: string
+	imageUrl: string
+	lastMessage: MessageType | null
+	lastMessageDate: Date | null
+	// isChat: boolean;
+	type: ChatRole
+}
+
 export type ChatType = Prisma.ChatGetPayload<{
 	include: Prisma.ChatInclude
-}>
+}> & {
+	members: ChatMemberType[]
+}
 
 export type ChatMemberType = Prisma.ChatMemberGetPayload<{
 	include: Prisma.ChatMemberInclude

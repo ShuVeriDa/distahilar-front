@@ -21,10 +21,12 @@ export const useContactQuery = (
 
 	const createContactQuery = useMutation({
 		mutationFn: (userId: string) => contactService.createContact(userId),
+		mutationKey: ["createContactQuery"],
 	})
 
 	const deleteContactQuery = useMutation({
 		mutationFn: () => contactService.createContact(contactId!),
+		mutationKey: ["deleteContactQuery"],
 	})
 
 	return useMemo(

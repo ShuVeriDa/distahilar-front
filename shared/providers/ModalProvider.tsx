@@ -3,6 +3,7 @@
 import { ModalContacts } from "@/widgets/ModalContacts"
 import { ModalEditFolder } from "@/widgets/ModalEditFolder"
 import { ModalFolder } from "@/widgets/ModalFolder"
+import { ModalFolderIncludeChats } from "@/widgets/ModalFolderIncludeChats"
 import { ModalSettings } from "@/widgets/ModalSettings"
 import { ModalCreateChannelGroup } from "@/widgets/ModalСreateChannelGroup"
 import { usePathname } from "next/navigation"
@@ -35,6 +36,7 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 			<ModalSettings />
 			<ModalFolder />
 			<ModalEditFolder />
+			<ModalFolderIncludeChats />
 		</>
 	)
 }

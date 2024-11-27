@@ -4,6 +4,7 @@ import {
 	closeModal,
 	pushModal,
 	removeLastModal,
+	setIsFetchModal,
 } from "../lib/redux-store/slices/model-slice/modalSlice"
 import {
 	EnumModel,
@@ -22,9 +23,10 @@ export const useModal = () => {
 		}, 200)
 	}
 
-	const onCloseCurrentModal = () => {
+	const onCloseCurrentModal = (onFunc?: () => void) => {
 		setTimeout(() => {
 			dispatch(removeLastModal())
+			if (onFunc) onFunc()
 		}, 200)
 	}
 
@@ -37,10 +39,15 @@ export const useModal = () => {
 		)
 	}
 
+	const onSetIsFetchModal = (value: boolean) => {
+		dispatch(setIsFetchModal(value))
+	}
+
 	const currentModal = modalStack[modalStack.length - 1] || {
 		type: null,
 		data: null,
 	}
+
 	const isModalOpen = modalStack.length > 0
 
 	return {
@@ -50,5 +57,6 @@ export const useModal = () => {
 		onOpenModal,
 		onCloseCurrentModal,
 		popoverRef,
+		onSetIsFetchModal,
 	}
 }

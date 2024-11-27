@@ -1,6 +1,4 @@
 import { FolderType } from "@/prisma/models"
-import { useModal } from "@/shared/hooks/useModal"
-import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { IconRenderer } from "@/shared/ui/IconRenderer"
@@ -10,21 +8,18 @@ import { GoTrash } from "react-icons/go"
 
 interface IFolderItemProps extends FolderType {
 	chatLength: number
+	onClick: () => void
 }
 
 export const FolderItem: FC<IFolderItemProps> = props => {
-	const { onOpenModal } = useModal()
-	const { imageUrl, id, name, chatLength } = props
-
-	const onClickModal = () =>
-		onOpenModal(EnumModel.EDIT_FOLDER, { folderEdit: { id: id } })
+	const { imageUrl, name, chatLength, onClick } = props
 
 	return (
 		<Button
 			className={cn(
 				"flex gap-1 px-5 h-[60px] !w-full !justify-between hover:bg-[#F1F1F1] dark:hover:bg-[#232E3C]"
 			)}
-			onClick={onClickModal}
+			onClick={onClick}
 		>
 			<div className="flex gap-6 items-center">
 				<div>

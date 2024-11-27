@@ -1,3 +1,5 @@
+import { useModal } from "@/shared/hooks/useModal"
+import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useFolderQuery } from "@/shared/lib/services/folder/useFolderQuery"
 import { cn } from "@/shared/lib/utils/cn"
 import { Skeleton } from "@/shared/ui/Skeleton/skeleton"
@@ -7,6 +9,7 @@ import { FolderItem } from "../../shared/ui/FolderItem"
 interface IMyFoldersProps {}
 
 export const MyFolders = ({}: IMyFoldersProps) => {
+	const { onOpenModal } = useModal()
 	const { fetchFoldersQuery } = useFolderQuery()
 	const { data, isSuccess, isLoading } = fetchFoldersQuery
 
@@ -29,11 +32,17 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 					data
 						.filter(folder => folder.name !== "All chats")
 						.map(folder => {
+							const onClick = () => {
+								onOpenModal(EnumModel.EDIT_FOLDER, {
+									folderEdit: { folder: folder, isFetching: true },
+								})
+							}
 							return (
 								<FolderItem
 									key={folder.id}
 									{...folder}
 									chatLength={folder.chats.length}
+									onClick={onClick}
 								/>
 							)
 						})}

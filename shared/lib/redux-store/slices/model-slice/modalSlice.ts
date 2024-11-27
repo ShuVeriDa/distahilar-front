@@ -22,7 +22,7 @@ export const modalSlice = createSlice({
 		) => {
 			const newModal = {
 				type: action.payload.type,
-				data: action.payload.data,
+				data: action.payload.data !== undefined ? action.payload.data : null,
 				priority: state.stack.length,
 			}
 			state.stack.push(newModal)
@@ -33,9 +33,16 @@ export const modalSlice = createSlice({
 		removeLastModal: state => {
 			state.stack.pop()
 		},
+		setIsFetchModal: (state, action: PayloadAction<boolean>) => {
+			const lastModal = state.stack[state.stack.length - 1]
+			if (lastModal.data && lastModal.data.folderEdit) {
+				lastModal.data.folderEdit.isFetching = action.payload
+			}
+		},
 	},
 })
 
-export const { removeLastModal, pushModal, closeModal } = modalSlice.actions
+export const { removeLastModal, pushModal, closeModal, setIsFetchModal } =
+	modalSlice.actions
 export const modalReducer = modalSlice.reducer
 export type Type = IModelSlice

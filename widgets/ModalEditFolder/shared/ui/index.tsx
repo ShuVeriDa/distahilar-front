@@ -1,25 +1,18 @@
-import { ChatMemberType, ChatType } from "@/prisma/models"
-import { useUser } from "@/shared/hooks/useUser"
 import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { Skeleton } from "@/shared/ui/Skeleton/skeleton"
 import { Typography } from "@/shared/ui/Typography/Typography"
-import { ChatRole } from "@prisma/client"
+import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared/types/types.type"
 import Image from "next/image"
 import { IoIosClose } from "react-icons/io"
 import { twMerge } from "tailwind-merge"
 
-interface IChatItemProps extends ChatType {
+interface IChatItemProps extends ICutChat {
 	onDeleteChat: () => void
 }
 
 export const ChatItem = ({ ...props }: IChatItemProps) => {
-	const { imageUrl, name, type, members, onDeleteChat } = props
-	const { user } = useUser()
-	const member = members.filter(m => m.userId !== user?.id)[0] as ChatMemberType
-	const memberName = member.user.name
-
-	const chatName = type === ChatRole.DIALOG ? memberName : name
+	const { imageUrl, name, onDeleteChat } = props
 
 	return (
 		<div className="flex justify-between items-center">
@@ -42,7 +35,7 @@ export const ChatItem = ({ ...props }: IChatItemProps) => {
 
 				<div className="flex items-center">
 					<Typography tag="p" className="text-[13px]">
-						{chatName}
+						{name}
 					</Typography>
 				</div>
 			</div>
