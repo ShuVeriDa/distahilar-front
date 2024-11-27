@@ -7,6 +7,7 @@ interface IFoldersProps {}
 
 export const Folders: FC<IFoldersProps> = () => {
 	const { fetchFoldersQuery } = useFolderQuery()
+
 	const { data, isSuccess, isLoading } = fetchFoldersQuery
 	return (
 		<>

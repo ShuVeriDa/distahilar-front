@@ -34,40 +34,22 @@ export const useEditFolder = (
 		}
 	}, [isFetching, folder])
 
-	console.log({ chatsLocale, deletedChatIds })
-
 	const onRemoveChatsIds = (ids: string[]) => {
-		console.log("1 stage", { ids, chatsLocale, deletedChatIds })
-
 		const updatedChatsLocale = chatsLocale.filter(
 			chat => !ids.includes(chat.chatId)
 		)
-		const updatedDeletedChatIds = deletedChatIds.filter(id => !ids.includes(id))
+		const updatedDeletedChatIds = new Set([...deletedChatIds, ...ids])
 
 		setChatsLocale(updatedChatsLocale)
-		setDeletedChatIds(updatedDeletedChatIds)
-
-		console.log("2 stage", { ids, chatsLocale, deletedChatIds })
+		setDeletedChatIds(Array.from(updatedDeletedChatIds))
 	}
 
-	// const onAddChatLocale = (
-	// 	chats: ChatType[],
-	// 	folderName: string,
-	// 	icon: IconsRendererType | string | null
-	// ) => {
-	// 	setChatsLocale(chats)
-	// 	setFolderNameValue(folderName)
-	// 	if (icon) setIconValue(icon)
-	// }
+	const { deleteChatFromFolderQuery, updateFolderQuery, addChatToFolderQuery } =
+		useFolderQuery(folder?.id)
 
-	const { deleteChatFromFolderQuery, updateFolderQuery } = useFolderQuery(
-		folder?.id
-		// onAddChatLocale
-	)
-
-	// const { data: folder, isLoading } = fetchFolderQuery
-	const { mutateAsync: removeChat } = deleteChatFromFolderQuery
-	const { mutateAsync: editFolder } = updateFolderQuery
+	const { mutateAsync: removeChatMutate } = deleteChatFromFolderQuery
+	const { mutateAsync: addChatsMutate } = addChatToFolderQuery
+	const { mutateAsync: editFolderMutate } = updateFolderQuery
 
 	const onChangeFolderName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFolderNameValue(e.currentTarget.value)
@@ -82,16 +64,21 @@ export const useEditFolder = (
 		setDeletedChatIds([...deletedChatIds, id])
 	}
 
-	const onDeleteChat = async () => {
+	const onDeleteChats = async () => {
 		if (folder && deletedChatIds.length > 0) {
-			console.log("delete folder")
-			await removeChat({ folderId: folder.id, chatIds: deletedChatIds })
+			await removeChatMutate({ folderId: folder.id, chatIds: deletedChatIds })
 		}
 	}
 
-	const onSaveFolder = async () => {
+	const onAddChats = async () => {
+		if (folder && addedChatsIds.length > 0) {
+			await addChatsMutate({ folderId: folder.id, chatIds: addedChatsIds })
+		}
+	}
+
+	const onEditFolder = async () => {
 		if (folder?.name !== folderNameValue || iconValue !== folder.imageUrl) {
-			await editFolder({
+			await editFolderMutate({
 				name: folderNameValue !== folder?.name ? folderNameValue : undefined,
 				imageUrl: iconValue !== folder?.imageUrl ? iconValue : undefined,
 			})
@@ -111,8 +98,9 @@ export const useEditFolder = (
 	}
 
 	const onSave = async () => {
-		await onDeleteChat()
-		await onSaveFolder()
+		await onDeleteChats()
+		await onAddChats()
+		await onEditFolder()
 		onCloseCurrentModal(onReset)
 	}
 

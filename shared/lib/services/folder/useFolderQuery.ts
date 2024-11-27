@@ -1,5 +1,3 @@
-import { ChatType } from "@/prisma/models"
-import { IconsRendererType } from "@/shared/ui/IconRenderer/data"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useMemo } from "react"
 import {
@@ -11,11 +9,7 @@ import {
 
 export const useFolderQuery = (
 	folderId?: string,
-	onClick?: (
-		chats: ChatType[],
-		folderName: string,
-		icon: IconsRendererType | string | null
-	) => void
+	autoFetch: boolean = false
 ) => {
 	const fetchFoldersQuery = useQuery({
 		queryFn: async () => folderService.fetchFolders(),
@@ -23,13 +17,9 @@ export const useFolderQuery = (
 	})
 
 	const fetchFolderQuery = useQuery({
-		queryFn: async () => {
-			const data = await folderService.fetchFolder(folderId!)
-			if (onClick) onClick(data.chats, data.name, data?.imageUrl)
-			return data
-		},
+		queryFn: async () => folderService.fetchFolder(folderId!),
 		queryKey: ["fetchFolder", folderId],
-		enabled: !!folderId,
+		enabled: !!folderId && autoFetch,
 	})
 
 	const client = useQueryClient()

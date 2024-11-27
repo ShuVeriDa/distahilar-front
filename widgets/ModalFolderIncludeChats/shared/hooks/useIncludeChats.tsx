@@ -69,12 +69,12 @@ export const useIncludeChats = () => {
 	}
 
 	const onSave = async () => {
-		console.log({ removedChatsIdsLocale, addedChatsIdsLocale })
-
-		if (removedChatsIdsLocale && onRemoveChatsIds)
+		if (removedChatsIdsLocale && onRemoveChatsIds) {
 			onRemoveChatsIds(removedChatsIdsLocale)
-		if (addedChatsIdsLocale && onAddChatsIds)
+		}
+		if (addedChatsIdsLocale && onAddChatsIds) {
 			onAddChatsIds(includedChats, addedChatsIdsLocale)
+		}
 
 		onCloseCurrentModal(onReset)
 	}
@@ -94,6 +94,8 @@ export const useIncludeChats = () => {
 	const onClose = () => {
 		onCloseCurrentModal(onReset)
 	}
+
+	console.log({ removedChatsIdsLocale })
 
 	return {
 		isCurrentModal,
