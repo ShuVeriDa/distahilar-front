@@ -6,9 +6,9 @@ import { FC } from "react"
 import { ModalFooter } from "@/entities/ModalFooter"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
-import { useEditFolder } from "../ModalFolder/shared/hooks/useEditFolder"
-import { Header } from "./entities/Header"
-import { IncludedChats } from "./entities/IncludedChats"
+import { useEditFolder } from "../../ModalFolder/shared/hooks/useEditFolder"
+import { Header } from "../features/Header"
+import { IncludedChats } from "../features/IncludedChats"
 
 interface IModalEditFolderProps {}
 

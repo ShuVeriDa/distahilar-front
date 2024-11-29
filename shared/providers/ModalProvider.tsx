@@ -1,7 +1,7 @@
 "use client"
 
 import { ModalContacts } from "@/widgets/ModalContacts"
-import { ModalEditFolder } from "@/widgets/ModalEditFolder"
+import { ModalEditFolder } from "@/widgets/ModalEditFolder/ui"
 import { ModalFolder } from "@/widgets/ModalFolder"
 import { ModalFolderIncludeChats } from "@/widgets/ModalFolderIncludeChats/ui/ModalFolderIncludeChats"
 import { ModalSettings } from "@/widgets/ModalSettings"

@@ -4,7 +4,7 @@ import { FC } from "react"
 import { FaPlus } from "react-icons/fa6"
 
 import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared/types/types.type"
-import { ChatItem } from "../../shared/ui"
+import { ChatItem } from "../../shared/ui/ChatItem"
 
 interface IIncludedChatsProps {
 	chats: ICutChat[]

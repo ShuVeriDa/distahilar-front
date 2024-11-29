@@ -1,7 +1,7 @@
 "use client"
 
+import { Login } from "@/features/Login"
 import { Typography } from "@/shared/ui/Typography/Typography"
-import { Login } from "@/widgets/Login"
 import { Register } from "@/widgets/Register"
 import { NextPage } from "next"
 import Image from "next/image"
