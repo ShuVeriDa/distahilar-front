@@ -4,10 +4,10 @@ import { FC } from "react"
 
 import { ModalFooter } from "@/entities/ModalFooter"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
-import { Chats } from "./entities/Chats"
-import { Header } from "./entities/Header"
-import { IncludedChats } from "./entities/IncludedChats"
-import { useIncludeChats } from "./shared/hooks/useIncludeChats"
+import { Header } from "../entities/Header"
+import { Chats } from "../features/Chats"
+import { IncludedChats } from "../features/IncludedChats"
+import { useIncludeChats } from "../shared/hooks/useIncludeChats"
 
 interface IModalFolderIncludeChatsProps {}
 
