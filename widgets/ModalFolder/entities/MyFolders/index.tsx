@@ -12,8 +12,9 @@ interface IMyFoldersProps {}
 
 export const MyFolders = ({}: IMyFoldersProps) => {
 	const { onOpenModal } = useModal()
-	const { fetchFoldersQuery } = useFolderQuery()
+	const { fetchFoldersQuery, deleteFolderByIdQuery } = useFolderQuery()
 	const { data, isSuccess, isLoading } = fetchFoldersQuery
+	const { mutateAsync: deleteFolderMutate } = deleteFolderByIdQuery
 
 	const onOpenCreateFolder = () => onOpenModal(EnumModel.CREATE_FOLDER)
 
@@ -41,12 +42,17 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 									folderEdit: { folder: folder, isFetching: true },
 								})
 							}
+
+							const onDeleteFolder = async () => {
+								await deleteFolderMutate(folder.id)
+							}
 							return (
 								<FolderItem
 									key={folder.id}
 									{...folder}
 									chatLength={folder.chats.length}
 									onClick={onClick}
+									onDeleteFolder={onDeleteFolder}
 								/>
 							)
 						})}

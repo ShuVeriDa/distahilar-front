@@ -3,16 +3,22 @@ import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { IconRenderer } from "@/shared/ui/IconRenderer"
 import { Typography } from "@/shared/ui/Typography/Typography"
-import { FC } from "react"
+import { FC, MouseEventHandler } from "react"
 import { GoTrash } from "react-icons/go"
 
 interface IFolderItemProps extends Partial<FolderType> {
 	chatLength?: number
 	onClick: () => void
+	onDeleteFolder?: () => Promise<void>
 }
 
 export const FolderItem: FC<IFolderItemProps> = props => {
-	const { imageUrl, name, chatLength, onClick } = props
+	const { imageUrl, name, chatLength, onClick, onDeleteFolder } = props
+
+	const onDeleteChat: MouseEventHandler<HTMLButtonElement> = e => {
+		e.stopPropagation()
+		if (onDeleteFolder) onDeleteFolder()
+	}
 
 	return (
 		<Button
@@ -32,16 +38,15 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 					<Typography tag="p" className="text-[14px] font-bold">
 						{name}
 					</Typography>
-					{chatLength && (
-						<Typography tag="p" className="text-[14px]">
-							{chatLength} chats
-						</Typography>
-					)}
+
+					<Typography tag="p" className="text-[14px]">
+						{chatLength === 0 ? "Folder is empty" : `${chatLength} chats`}
+					</Typography>
 				</div>
 			</div>
-			<div>
+			<Button onClick={onDeleteChat}>
 				<GoTrash className="hover:fill-[#545454] fill-[#999999]" size={18} />
-			</div>
+			</Button>
 		</Button>
 	)
 }

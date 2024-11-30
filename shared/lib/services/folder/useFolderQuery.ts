@@ -58,7 +58,7 @@ export const useFolderQuery = (
 	})
 
 	const deleteFolderByIdQuery = useMutation({
-		mutationFn: () => folderService.deleteFolderById(folderId!),
+		mutationFn: (folderId: string) => folderService.deleteFolderById(folderId),
 		mutationKey: ["deleteFolderByIdQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
