@@ -58,11 +58,12 @@ export const ModalHeaderInfo: FC<IModalHeaderInfoProps> = ({
 				}}
 			>
 				<Image
-					src={user?.imageUrl ? user.imageUrl : "/images/no-avatar.png"}
-					alt={"avatar"}
+					src={user?.imageUrl || "/images/no-avatar.png"}
+					alt={`${fullName || "User"} avatar`}
 					className={cn(`w-full h-full rounded-full`, classNameAvatar)}
 					width={variantValue.avatar.width}
 					height={variantValue.avatar.height}
+					loading="lazy"
 				/>
 			</div>
 

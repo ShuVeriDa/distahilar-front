@@ -76,19 +76,19 @@ export enum EnumLanguage {
 	CHE = "CHE",
 }
 
-export enum MediaType {
-	IMAGE,
-	VIDEO,
-	VOICE,
-	FILE,
-}
+// export enum MediaType {
+// 	IMAGE,
+// 	VIDEO,
+// 	VOICE,
+// 	FILE,
+// }
 
-export enum MessageType {
-	TEXT,
-	VIDEO,
-	VOICE,
-	FILE,
-}
+// export enum MessageType {
+// 	TEXT,
+// 	VIDEO,
+// 	VOICE,
+// 	FILE,
+// }
 
 export enum ChatRole {
 	DIALOG = "DIALOG",

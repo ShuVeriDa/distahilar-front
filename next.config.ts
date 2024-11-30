@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
 		})
 		return config
 	},
+	sassOptions: {
+		silenceDeprecations: ["legacy-js-api"],
+	},
 	images: {
 		remotePatterns: [
 			{

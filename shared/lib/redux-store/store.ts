@@ -1,13 +1,36 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useSelector } from "react-redux"
-import { persistReducer, persistStore } from "redux-persist"
-import storage from "redux-persist/lib/storage"
+import { persistReducer, persistStore, WebStorage } from "redux-persist"
+
 import { modalReducer } from "./slices/model-slice/modalSlice"
 import { userReducer } from "./slices/user-slice/userSlice"
 
+import createWebStorage from "redux-persist/lib/storage/createWebStorage"
+
+function createPersistStorage(): WebStorage {
+	const isServer = typeof window === "undefined"
+
+	// Returns noop (dummy) storage.
+	if (isServer) {
+		return {
+			getItem() {
+				return Promise.resolve(null)
+			},
+			setItem() {
+				return Promise.resolve()
+			},
+			removeItem() {
+				return Promise.resolve()
+			},
+		}
+	}
+
+	return createWebStorage("local")
+}
+
 const persistConfig = {
 	key: "root",
-	storage: storage,
+	storage: createPersistStorage(),
 	whitelist: ["user"],
 }
 
