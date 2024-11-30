@@ -13,7 +13,7 @@ export const useFolderManager = (
 	isFetching?: boolean | undefined
 ) => {
 	const [folderNameValue, setFolderNameValue] = useState<string>("")
-	const [iconValue, setIconValue] = useState<string>("")
+	const [iconValue, setIconValue] = useState<string>("Folder")
 	const [chatsLocale, setChatsLocale] = useState<ICutChat[]>([])
 	const [addedChatsIds, setAddedChatsIds] = useState<string[]>([])
 	const [deletedChatIds, setDeletedChatIds] = useState<string[]>([])
@@ -94,7 +94,7 @@ export const useFolderManager = (
 	const onCreateFolder = async () => {
 		await createFolderMutate({
 			name: folderNameValue,
-			imageUrl: iconValue,
+			imageUrl: iconValue ? iconValue : "Folder",
 			chatIds: addedChatsIds,
 		})
 	}

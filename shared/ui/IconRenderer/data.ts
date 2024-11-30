@@ -28,6 +28,7 @@ import {
 import { PiAirplaneTiltFill, PiCatFill } from "react-icons/pi"
 import { RiAndroidFill, RiFlowerFill } from "react-icons/ri"
 import { SiBitcoinsv } from "react-icons/si"
+import { VscSettings } from "react-icons/vsc"
 
 import { IconType } from "react-icons/lib"
 
@@ -62,6 +63,7 @@ export type IconsRendererType =
 	| "Megaphone"
 	| "Folder"
 	| "Clipboard"
+	| "Settings"
 
 export const iconList: { name: IconsRendererType; icon: IconType }[] = [
 	{
@@ -183,5 +185,9 @@ export const iconList: { name: IconsRendererType; icon: IconType }[] = [
 	{
 		name: "Clipboard",
 		icon: FaClipboardList,
+	},
+	{
+		name: "Settings",
+		icon: VscSettings,
 	},
 ]

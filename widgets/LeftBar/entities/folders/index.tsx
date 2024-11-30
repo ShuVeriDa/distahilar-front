@@ -1,39 +1,37 @@
+import { useModal } from "@/shared/hooks/useModal"
+import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useFolderQuery } from "@/shared/lib/services/folder/useFolderQuery"
-import { IconRenderer } from "@/shared/ui/IconRenderer"
-import { Typography } from "@/shared/ui/Typography/Typography"
+import { Button } from "@/shared/ui/Button"
 import { FC } from "react"
+import { FolderItem } from "../folderItem"
 
 interface IFoldersProps {}
 
 export const Folders: FC<IFoldersProps> = () => {
+	const { onOpenModal } = useModal()
 	const { fetchFoldersQuery } = useFolderQuery()
 
 	const { data, isSuccess, isLoading } = fetchFoldersQuery
+
+	const onOpen = () => onOpenModal(EnumModel.FOLDERS)
+
 	return (
 		<>
 			{isLoading && <p>Loading...</p>}
 			{isSuccess &&
 				data.map(folder => {
 					return (
-						<div
+						<FolderItem
 							key={folder.id}
-							className="group w-[64px] min-h-[64px] py-[11px] ga rounded flex flex-col gap-1 justify-center items-center hover:bg-white/10 cursor-pointer"
-						>
-							<div className="w-[20px] h-[20px]">
-								<IconRenderer
-									iconName={folder?.imageUrl as string}
-									className={"group-hover:[&>path]:fill-[#0F80D7]"}
-								/>
-							</div>
-							<Typography
-								tag="p"
-								className="text-[12px] dark:text-white/40 text-center group-hover:text-[#0F80D7]"
-							>
-								{folder.name}
-							</Typography>
-						</div>
+							imageUrl={folder.imageUrl!}
+							name={folder.name}
+							size={25}
+						/>
 					)
 				})}
+			<Button onClick={onOpen}>
+				<FolderItem imageUrl={"Settings"} name={"Edit"} size={30} />
+			</Button>
 		</>
 	)
 }

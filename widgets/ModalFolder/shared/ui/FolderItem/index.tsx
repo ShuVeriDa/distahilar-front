@@ -3,7 +3,7 @@ import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { IconRenderer } from "@/shared/ui/IconRenderer"
 import { Typography } from "@/shared/ui/Typography/Typography"
-import { FC, MouseEventHandler } from "react"
+import { FC, KeyboardEvent, MouseEvent, MouseEventHandler } from "react"
 import { GoTrash } from "react-icons/go"
 
 interface IFolderItemProps extends Partial<FolderType> {
@@ -15,9 +15,16 @@ interface IFolderItemProps extends Partial<FolderType> {
 export const FolderItem: FC<IFolderItemProps> = props => {
 	const { imageUrl, name, chatLength, onClick, onDeleteFolder } = props
 
-	const onDeleteChat: MouseEventHandler<HTMLButtonElement> = e => {
+	const onDeleteChat: MouseEventHandler<HTMLDivElement> = e => {
 		e.stopPropagation()
 		if (onDeleteFolder) onDeleteFolder()
+	}
+
+	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault() // Предотвращает скроллинг при пробеле
+			onDeleteChat(e as unknown as MouseEvent<HTMLDivElement>)
+		}
 	}
 
 	return (
@@ -44,9 +51,14 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 					</Typography>
 				</div>
 			</div>
-			<Button onClick={onDeleteChat}>
+			<div
+				role="button"
+				onClick={onDeleteChat}
+				tabIndex={0}
+				onKeyDown={handleKeyDown}
+			>
 				<GoTrash className="hover:fill-[#545454] fill-[#999999]" size={18} />
-			</Button>
+			</div>
 		</Button>
 	)
 }
