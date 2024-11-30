@@ -13,17 +13,13 @@ import { useFolderManager } from "../../shared/hooks/useFolderManager"
 interface IModalEditFolderProps {}
 
 export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
-	const {
-		onCloseCurrentModal,
-		currentModal,
-		isModalOpen,
-		onOpenModal,
-		onSetIsFetchModal,
-	} = useModal()
-	const { type, data } = currentModal
+	console.log("ModalEditFolder")
+
+	const { onCloseCurrentModal, currentModal, onOpenModal, onSetIsFetchModal } =
+		useModal()
+	const { data } = currentModal
 	const folder = data?.folderEdit?.folder
 	const isFetching = data?.folderEdit?.isFetching
-	const isCurrentModal = isModalOpen && type === EnumModel.EDIT_FOLDER
 
 	const {
 		folderNameValue,
@@ -59,7 +55,6 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 
 	return (
 		<ModalLayout
-			isCurrentModal={isCurrentModal}
 			onClose={onClose}
 			className="p-0"
 			isClickOutside={false}

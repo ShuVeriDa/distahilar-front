@@ -5,7 +5,6 @@ import { FC } from "react"
 
 import { useSearchContact } from "@/shared/hooks/useSearchContact"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
-import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { Typography } from "@/shared/ui/Typography/Typography"
@@ -15,9 +14,8 @@ import { ContactList } from "./entities/ContactList"
 interface IModalContactsProps {}
 
 export const ModalContacts: FC<IModalContactsProps> = () => {
-	const { onClose, currentModal, isModalOpen } = useModal()
-	const { type } = currentModal
-	const isCurrentModal = isModalOpen && type === EnumModel.CONTACTS
+	const { onClose, isModalOpen } = useModal()
+
 	const { contacts, onChangeValue, value, isSuccess } =
 		useSearchContact(isModalOpen)
 
@@ -25,12 +23,7 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:bottom-0 after:bg-[#E7E7E7] after:dark:bg-[#101921]"
 
 	return (
-		<ModalLayout
-			isCurrentModal={isCurrentModal}
-			onClose={onClose}
-			className="p-0 "
-			isClickOutside
-		>
+		<ModalLayout onClose={onClose} className="p-0 " isClickOutside>
 			<div className={cn("flex flex-col gap-4 px-4 pt-4", CLASSNAME_UNDERLINE)}>
 				<Typography tag="h4" className="font-normal">
 					Contacts

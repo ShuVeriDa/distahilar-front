@@ -13,9 +13,8 @@ interface IModalFolderIncludeChatsProps {}
 
 export const ModalFolderIncludeChats: FC<
 	IModalFolderIncludeChatsProps
-> = ({}) => {
+> = () => {
 	const {
-		isCurrentModal,
 		onCloseCurrentModal,
 
 		includedChats,
@@ -30,7 +29,6 @@ export const ModalFolderIncludeChats: FC<
 
 	return (
 		<ModalLayout
-			isCurrentModal={isCurrentModal}
 			onClose={onCloseCurrentModal}
 			className="p-0"
 			isClickOutside={false}

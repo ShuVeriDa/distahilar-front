@@ -1,5 +1,4 @@
 import { useClickOutside } from "@siberiacancode/reactuse"
-import { AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { FC, ReactNode, useRef } from "react"
 import { IoIosClose } from "react-icons/io"
@@ -10,7 +9,6 @@ const MotionDiv = dynamic(() =>
 )
 
 interface IModalLayoutProps {
-	isCurrentModal: boolean
 	onClose: () => void
 	children: ReactNode
 	popoverRef?: React.RefObject<HTMLDivElement>
@@ -22,7 +20,6 @@ interface IModalLayoutProps {
 }
 
 export const ModalLayout: FC<IModalLayoutProps> = ({
-	isCurrentModal: isModalOpen,
 	onClose,
 	children,
 	className,
@@ -47,39 +44,37 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 	})
 
 	return (
-		<AnimatePresence>
-			{isModalOpen && (
+		<>
+			<MotionDiv
+				className={cn(
+					"fixed left-0 top-0 z-[100] flex h-full w-full flex-col items-center justify-center bg-black/80"
+				)}
+				style={{ zIndex: 100 + stackIndex }} // Увеличиваем `z-index` по глубине стека
+			>
 				<MotionDiv
+					ref={ref}
 					className={cn(
-						"fixed left-0 top-0 z-[100] flex h-full w-full flex-col items-center justify-center bg-black/80"
+						"relative z-[11] w-[400px] rounded-[7px] bg-white dark:bg-[#17212B] p-4 ",
+						className
 					)}
-					style={{ zIndex: 100 + stackIndex }} // Увеличиваем `z-index` по глубине стека
+					initial={{ opacity: 0, translateX: `${translateX}%` }}
+					animate={{ opacity: 1, translateX: "0" }}
+					exit={{ opacity: 0 }}
+					transition={{ duration: 0.3 }}
 				>
-					<MotionDiv
-						ref={ref}
-						className={cn(
-							"relative z-[11] w-[400px] rounded-[7px] bg-white dark:bg-[#17212B] p-4 ",
-							className
-						)}
-						initial={{ opacity: 0, translateX: `${translateX}%` }}
-						animate={{ opacity: 1, translateX: "0" }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.3 }}
-					>
-						{children}
+					{children}
 
-						{isXClose && (
-							<div className="absolute top-3 right-3 cursor-pointer">
-								<IoIosClose
-									size={35}
-									onClick={onClose}
-									className="text-[#737E87] hover:text-[#c7d0d7] hover:dark:text-white"
-								/>
-							</div>
-						)}
-					</MotionDiv>
+					{isXClose && (
+						<div className="absolute top-3 right-3 cursor-pointer">
+							<IoIosClose
+								size={35}
+								onClick={onClose}
+								className="text-[#737E87] hover:text-[#c7d0d7] hover:dark:text-white"
+							/>
+						</div>
+					)}
 				</MotionDiv>
-			)}
-		</AnimatePresence>
+			</MotionDiv>
+		</>
 	)
 }

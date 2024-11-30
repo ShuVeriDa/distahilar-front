@@ -34,16 +34,13 @@ const items: IItem[] = [
 interface IModalSettingsProps {}
 
 export const ModalSettings: FC<IModalSettingsProps> = () => {
-	const { onClose, currentModal, isModalOpen, popoverRef } = useModal()
-	const { type } = currentModal
-	const isCurrentModal = isModalOpen && type === EnumModel.SETTINGS
+	const { onClose, popoverRef } = useModal()
 
 	const CLASSNAME_UNDERLINE =
 		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:bottom-0 after:bg-[#E7E7E7] after:dark:bg-[#101921]"
 
 	return (
 		<ModalLayout
-			isCurrentModal={isCurrentModal}
 			onClose={onClose}
 			className="p-0"
 			isXClose

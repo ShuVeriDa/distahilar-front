@@ -10,16 +10,7 @@ import { FC } from "react"
 interface IModalCreateFolderProps {}
 
 export const ModalCreateFolder: FC<IModalCreateFolderProps> = () => {
-	const {
-		onCloseCurrentModal,
-		currentModal,
-		isModalOpen,
-		onOpenModal,
-		onSetIsFetchModal,
-	} = useModal()
-
-	const { type } = currentModal
-	const isCurrentModal = isModalOpen && type === EnumModel.CREATE_FOLDER
+	const { onCloseCurrentModal, onOpenModal, onSetIsFetchModal } = useModal()
 
 	const {
 		folderNameValue,
@@ -47,7 +38,6 @@ export const ModalCreateFolder: FC<IModalCreateFolderProps> = () => {
 
 	return (
 		<ModalLayout
-			isCurrentModal={isCurrentModal}
 			onClose={onClose}
 			className="p-0"
 			isClickOutside={false}

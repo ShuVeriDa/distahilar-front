@@ -26,11 +26,8 @@ export const ModalCreateChannelGroup: FC<
 > = () => {
 	const inputRef = useRef<HTMLInputElement>(null)
 
-	const { onClose, currentModal, isModalOpen } = useModal()
+	const { onClose, currentModal } = useModal()
 	const { type } = currentModal
-
-	const isCurrentModal =
-		isModalOpen && (type === EnumModel.CHANNEL || type === EnumModel.GROUP)
 
 	const handleClickInput = () => {
 		inputRef.current?.click()
@@ -72,16 +69,12 @@ export const ModalCreateChannelGroup: FC<
 			await onSubmitFile()
 		}
 
-		try {
-			await createCommunity({
-				name: data.name,
-				description: data.description,
-				type: type === EnumModel.CHANNEL ? ChatRole.CHANNEL : ChatRole.DIALOG,
-				imageUrl: imageUrl || undefined,
-			})
-		} catch (error) {
-			console.warn(error)
-		}
+		await createCommunity({
+			name: data.name,
+			description: data.description,
+			type: type === EnumModel.CHANNEL ? ChatRole.CHANNEL : ChatRole.DIALOG,
+			imageUrl: imageUrl || undefined,
+		})
 
 		reset()
 	}
@@ -89,11 +82,7 @@ export const ModalCreateChannelGroup: FC<
 	const fieldName = type === EnumModel.CHANNEL ? "Channel name" : "Group name"
 
 	return (
-		<ModalLayout
-			isCurrentModal={isCurrentModal}
-			onClose={onClose}
-			isClickOutside
-		>
+		<ModalLayout onClose={onClose} isClickOutside>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-4">
