@@ -7,7 +7,8 @@ import { IconsRendererType } from "@/shared/ui/IconRenderer/data"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { HoverCardWrapper } from "@/widgets/HoverCardWrapper"
 
-interface IHeaderProps {
+interface IHeaderFolderManagerProps {
+	title: string
 	folderName: string | undefined
 	iconUrl: string | null | undefined
 	onChangeFolderName: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -17,7 +18,8 @@ interface IHeaderProps {
 const CLASSNAME_UNDERLINE =
 	"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:bottom-0 after:bg-[#E7E7E7] after:dark:bg-[#101921]"
 
-export const Header: FC<IHeaderProps> = ({
+export const HeaderFolderManager: FC<IHeaderFolderManagerProps> = ({
+	title,
 	folderName,
 	onChangeFolderName,
 	iconUrl,
@@ -31,7 +33,7 @@ export const Header: FC<IHeaderProps> = ({
 			)}
 		>
 			<Typography tag="h4" className="font-normal">
-				Edit Folder
+				{title}
 			</Typography>
 
 			<div className="relative">

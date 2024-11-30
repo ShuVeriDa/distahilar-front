@@ -5,11 +5,12 @@ import { mapToCutChat } from "@/widgets/ModalFolderIncludeChats/shared/lib/mapTo
 import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared/types/types.type"
 import { useEffect, useState } from "react"
 
-export const useEditFolder = (
-	folder: FolderType | undefined,
-	isFetching: boolean | undefined,
+export const useFolderManager = (
+	type: "create" | "edit",
 	onCloseCurrentModal: (onFunc?: () => void) => void,
-	onSetIsFetchModal: (value: boolean) => void
+	onSetIsFetchModal: (value: boolean) => void,
+	folder?: FolderType | undefined,
+	isFetching?: boolean | undefined
 ) => {
 	const [folderNameValue, setFolderNameValue] = useState<string>("")
 	const [iconValue, setIconValue] = useState<string>("")
@@ -23,7 +24,7 @@ export const useEditFolder = (
 	}
 
 	useEffect(() => {
-		if (isFetching && folder) {
+		if (isFetching && folder && type === "edit") {
 			const mutatedChats = folder.chats.map(obj =>
 				mapToCutChat(obj as ChatType)
 			)
@@ -32,7 +33,7 @@ export const useEditFolder = (
 			setIconValue(folder?.imageUrl as string)
 			onSetIsFetchModal(false)
 		}
-	}, [isFetching, folder])
+	}, [isFetching, folder, type])
 
 	const onRemoveChatsIds = (ids: string[]) => {
 		const updatedChatsLocale = chatsLocale.filter(
@@ -44,9 +45,14 @@ export const useEditFolder = (
 		setDeletedChatIds(Array.from(updatedDeletedChatIds))
 	}
 
-	const { deleteChatFromFolderQuery, updateFolderQuery, addChatToFolderQuery } =
-		useFolderQuery(folder?.id)
+	const {
+		deleteChatFromFolderQuery,
+		updateFolderQuery,
+		addChatToFolderQuery,
+		createFolderQuery,
+	} = useFolderQuery(folder?.id)
 
+	const { mutateAsync: createFolderMutate } = createFolderQuery
 	const { mutateAsync: removeChatMutate } = deleteChatFromFolderQuery
 	const { mutateAsync: addChatsMutate } = addChatToFolderQuery
 	const { mutateAsync: editFolderMutate } = updateFolderQuery
@@ -85,6 +91,14 @@ export const useEditFolder = (
 		}
 	}
 
+	const onCreateFolder = async () => {
+		await createFolderMutate({
+			name: folderNameValue,
+			imageUrl: iconValue,
+			chatIds: addedChatsIds,
+		})
+	}
+
 	const onReset = () => {
 		setAddedChatsIds([])
 		setDeletedChatIds([])
@@ -98,9 +112,14 @@ export const useEditFolder = (
 	}
 
 	const onSave = async () => {
-		await onDeleteChats()
-		await onAddChats()
-		await onEditFolder()
+		if (type === "edit") {
+			await onDeleteChats()
+			await onAddChats()
+			await onEditFolder()
+		}
+
+		if (type === "create") onCreateFolder()
+
 		onCloseCurrentModal(onReset)
 	}
 

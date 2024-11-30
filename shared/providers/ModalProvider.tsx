@@ -1,7 +1,8 @@
 "use client"
 
 import { ModalContacts } from "@/widgets/ModalContacts"
-import { ModalEditFolder } from "@/widgets/ModalEditFolder/ui"
+import { ModalCreateFolder } from "@/widgets/ModalCreateFolder"
+import { ModalEditFolder } from "@/widgets/ModalEditFolder"
 import { ModalFolder } from "@/widgets/ModalFolder"
 import { ModalFolderIncludeChats } from "@/widgets/ModalFolderIncludeChats/ui/ModalFolderIncludeChats"
 import { ModalSettings } from "@/widgets/ModalSettings"
@@ -35,6 +36,7 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 			<ModalContacts />
 			<ModalSettings />
 			<ModalFolder />
+			<ModalCreateFolder />
 			<ModalEditFolder />
 			<ModalFolderIncludeChats />
 		</>

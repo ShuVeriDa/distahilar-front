@@ -20,9 +20,9 @@ export const HoverCardWrapper: FC<IHoverCardWrapperProps> = ({
 	return (
 		<div className="absolute z-[1] right-0 top-[20px] cursor-pointer">
 			<HoverCard openDelay={100} closeDelay={100}>
-				<HoverCardTrigger className="group ">
+				<HoverCardTrigger className="group">
 					<IconRenderer
-						iconName={iconUrl as string}
+						iconName={iconUrl ? (iconUrl as string) : "Folder"}
 						className="w-[25px] h-[25px] [&>path]:fill-[#3E546A] group-hover:[&>path]:fill-[#40A7E3]"
 					/>
 				</HoverCardTrigger>

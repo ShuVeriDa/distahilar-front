@@ -8,8 +8,9 @@ export interface IFolderData {
 }
 
 export interface ICreateFolder {
-	folderName: string
+	name: string
 	imageUrl: string
+	chatIds: string[]
 }
 
 export interface IUpdateFolder {

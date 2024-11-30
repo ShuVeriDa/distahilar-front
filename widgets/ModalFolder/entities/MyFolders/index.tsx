@@ -2,8 +2,10 @@ import { useModal } from "@/shared/hooks/useModal"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useFolderQuery } from "@/shared/lib/services/folder/useFolderQuery"
 import { cn } from "@/shared/lib/utils/cn"
+import { Button } from "@/shared/ui/Button"
 import { Skeleton } from "@/shared/ui/Skeleton/skeleton"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { FaPlus } from "react-icons/fa"
 import { FolderItem } from "../../shared/ui/FolderItem"
 
 interface IMyFoldersProps {}
@@ -13,6 +15,8 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 	const { fetchFoldersQuery } = useFolderQuery()
 	const { data, isSuccess, isLoading } = fetchFoldersQuery
 
+	const onOpenCreateFolder = () => onOpenModal(EnumModel.CREATE_FOLDER)
+
 	return (
 		<div className="w-full  flex flex-col">
 			<div className="px-5 py-4">
@@ -20,7 +24,7 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 					My folders
 				</Typography>
 			</div>
-			<div className="flex flex-col gap-1 w-full">
+			<div className="flex flex-col gap-1 w-full pb-2">
 				{isLoading && (
 					<>
 						<MyFolders.Skeleton />
@@ -46,6 +50,30 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 								/>
 							)
 						})}
+
+				<Button
+					className={cn(
+						"flex gap-1 px-5 h-[40px] !w-full !justify-between hover:bg-[#F1F1F1] dark:hover:bg-[#232E3C]"
+					)}
+					onClick={onOpenCreateFolder}
+				>
+					<div className="flex gap-5 items-center">
+						<div className="w-[20px] h-[20px] flex items-center justify-center">
+							<div className="flex items-center justify-center w-[20px] h-[20px] rounded-full text-white font-bold bg-[#5288C1]">
+								<FaPlus size={10} />
+							</div>
+						</div>
+
+						<div className="flex flex-col gap-0.5 text-start">
+							<Typography
+								tag="p"
+								className="text-[14px] font-normal text-[#71a3d8]"
+							>
+								Create new folder
+							</Typography>
+						</div>
+					</div>
+				</Button>
 			</div>
 		</div>
 	)

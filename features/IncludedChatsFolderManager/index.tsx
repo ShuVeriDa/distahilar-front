@@ -4,21 +4,18 @@ import { FC } from "react"
 import { FaPlus } from "react-icons/fa6"
 
 import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared/types/types.type"
-import { ChatItem } from "../../shared/ui/ChatItem"
+import { ChatItem } from "./shared/ui/ChatItem"
 
-interface IIncludedChatsProps {
+interface IIncludedChatsFolderManagerProps {
 	chats: ICutChat[]
 	isLoading: boolean
 	onDeleteLocale: (id: string) => void
 	onOpenIncludeChats: () => void
 }
 
-export const IncludedChats: FC<IIncludedChatsProps> = ({
-	chats,
-	isLoading,
-	onDeleteLocale,
-	onOpenIncludeChats,
-}) => {
+export const IncludedChatsFolderManager: FC<
+	IIncludedChatsFolderManagerProps
+> = ({ chats, isLoading, onDeleteLocale, onOpenIncludeChats }) => {
 	return (
 		<div className="flex flex-col gap-4  py-4">
 			<Typography tag="h5" className="font-bold text-[#51B3F3] px-4">

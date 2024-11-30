@@ -9,6 +9,7 @@ export enum EnumModel {
 	ACCOUNT = "ACCOUNT",
 	FOLDERS = "FOLDERS",
 	EDIT_FOLDER = "EDIT_FOLDER",
+	CREATE_FOLDER = "CREATE_FOLDER",
 	INCLUDE_CHATS = "INCLUDE_CHATS",
 	LANGUAGE = "LANGUAGE",
 	NO_TYPE = "NO_TYPE",
@@ -23,8 +24,8 @@ export interface IModalData {
 }
 
 export type IIncludeChats = {
-	id: string
-	chats: ICutChat[]
+	id?: string
+	chats?: ICutChat[]
 	onAddChatsIds?: (chats: ICutChat[], ids: string[]) => void
 	onRemoveChatsIds?: (ids: string[]) => void
 }

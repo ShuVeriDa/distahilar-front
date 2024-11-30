@@ -6,8 +6,8 @@ import { Typography } from "@/shared/ui/Typography/Typography"
 import { FC } from "react"
 import { GoTrash } from "react-icons/go"
 
-interface IFolderItemProps extends FolderType {
-	chatLength: number
+interface IFolderItemProps extends Partial<FolderType> {
+	chatLength?: number
 	onClick: () => void
 }
 
@@ -32,9 +32,11 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 					<Typography tag="p" className="text-[14px] font-bold">
 						{name}
 					</Typography>
-					<Typography tag="p" className="text-[14px]">
-						{chatLength} chats
-					</Typography>
+					{chatLength && (
+						<Typography tag="p" className="text-[14px]">
+							{chatLength} chats
+						</Typography>
+					)}
 				</div>
 			</div>
 			<div>

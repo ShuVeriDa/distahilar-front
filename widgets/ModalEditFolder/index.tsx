@@ -6,9 +6,9 @@ import { FC } from "react"
 import { ModalFooter } from "@/entities/ModalFooter"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
-import { useEditFolder } from "../../ModalFolder/shared/hooks/useEditFolder"
-import { Header } from "../features/Header"
-import { IncludedChats } from "../features/IncludedChats"
+import { HeaderFolderManager } from "../../features/HeaderFolderManager"
+import { IncludedChatsFolderManager } from "../../features/IncludedChatsFolderManager"
+import { useFolderManager } from "../../shared/hooks/useFolderManager"
 
 interface IModalEditFolderProps {}
 
@@ -36,7 +36,13 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 		onAddChatsIds,
 		onRemoveChatsIds,
 		onClose,
-	} = useEditFolder(folder, isFetching, onCloseCurrentModal, onSetIsFetchModal)
+	} = useFolderManager(
+		"edit",
+		onCloseCurrentModal,
+		onSetIsFetchModal,
+		folder,
+		isFetching
+	)
 
 	const onOpenIncludeChats = () => {
 		if (folder) {
@@ -59,7 +65,8 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 			isClickOutside={false}
 			translateX={0}
 		>
-			<Header
+			<HeaderFolderManager
+				title="Edit Folder"
 				folderName={folderNameValue}
 				onChangeFolderName={onChangeFolderName}
 				onChangeIcon={onChangeIcon}
@@ -67,7 +74,7 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 			/>
 			<div className="h-2 bg-[#F1F1F1] dark:bg-[#232E3C]" />
 
-			<IncludedChats
+			<IncludedChatsFolderManager
 				chats={chatsLocale}
 				onDeleteLocale={onDeleteChatLocale}
 				isLoading={false}
