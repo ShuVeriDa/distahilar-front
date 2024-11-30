@@ -2,7 +2,9 @@ import { Prisma } from "@prisma/client"
 
 export type UserType = Prisma.UserGetPayload<{
 	include: Prisma.UserInclude
-}>
+}> & {
+	settings: UserSettingsType
+}
 
 export type UserSettingsType = Prisma.UserSettingsGetPayload<{
 	include: Prisma.UserSettingsInclude
@@ -68,10 +70,10 @@ export enum MemberRole {
 	MODERATOR,
 	GUEST,
 }
-export enum Language {
-	EN,
-	RU,
-	CHE,
+export enum EnumLanguage {
+	EN = "EN",
+	RU = "RU",
+	CHE = "CHE",
 }
 
 export enum MediaType {

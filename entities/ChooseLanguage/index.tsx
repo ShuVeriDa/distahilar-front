@@ -1,3 +1,4 @@
+import { EnumLanguage } from "@/prisma/models"
 import {
 	Select,
 	SelectContent,
@@ -5,40 +6,41 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/ui/Select/select"
-import { FC, useState } from "react"
+import { FC } from "react"
+import { useLang } from "./shared/hooks/useLang"
 
 interface IChooseLanguageProps {
 	ref?: React.RefObject<HTMLDivElement>
 }
 
 export const ChooseLanguage: FC<IChooseLanguageProps> = ({ ref }) => {
-	const [language, setLanguage] = useState<"en" | "ru" | "che">("en")
-
-	const handleLanguageChange = (newLanguage: "en" | "ru" | "che") => {
-		setLanguage(newLanguage)
-	}
-
-	const langName = {
-		en: "English",
-		ru: "Русский",
-		che: "Нохчийн",
-	}
+	const { language, handleLanguageChange, langName } = useLang()
 
 	return (
-		<Select>
-			<SelectTrigger className="w-auto border-none">
-				<SelectValue placeholder={langName[language]} defaultValue={language} />
+		<Select
+			value={langName[language!].tag}
+			onValueChange={(value: EnumLanguage) => handleLanguageChange(value)}
+		>
+			<SelectTrigger
+				className="w-auto border-none text-[#5288C1]"
+				defaultValue={langName[language!].name}
+				value={langName[language!].name}
+			>
+				<SelectValue
+					placeholder={langName[language!].name}
+					defaultValue={language}
+				/>
 			</SelectTrigger>
 			<SelectContent className="!z-[110]" ref={ref}>
-				<SelectItem value="en" onClick={() => handleLanguageChange("en")}>
-					{langName.en}
-				</SelectItem>
-				<SelectItem value="ru" onClick={() => handleLanguageChange("ru")}>
-					{langName.ru}
-				</SelectItem>
-				<SelectItem value="che" onClick={() => handleLanguageChange("che")}>
-					{langName.che}
-				</SelectItem>
+				{Object.values(langName).map(obj => (
+					<SelectItem
+						key={obj.tag}
+						value={obj.tag}
+						onClick={() => handleLanguageChange(obj.tag)}
+					>
+						{obj.name}
+					</SelectItem>
+				))}
 			</SelectContent>
 		</Select>
 	)

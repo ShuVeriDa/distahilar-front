@@ -16,9 +16,17 @@ export const userSlice = createSlice({
 		setUser: (state, action: PayloadAction<IUserSlice["user"]>) => {
 			state.user = action.payload
 		},
+		setLanguage: (
+			state,
+			action: PayloadAction<UserType["settings"]["language"]>
+		) => {
+			if (state.user) {
+				state.user.settings.language = action.payload
+			}
+		},
 	},
 })
 
-export const { setUser } = userSlice.actions
+export const { setUser, setLanguage } = userSlice.actions
 export const userReducer = userSlice.reducer
 export type Type = IUserSlice
