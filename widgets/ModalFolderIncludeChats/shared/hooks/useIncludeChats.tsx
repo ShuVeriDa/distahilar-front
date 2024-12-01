@@ -95,8 +95,6 @@ export const useIncludeChats = () => {
 		onCloseCurrentModal(onReset)
 	}
 
-	console.log({ removedChatsIdsLocale })
-
 	return {
 		isCurrentModal,
 		isLoading,

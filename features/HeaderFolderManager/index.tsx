@@ -25,8 +25,6 @@ export const HeaderFolderManager: FC<IHeaderFolderManagerProps> = ({
 	iconUrl,
 	onChangeIcon,
 }) => {
-	console.log("HeaderFolderManager")
-
 	return (
 		<div
 			className={cn(

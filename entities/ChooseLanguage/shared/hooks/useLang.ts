@@ -37,8 +37,6 @@ export const useLang = () => {
 		},
 	}
 
-	console.log({ lang: user?.settings.language })
-
 	return {
 		language,
 		handleLanguageChange,

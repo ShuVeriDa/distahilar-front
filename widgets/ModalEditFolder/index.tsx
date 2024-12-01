@@ -13,8 +13,6 @@ import { useFolderManager } from "../../shared/hooks/useFolderManager"
 interface IModalEditFolderProps {}
 
 export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
-	console.log("ModalEditFolder")
-
 	const { onCloseCurrentModal, currentModal, onOpenModal, onSetIsFetchModal } =
 		useModal()
 	const { data } = currentModal

@@ -8,7 +8,13 @@ import {
 	useRef,
 	useState,
 } from "react"
-import { UseFormRegisterReturn } from "react-hook-form"
+import {
+	FieldError,
+	FieldErrorsImpl,
+	Merge,
+	UseFormRegisterReturn,
+	UseFormWatch,
+} from "react-hook-form"
 import { LiaSearchSolid } from "react-icons/lia"
 
 type InputRefType = HTMLInputElement | null
@@ -30,9 +36,7 @@ export const InputNS = {
 		},
 		primary: {
 			wrapperClassName: "relative mt-4 w-full",
-			className: cn(
-				"w-full py-2 text-base bg-transparent border-b border-[#313C49] focus:outline-none"
-			),
+			className: cn("w-full py-2 text-base bg-transparent  focus:outline-none"),
 		},
 		accountInfo: {
 			wrapperClassName: "",
@@ -47,11 +51,11 @@ export type PropsType = {
 	classNameLabel?: string
 	label?: string
 	id?: string
+	errors?: Merge<FieldError, FieldErrorsImpl<{ value: number }>> | undefined
+	watch?: UseFormWatch<any>
 } & ComponentProps<"input">
 
 export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
-	const inputRef = useRef<InputRefType>(null)
-
 	const {
 		disabled,
 		className,
@@ -62,9 +66,15 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 		label,
 		id,
 		classNameLabel,
+		errors,
+		watch,
 		...rest
 	} = props
+
 	const [focused, setFocused] = useState(false)
+	const currentValue = value ?? watch!(register?.name!)
+
+	const inputRef = useRef<InputRefType>(null)
 
 	const onFocus = () => setFocused(true)
 	const onBlur = () => setFocused(false)
@@ -86,15 +96,16 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 	const labelClassName =
 		variant === "primary"
 			? cn(
-					`text-[14px] font-semibold absolute left-0 top-1/2 -translate-y-1/2 transform transition-all duration-200 ease-in-out`,
-					focused || value
-						? "text-[13px] -top-[4px] text-[#439DF3]"
+					`!text-[14px] font-semibold absolute left-0 top-1/2 -translate-y-1/2 transform transition-all duration-200 ease-in-out`,
+					focused || currentValue
+						? "!text-[13px] -top-[4px] text-[#6AB2F2]"
 						: "text-base text-[#5C6E81]",
-					value && "text-[#5C6E81]",
-					focused && value && "text-[#439DF3]",
+					currentValue && "text-[#5C6E81]",
+					focused && currentValue && "text-[#6AB2F2]",
+					errors?.message && "text-red-500",
 					classNameLabel
 			  )
-			: cn("text-[14px]", classNameLabel)
+			: cn("!text-[14px]", classNameLabel)
 
 	return (
 		<div className={cn(wrapperClassName)}>
@@ -114,20 +125,27 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 					id={id}
 					// ref={inputRef}
 					disabled={disabled}
-					className={cn(variantClassName, className)}
-					value={value}
+					className={cn(
+						variantClassName,
+						className,
+						variant === "primary" && errors?.message
+							? "border-b border-[#ff0000]"
+							: "border-b border-[#313C49]"
+					)}
+					value={value ?? undefined}
 					type={type}
-					onFocus={onFocus}
-					onBlur={onBlur}
 					{...rest}
 					{...register}
+					onFocus={onFocus}
+					onBlur={onBlur}
 				/>
 
 				<div
 					className={cn(
 						"absolute bottom-0 left-0 h-[2px] w-full bg-[#439DF3] transform scale-x-0 transition-transform duration-300 origin-center",
 						focused && "scale-x-100",
-						variant !== "primary" && "hidden"
+						variant !== "primary" && "hidden",
+						variant === "primary" && errors?.message && "bg-[#ff0000]"
 					)}
 				/>
 			</div>

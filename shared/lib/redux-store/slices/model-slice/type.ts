@@ -7,6 +7,7 @@ export enum EnumModel {
 	CONTACTS = "CONTACTS",
 	SETTINGS = "SETTINGS",
 	ACCOUNT = "ACCOUNT",
+	CHANGE_NAME = "CHANGE_NAME",
 	FOLDERS = "FOLDERS",
 	EDIT_FOLDER = "EDIT_FOLDER",
 	CREATE_FOLDER = "CREATE_FOLDER",
@@ -21,6 +22,12 @@ export interface IModalData {
 		isFetching: boolean
 	}
 	includeChats?: IIncludeChats
+	changeInfo?: {
+		firstName?: string
+		surname?: string
+		phone?: string
+		username?: string
+	}
 }
 
 export type IIncludeChats = {

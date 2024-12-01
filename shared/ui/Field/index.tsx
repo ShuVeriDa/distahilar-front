@@ -5,6 +5,7 @@ import {
 	FieldErrorsImpl,
 	Merge,
 	UseFormRegisterReturn,
+	UseFormWatch,
 } from "react-hook-form"
 import { Input, InputNS } from "../Input"
 import { Textarea, TextAreaNS } from "../Textarea"
@@ -22,6 +23,7 @@ interface IFieldProps
 	classNameField?: string
 	id?: string
 	variant?: keyof typeof InputNS.variants | keyof typeof TextAreaNS.variants
+	watch?: UseFormWatch<any>
 }
 
 export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
@@ -53,6 +55,8 @@ export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
 					label={label}
 					id={id}
 					variant={variant}
+					errors={errors}
+					watch={rest.watch}
 					{...rest}
 				/>
 			) : (
@@ -67,7 +71,7 @@ export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
 				/>
 			)}
 
-			{errors && (
+			{errors && variant !== "primary" && (
 				<Typography tag="span" className={"text-[12px] text-[#ff0000]"}>
 					{errors.message}
 				</Typography>

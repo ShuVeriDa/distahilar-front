@@ -12,6 +12,7 @@ export interface IEditUserRequest {
 	password?: string
 	username?: string
 	name?: string
+	surname?: string
 	phone?: string
 	imageUrl?: string
 	bio?: string

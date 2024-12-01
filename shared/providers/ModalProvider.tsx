@@ -1,6 +1,7 @@
 "use client"
 
 import { ModalAccountInfo } from "@/widgets/ModalAccountInfo"
+import { ModalCHangeName } from "@/widgets/ModalChangeName"
 import { ModalContacts } from "@/widgets/ModalContacts"
 import { ModalCreateChannelGroup } from "@/widgets/ModalCreateChannelGroup"
 import { ModalCreateFolder } from "@/widgets/ModalCreateFolder"
@@ -48,6 +49,9 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 			)}
 			{isModalOpen && currentModal.type === EnumModel.ACCOUNT && (
 				<ModalAccountInfo key={"modal-settings-info"} />
+			)}
+			{isModalOpen && currentModal.type === EnumModel.CHANGE_NAME && (
+				<ModalCHangeName key={"modal-change-name"} />
 			)}
 			{isModalOpen && currentModal.type === EnumModel.FOLDERS && (
 				<ModalFolder key={"modal-folder"} />

@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge"
 export const ButtonNS = {
 	variants: {
 		withoutBg:
-			"bg-transition h-[36px] text-[#168ACD] dark:text-[#5DB2F2] hover:bg-[rgba(106,139,172,0.2)] hover:dark:bg-[rgba(23,63,103,0.2)",
+			"bg-transition h-[36px] text-[#168ACD] dark:text-[#6AB2F2] hover:bg-[rgba(106,139,172,0.2)] hover:dark:bg-[rgba(23,63,103,0.2)",
 		primary: "bg-blue-500 hover:bg-blue-600 text-white text-[16px]",
 		default: "w-fit h-fit p-0",
 		clean: "p-0",
@@ -30,7 +30,7 @@ interface ButtonProps extends ComponentProps<"button"> {
 export const Button: FC<ButtonProps> = ({ ...props }) => {
 	const { children, className, variant, size, ...rest } = props
 
-	const DEFAULT_VARIANT = "flex items-center justify-center"
+	const DEFAULT_VARIANT = "flex items-center justify-center cursor-pointer"
 
 	const variantClassName = variant
 		? ButtonNS.variants[variant]

@@ -84,6 +84,14 @@ export const Register: FC<IRegisterProps> = () => {
 					placeholder="Name"
 					register={register("name", {
 						required: "Name is required",
+						minLength: {
+							value: 2,
+							message: "Name must be at least 2 characters long",
+						},
+						maxLength: {
+							value: 32,
+							message: "Name must be no more than 32 characters long",
+						},
 					})}
 					minLength={2}
 					maxLength={32}
