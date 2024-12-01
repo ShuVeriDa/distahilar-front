@@ -6,3 +6,13 @@ export interface IChangeSettingsRequest {
 	notifications?: boolean
 	language?: UserType["settings"]["language"]
 }
+
+export interface IEditUserRequest {
+	email?: string
+	password?: string
+	username?: string
+	name?: string
+	phone?: string
+	imageUrl?: string
+	bio?: string
+}

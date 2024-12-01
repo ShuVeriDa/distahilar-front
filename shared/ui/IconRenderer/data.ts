@@ -1,4 +1,10 @@
-import { BiLogoTelegram, BiSolidLike, BiSolidStar } from "react-icons/bi"
+import {
+	BiAt,
+	BiLogoTelegram,
+	BiSolidLike,
+	BiSolidStar,
+	BiUserCircle,
+} from "react-icons/bi"
 import { BsChatFill, BsFillLightbulbFill } from "react-icons/bs"
 import {
 	FaBasketballBall,
@@ -19,6 +25,7 @@ import { GiDominoMask } from "react-icons/gi"
 import { HiPaintBrush, HiUserCircle } from "react-icons/hi2"
 import { ImGlass2 } from "react-icons/im"
 import {
+	IoCallOutline,
 	IoChatbubblesSharp,
 	IoGameControllerSharp,
 	IoHome,
@@ -64,6 +71,9 @@ export type IconsRendererType =
 	| "Folder"
 	| "Clipboard"
 	| "Settings"
+	| "User2"
+	| "At"
+	| "Call"
 
 export const iconList: { name: IconsRendererType; icon: IconType }[] = [
 	{
@@ -189,5 +199,17 @@ export const iconList: { name: IconsRendererType; icon: IconType }[] = [
 	{
 		name: "Settings",
 		icon: VscSettings,
+	},
+	{
+		name: "User2",
+		icon: BiUserCircle,
+	},
+	{
+		name: "Call",
+		icon: IoCallOutline,
+	},
+	{
+		name: "At",
+		icon: BiAt,
 	},
 ]

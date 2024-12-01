@@ -2,16 +2,16 @@
 
 import { useModal } from "@/shared/hooks/useModal"
 import { Field } from "@/shared/ui/Field"
-import { ChangeEvent, FC, useRef, useState } from "react"
-import { MdPhotoCamera } from "react-icons/md"
+import { FC } from "react"
 
+import { ChangePhoto } from "@/features/ChangePhoto"
+import { ENUM_VARIANT_PHOTO } from "@/features/ChangePhoto/shared/hooks/useClassName"
 import { ChatRole } from "@/prisma/models"
+import { useChangePhoto } from "@/shared/hooks/useChangePhoto"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useCommunityQuery } from "@/shared/lib/services/chat/community/useCommunityQuery"
-import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import { Button } from "@/shared/ui/Button"
-import Image from "next/image"
 import { SubmitHandler, useForm } from "react-hook-form"
 
 interface IForm {
@@ -24,38 +24,20 @@ interface IModalCreateChannelGroupProps {}
 export const ModalCreateChannelGroup: FC<
 	IModalCreateChannelGroupProps
 > = () => {
-	const inputRef = useRef<HTMLInputElement>(null)
-
 	const { onClose, currentModal } = useModal()
 	const { type } = currentModal
 
-	const handleClickInput = () => {
-		inputRef.current?.click()
-	}
+	const {
+		file,
+		inputRef,
+		imageUrl,
+		handleClickInput,
+		onChangeImage,
+		onSubmitFile,
+	} = useChangePhoto()
 
-	const [file, setFile] = useState<File | null>(null)
-	const [imageUrl, setImageUrl] = useState<string | null>(null)
-	const { uploadFileQuery } = useFileQuery("avatar", setImageUrl)
-	const { mutateAsync } = uploadFileQuery
 	const { createCommunityQuery } = useCommunityQuery()
 	const { mutateAsync: createCommunity } = createCommunityQuery
-
-	const onChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
-		setFile(e.currentTarget.files?.[0] || null)
-	}
-
-	const onSubmitFile = async () => {
-		if (!file) return
-
-		const formData = new FormData()
-		formData.append("file", file)
-
-		try {
-			await mutateAsync(formData)
-		} catch (error) {
-			console.warn(error)
-		}
-	}
 
 	const {
 		register,
@@ -87,30 +69,13 @@ export const ModalCreateChannelGroup: FC<
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-4">
 						<div className="flex gap-3 w-full">
-							<div>
-								<button
-									className="w-20 h-20 flex justify-center items-center rounded-full bg-[#40A7E3]"
-									onClick={handleClickInput}
-								>
-									{file ? (
-										<Image
-											src={file ? URL.createObjectURL(file) : ""}
-											className="object-cover rounded-full w-full h-full"
-											width={80}
-											height={80}
-											alt="chat-avatar"
-										/>
-									) : (
-										<MdPhotoCamera size={40} color="white" />
-									)}
-								</button>
-								<input
-									ref={inputRef}
-									type="file"
-									hidden
-									onChange={onChangeImage}
-								/>
-							</div>
+							<ChangePhoto
+								onClick={handleClickInput}
+								file={file}
+								inputRef={inputRef}
+								onChangeImage={onChangeImage}
+								variant={ENUM_VARIANT_PHOTO.DEFAULT}
+							/>
 
 							<Field
 								type="text"

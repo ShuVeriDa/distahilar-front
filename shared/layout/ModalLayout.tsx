@@ -1,8 +1,10 @@
 import { useClickOutside } from "@siberiacancode/reactuse"
 import dynamic from "next/dynamic"
 import { FC, ReactNode, useRef } from "react"
+import { HiOutlineArrowSmallLeft } from "react-icons/hi2"
 import { IoIosClose } from "react-icons/io"
 import { cn } from "../lib/utils/cn"
+import { Button } from "../ui/Button"
 
 const MotionDiv = dynamic(() =>
 	import("framer-motion").then(mod => mod.motion.div)
@@ -14,8 +16,10 @@ interface IModalLayoutProps {
 	popoverRef?: React.RefObject<HTMLDivElement>
 	className?: string
 	isXClose?: boolean
+	isClickOutside?: boolean
+	isLeftArrow?: boolean
 	stackIndex?: number
-	isClickOutside: boolean
+	onClickLeftArrow?: () => void
 	translateX?: number
 }
 
@@ -24,6 +28,7 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 	children,
 	className,
 	isXClose,
+	onClickLeftArrow,
 	popoverRef,
 	stackIndex = 0, // принимаем значение стека
 	isClickOutside,
@@ -62,16 +67,28 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 					exit={{ opacity: 0 }}
 					transition={{ duration: 0.3 }}
 				>
+					{onClickLeftArrow && (
+						<Button
+							onClick={onClickLeftArrow}
+							className="absolute top-3 left-3  cursor-pointer h-[35px] w-[35px]"
+						>
+							<HiOutlineArrowSmallLeft
+								size={25}
+								className="text-[#737E87] hover:text-[#c7d0d7] hover:dark:text-white"
+							/>
+						</Button>
+					)}
+
 					{children}
 
 					{isXClose && (
-						<div className="absolute top-3 right-3 cursor-pointer">
+						<Button className="absolute top-3 right-3 cursor-pointer ">
 							<IoIosClose
 								size={35}
 								onClick={onClose}
 								className="text-[#737E87] hover:text-[#c7d0d7] hover:dark:text-white"
 							/>
-						</div>
+						</Button>
 					)}
 				</MotionDiv>
 			</MotionDiv>

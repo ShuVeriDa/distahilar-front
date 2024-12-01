@@ -1,13 +1,24 @@
 import { useMutation } from "@tanstack/react-query"
 import { useMemo } from "react"
 import { useDispatch } from "react-redux"
-import { setLanguage } from "../../redux-store/slices/user-slice/userSlice"
+import {
+	setLanguage,
+	setUser,
+} from "../../redux-store/slices/user-slice/userSlice"
 import { userService } from "./user.service"
-import { IChangeSettingsRequest } from "./user.types"
+import { IChangeSettingsRequest, IEditUserRequest } from "./user.types"
 
 export const useUserQuery = () => {
 	const dispatch = useDispatch()
 	// const client = useQueryClient()
+
+	const userEdit = useMutation({
+		mutationFn: async (data: IEditUserRequest) => userService.userEdit(data),
+		mutationKey: ["userEdit"],
+		onSuccess: data => {
+			dispatch(setUser(data))
+		},
+	})
 
 	const changeSettings = useMutation({
 		mutationFn: async (data: IChangeSettingsRequest) =>
@@ -18,5 +29,8 @@ export const useUserQuery = () => {
 		},
 	})
 
-	return useMemo(() => ({ changeSettings }), [changeSettings])
+	return useMemo(
+		() => ({ changeSettings, userEdit }),
+		[changeSettings, userEdit]
+	)
 }

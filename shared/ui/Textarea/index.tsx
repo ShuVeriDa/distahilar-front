@@ -1,3 +1,4 @@
+import { ENUM_VARIANT_PHOTO } from "@/features/ChangePhoto/shared/hooks/useClassName"
 import { cn } from "@/shared/lib/utils/cn"
 import { ComponentProps, FC } from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
@@ -18,6 +19,11 @@ export const TextAreaNS = {
 		primary: {
 			wrapperClassName: "",
 			className: "",
+		},
+		accountInfo: {
+			wrapperClassName: "w-full flex relative",
+			className:
+				"w-full h-full flex-1 !bg-transparent py-3 pl-5 pr-12 font-normal text-black outline-none w-full resize-none text-[14px] dark:text-white placeholder:text-[13px]",
 		},
 	} as const,
 }
@@ -61,6 +67,12 @@ export const Textarea: FC<ITextareaProps> = ({
 				{...rest}
 				{...register}
 			/>
+
+			{variant === ENUM_VARIANT_PHOTO.ACCOUNT_INFO && (
+				<div className="absolute right-5 top-3 text-[14px] text-[#708499]">
+					{rest.maxLength! - String(rest?.value).length}
+				</div>
+			)}
 		</div>
 	)
 }

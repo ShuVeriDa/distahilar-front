@@ -34,6 +34,10 @@ export const InputNS = {
 				"w-full py-2 text-base bg-transparent border-b border-[#313C49] focus:outline-none"
 			),
 		},
+		accountInfo: {
+			wrapperClassName: "",
+			className: cn(""),
+		},
 	} as const,
 }
 
