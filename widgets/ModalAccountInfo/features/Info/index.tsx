@@ -33,7 +33,7 @@ export const Info: FC<IInfoProps> = ({ user }) => {
 				icon: <IconRenderer iconName="Call" size={23} />,
 				value: user?.phone,
 				onOpen: () =>
-					onOpenModal(EnumModel.CHANGE_NAME, {
+					onOpenModal(EnumModel.CHANGE_PHONE, {
 						changeInfo: {
 							phone: user.phone,
 						},

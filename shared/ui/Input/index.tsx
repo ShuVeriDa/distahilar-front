@@ -72,7 +72,11 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 	} = props
 
 	const [focused, setFocused] = useState(false)
-	const currentValue = value ?? watch!(register?.name!)
+	const currentValue = value
+		? value
+		: watch
+		? watch(register?.name as string)
+		: value
 
 	const inputRef = useRef<InputRefType>(null)
 

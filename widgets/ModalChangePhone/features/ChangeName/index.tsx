@@ -1,7 +1,7 @@
+import { IChangeAccountInfoInput } from "@/shared/hooks/useChangeAccountInfo"
 import { Field } from "@/shared/ui/Field"
 import { FC } from "react"
 import { FieldErrors, UseFormRegister, UseFormWatch } from "react-hook-form"
-import { IChangeAccountInfoInput } from "../../../../shared/hooks/useChangeAccountInfo"
 
 interface IChangeNameProps {
 	register: UseFormRegister<IChangeAccountInfoInput>

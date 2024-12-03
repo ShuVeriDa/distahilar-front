@@ -2,9 +2,11 @@ import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { FC } from "react"
 
+type OnClose = (() => void) & ((onFunc?: () => void) => void)
+
 interface IModalFooterProps {
 	isLoading: boolean
-	onClose: () => void
+	onClose: OnClose
 	onSave?: () => Promise<void>
 	className?: string
 	type?: "submit" | "button"
@@ -32,7 +34,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 				variant="withoutBg"
 				size="sm"
 				type="button"
-				onClick={onClose}
+				onClick={() => onClose()}
 				disabled={isLoading}
 			>
 				Cancel
