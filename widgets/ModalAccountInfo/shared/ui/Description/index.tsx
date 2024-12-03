@@ -14,7 +14,10 @@ export const Description: FC<IDescriptionProps> = ({ text, splitWord }) => {
 				<>
 					<span>{parts[0]}</span>
 					<br />
-					<span>Example:{parts[1]}</span>
+					{splitWord === "You can user" && <br />}
+					<span>
+						{splitWord}:{parts[1]}
+					</span>
 				</>
 			) : (
 				<span>{text}</span>

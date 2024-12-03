@@ -3,6 +3,7 @@
 import { ModalAccountInfo } from "@/widgets/ModalAccountInfo"
 import { ModalChangeName } from "@/widgets/ModalChangeName"
 import { ModalChangePhone } from "@/widgets/ModalChangePhone"
+import { ModalChangeUserName } from "@/widgets/ModalChangeUsername"
 import { ModalContacts } from "@/widgets/ModalContacts"
 import { ModalCreateChannelGroup } from "@/widgets/ModalCreateChannelGroup"
 import { ModalCreateFolder } from "@/widgets/ModalCreateFolder"
@@ -56,6 +57,9 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 			)}
 			{isModalOpen && currentModal.type === EnumModel.CHANGE_PHONE && (
 				<ModalChangePhone key={"modal-change-phone"} />
+			)}
+			{isModalOpen && currentModal.type === EnumModel.CHANGE_USERNAME && (
+				<ModalChangeUserName key={"modal-change-username"} />
 			)}
 			{isModalOpen && currentModal.type === EnumModel.FOLDERS && (
 				<ModalFolder key={"modal-folder"} />

@@ -22,7 +22,7 @@ export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 	return (
 		<ModalLayout
 			onClose={onClose}
-			className="p-0"
+			className="p-0 pb-5"
 			isXClose
 			popoverRef={popoverRef}
 			isClickOutside

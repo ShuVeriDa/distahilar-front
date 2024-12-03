@@ -20,14 +20,14 @@ export const useModal = () => {
 	const onClose = () => {
 		setTimeout(() => {
 			dispatch(closeModal())
-		}, 200)
+		}, 100)
 	}
 
 	const onCloseCurrentModal = (onFunc?: () => void) => {
 		setTimeout(() => {
 			dispatch(removeLastModal())
 			if (onFunc) onFunc()
-		}, 200)
+		}, 100)
 	}
 
 	const onOpenModal = (type: EnumModel, data?: IModalData) => {
@@ -51,6 +51,7 @@ export const useModal = () => {
 	const isModalOpen = modalStack.length > 0
 
 	return {
+		modalStack,
 		currentModal,
 		isModalOpen,
 		onClose,

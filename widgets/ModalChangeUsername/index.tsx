@@ -8,20 +8,19 @@ import { useChangeAccountInfo } from "@/shared/hooks/useChangeAccountInfo"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { Description } from "../ModalAccountInfo/shared/ui/Description"
 
-interface IModalChangePhoneProps {}
+interface IModalChangeUserNameProps {}
 
-export const ModalChangePhone: FC<IModalChangePhoneProps> = () => {
+export const ModalChangeUserName: FC<IModalChangeUserNameProps> = () => {
 	const {
 		errors,
 		isPending,
-		phoneValue,
-
+		watch,
 		onSubmit,
 		register,
 		handleSubmit,
 		onCloseCurrentModal,
-		onChangePhone,
 	} = useChangeAccountInfo()
 
 	return (
@@ -35,28 +34,30 @@ export const ModalChangePhone: FC<IModalChangePhoneProps> = () => {
 				<div className="flex flex-col">
 					<div className={cn("flex flex-col gap-4 px-4 py-4")}>
 						<Typography tag="h4" className="font-normal">
-							Edit your phone number
+							Username
 						</Typography>
 					</div>
-					<div className="flex flex-col gap-2 px-4">
-						<Field
-							variant="primary"
-							label="Phone number"
-							value={phoneValue}
-							{...register("phone", {
-								required: "Phone number is required",
-								validate: value =>
-									/^\+?\d+\s?\(?\d{1,3}\)?\s?\d{1,3}-\d{1,2}-\d{1,2}$/.test(
-										value ? value : ""
-									) || "Invalid phone number format",
-								onChange: onChangePhone,
-							})}
-							type="tel"
-							disabled={isPending}
-							errors={errors.phone}
+					<div className="flex flex-col gap-6">
+						<div className="flex flex-col gap-2 px-4">
+							<Field
+								variant="primary"
+								label="@username"
+								minLength={2}
+								maxLength={16}
+								register={register("username", {
+									required: "Username is required",
+								})}
+								watch={watch}
+								disabled={isPending}
+								errors={errors.username}
+							/>
+						</div>
+						<Description
+							text={cn(
+								`You can choose a username on Telegram. If you do, other people will be able to find you by this username and contract you without knowing your phone number. You can user a-z, 0-9 and underscores. Minimum length is 5 characters.`
+							)}
+							splitWord="You can user"
 						/>
-
-						{errors && errors.phone && <p>{errors.phone.message}</p>}
 					</div>
 				</div>
 				<ModalFooter

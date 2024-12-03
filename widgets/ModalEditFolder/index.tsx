@@ -53,7 +53,7 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 
 	return (
 		<ModalLayout
-			onClose={onClose}
+			onClose={() => {}}
 			className="p-0"
 			isClickOutside={false}
 			translateX={0}

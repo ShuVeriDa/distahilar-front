@@ -45,7 +45,7 @@ export const Info: FC<IInfoProps> = ({ user }) => {
 				icon: <IconRenderer iconName="At" size={23} />,
 				value: `@${user?.username}`,
 				onOpen: () =>
-					onOpenModal(EnumModel.CHANGE_NAME, {
+					onOpenModal(EnumModel.CHANGE_USERNAME, {
 						changeInfo: {
 							username: user.username,
 						},

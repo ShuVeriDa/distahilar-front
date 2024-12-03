@@ -19,7 +19,7 @@ interface IModalLayoutProps {
 	isClickOutside?: boolean
 	isLeftArrow?: boolean
 	stackIndex?: number
-	onClickLeftArrow?: () => void
+	onClickLeftArrow?: (onFunc?: () => void) => void
 	translateX?: number
 }
 
@@ -65,11 +65,11 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 					initial={{ opacity: 0, translateX: `${translateX}%` }}
 					animate={{ opacity: 1, translateX: "0" }}
 					exit={{ opacity: 0 }}
-					transition={{ duration: 0.3 }}
+					transition={{ duration: 0.2 }}
 				>
 					{onClickLeftArrow && (
 						<Button
-							onClick={onClickLeftArrow}
+							onClick={() => onClickLeftArrow()}
 							className="absolute top-3 left-3  cursor-pointer h-[35px] w-[35px]"
 						>
 							<HiOutlineArrowSmallLeft

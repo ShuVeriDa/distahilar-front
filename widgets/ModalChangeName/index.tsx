@@ -13,7 +13,6 @@ interface IModalChangeNameProps {}
 
 export const ModalChangeName: FC<IModalChangeNameProps> = () => {
 	const {
-		onClose,
 		onSubmit,
 		register,
 		errors,
@@ -25,7 +24,7 @@ export const ModalChangeName: FC<IModalChangeNameProps> = () => {
 
 	return (
 		<ModalLayout
-			onClose={onClose}
+			onClose={() => {}}
 			className="p-0 w-[300px] flex flex-col !gap-5"
 			isClickOutside={false}
 			translateX={0}
