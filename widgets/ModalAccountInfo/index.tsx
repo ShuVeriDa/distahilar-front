@@ -25,7 +25,7 @@ export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 			className="p-0 pb-5"
 			isXClose
 			popoverRef={popoverRef}
-			isClickOutside
+			isClickOutside={false}
 			onClickLeftArrow={onCloseCurrentModal}
 		>
 			<div className={cn("flex flex-col gap-4 ml-12 px-4 py-4")}>

@@ -1,13 +1,13 @@
 import { useChangeAccountInfo } from "./useChangeAccountInfo"
-import { useChangePhoto } from "./useChangePhoto"
 import { useFolderManager } from "./useFolderManager"
 import { useModal } from "./useModal"
 import { useSearchContact } from "./useSearchContact"
+import { useUploadPhoto } from "./useUploadPhoto"
 import { useUser } from "./useUser"
 
 export {
 	useChangeAccountInfo,
-	useChangePhoto,
+	useUploadPhoto as useChangePhoto,
 	useFolderManager,
 	useModal,
 	useSearchContact,

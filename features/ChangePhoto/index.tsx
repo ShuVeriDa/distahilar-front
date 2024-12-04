@@ -6,7 +6,7 @@ import { ChangePhotoNS } from "./shared/hooks/useClassName"
 interface IChangePhotoProps {
 	file: File | null
 	inputRef: RefObject<HTMLInputElement>
-	onChangeImage: (e: ChangeEvent<HTMLInputElement>) => void
+	onChangeImage: (e: ChangeEvent<HTMLInputElement>) => Promise<void> | void
 	onClick: () => void
 	variant: keyof typeof ChangePhotoNS.variants
 	imageUrl?: string | null

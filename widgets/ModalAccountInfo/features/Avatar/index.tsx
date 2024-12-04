@@ -1,5 +1,5 @@
 import { ChangePhoto } from "@/features/ChangePhoto"
-import { useChangePhoto } from "@/shared/hooks/useChangePhoto"
+import { useUploadPhoto } from "@/shared/hooks/useUploadPhoto"
 import { FC } from "react"
 
 interface IAvatarProps {
@@ -7,14 +7,8 @@ interface IAvatarProps {
 }
 
 export const Avatar: FC<IAvatarProps> = ({ avatar }) => {
-	const {
-		file,
-		handleClickInput,
-		imageUrl,
-		inputRef,
-		onChangeImage,
-		// onSubmitFile,
-	} = useChangePhoto(avatar)
+	const { file, handleClickInput, imageUrl, inputRef, onChangeImage } =
+		useUploadPhoto(avatar, true)
 
 	return (
 		<ChangePhoto

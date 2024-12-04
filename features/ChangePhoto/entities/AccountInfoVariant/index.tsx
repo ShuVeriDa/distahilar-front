@@ -13,7 +13,7 @@ interface IAccountInfoVariantProps {
 	variant: keyof typeof ChangePhotoNS.variants
 	file: File | null
 	inputRef: RefObject<HTMLInputElement>
-	onChangeImage: (e: ChangeEvent<HTMLInputElement>) => void
+	onChangeImage: (e: ChangeEvent<HTMLInputElement>) => Promise<void> | void
 	onClick: () => void
 	imageUrl: string | null
 }
@@ -47,11 +47,12 @@ export const AccountInfoVariant: FC<IAccountInfoVariantProps> = ({
 			<Button className={cn(DEFAULT_VARIANT_BUTTON, VARIANT_BUTTON)}>
 				{file || imageUrl ? (
 					<Image
-						src={imageUrl!}
-						className={cn(DEFAULT_VARIANT_IMAGE, VARIANT_IMAGE)}
+						src={file ? URL.createObjectURL(file) : imageUrl!}
+						className={cn(DEFAULT_VARIANT_IMAGE, VARIANT_IMAGE, "object-cover")}
 						width={IMAGE_WIDTH}
 						height={IMAGE_HEIGHT}
 						alt={IMAGE_ALT}
+						loading="lazy"
 					/>
 				) : (
 					<MdPhotoCamera size={DEFAULT_IMAGE_ALT} color="white" />

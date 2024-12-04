@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query"
-import { useMemo } from "react"
 import { fileService } from "./file.service"
 
 export const useFileQuery = (
@@ -8,18 +7,13 @@ export const useFileQuery = (
 ) => {
 	const uploadFileQuery = useMutation({
 		mutationFn: (data: FormData) => fileService.uploadFile(data, folderName),
-		mutationKey: ["deleteContactQuery"],
+		mutationKey: ["uploadFileQuery"],
 		onSuccess: data => {
 			if (setUrl) {
-				setUrl(data[0].url)
+				setUrl(data?.url)
 			}
 		},
 	})
 
-	return useMemo(
-		() => ({
-			uploadFileQuery,
-		}),
-		[uploadFileQuery]
-	)
+	return { uploadFileQuery }
 }

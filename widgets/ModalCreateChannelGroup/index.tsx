@@ -7,7 +7,8 @@ import { FC } from "react"
 import { ChangePhoto } from "@/features/ChangePhoto"
 import { ENUM_VARIANT_PHOTO } from "@/features/ChangePhoto/shared/hooks/useClassName"
 import { ChatRole } from "@/prisma/models"
-import { useChangePhoto } from "@/shared/hooks/useChangePhoto"
+
+import { useChangePhoto } from "@/shared"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useCommunityQuery } from "@/shared/lib/services/chat/community/useCommunityQuery"
@@ -30,10 +31,10 @@ export const ModalCreateChannelGroup: FC<
 	const {
 		file,
 		inputRef,
-		imageUrl,
 		handleClickInput,
 		onChangeImage,
 		onSubmitFile,
+		imageUrl,
 	} = useChangePhoto()
 
 	const { createCommunityQuery } = useCommunityQuery()
@@ -47,18 +48,15 @@ export const ModalCreateChannelGroup: FC<
 	} = useForm<IForm>()
 
 	const onSubmit: SubmitHandler<IForm> = async data => {
-		if (file) {
-			await onSubmitFile()
-		}
-
 		await createCommunity({
 			name: data.name,
 			description: data.description,
-			type: type === EnumModel.CHANNEL ? ChatRole.CHANNEL : ChatRole.DIALOG,
+			type: type === EnumModel.CHANNEL ? ChatRole.CHANNEL : ChatRole.GROUP,
 			imageUrl: imageUrl || undefined,
 		})
 
 		reset()
+		onClose()
 	}
 
 	const fieldName = type === EnumModel.CHANNEL ? "Channel name" : "Group name"
