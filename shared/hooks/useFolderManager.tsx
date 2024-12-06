@@ -23,6 +23,8 @@ export const useFolderManager = (
 		setAddedChatsIds([...addedChatsIds, ...ids])
 	}
 
+	console.log({ folderNameValue, chatsLocale, addedChatsIds, deletedChatIds })
+
 	useEffect(() => {
 		if (isFetching && folder && type === "edit") {
 			const mutatedChats = folder.chats.map(obj =>

@@ -45,8 +45,11 @@ export const ChooseIconFolder: FC<IChooseIconFolderProps> = ({
 	onChangeIcon,
 }) => {
 	return (
-		<div className="flex flex-col gap-3 p-4 w-[282px] rounded-[6px]  bg-[#17212B] border-[1px] border-[#18222d]">
-			<Typography tag="h5" className="text-[14px] font-normal text-[#5C6E81]">
+		<div className="flex flex-col gap-3 p-4 w-[282px] rounded-[6px] bg-white border-[#f4f3f3] dark:bg-[#17212B] border-[1px] dark:border-[#18222d]">
+			<Typography
+				tag="h5"
+				className="text-[14px] font-normal text-[#BBBBBB] dark:text-[#5C6E81]"
+			>
 				Choose an icon
 			</Typography>
 
@@ -59,7 +62,7 @@ export const ChooseIconFolder: FC<IChooseIconFolderProps> = ({
 						<Button key={index} className="group" onClick={onClickHandler}>
 							<IconRenderer
 								iconName={icon}
-								className="w-[28px] h-[28px] [&>path]:fill-[#3E546A] group-hover:[&>path]:fill-[#40A7E3]"
+								className="w-[28px] h-[28px] [&>path]:fill-[#BBBBBB] dark:[&>path]:fill-[#3E546A] group-hover:[&>path]:fill-[#40A7E3]"
 							/>
 						</Button>
 					)

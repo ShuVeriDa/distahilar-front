@@ -18,7 +18,10 @@ export const IncludedChatsFolderManager: FC<
 > = ({ chats, isLoading, onDeleteLocale, onOpenIncludeChats }) => {
 	return (
 		<div className="flex flex-col gap-4  py-4">
-			<Typography tag="h5" className="font-bold text-[#51B3F3] px-4">
+			<Typography
+				tag="h5"
+				className="font-[500] text-[#71a3d8] px-4 !text-[16px]"
+			>
 				Included chats
 			</Typography>
 
@@ -28,11 +31,13 @@ export const IncludedChatsFolderManager: FC<
 					onClick={onOpenIncludeChats}
 				>
 					<div className="w-[40px] h-[40px] flex items-center justify-center">
-						<div className="flex items-center justify-center w-[22px] h-[22px] rounded-full text-white font-bold bg-[#5288C1]">
+						<div className="flex items-center justify-center w-[22px] h-[22px] rounded-full text-white font-bold bg-[#40A7E3]">
 							<FaPlus size={14} />
 						</div>
 					</div>
-					<div>Add Chats</div>
+					<Typography tag="span" className="font-normal">
+						Add Chats
+					</Typography>
 				</Button>
 
 				<div className="flex flex-col gap-3 overflow-y-auto min-h-[200px] max-h-[400px] px-4">

@@ -21,31 +21,31 @@ export const IncludedChats: FC<IIncludedChatsProps> = ({
 				return (
 					<div
 						key={chat.chatId}
-						className="group flex items-center h-[30px] gap-2 bg-[#1F2C39] rounded-r-full rounded-l-full"
+						className="group flex items-center h-[32px] gap-2 bg-[#F1F1F1] dark:bg-[#1F2C39] rounded-r-full rounded-l-full"
 					>
 						<Button
-							className="w-[30px] h-[30px] rounded-full relative"
+							className="w-[32px] h-[32px] rounded-full relative"
 							onClick={onClickHandler}
 						>
-							<div className="absolute inset-0 bg-[#22619c] transition duration-200 opacity-0 hover:opacity-100 rounded-full flex items-center justify-center scale-90 group-hover:scale-110">
+							<div className="absolute inset-0 bg-[#5daef9] transition duration-200 opacity-0 hover:opacity-100 rounded-full flex items-center justify-center scale-90 group-hover:scale-110">
 								<IoIosClose
-									size={30}
-									className="rotate-45 group-hover:rotate-0 duration-300 "
+									size={32}
+									className="rotate-45 group-hover:rotate-0 duration-300 text-[#ffffff]"
 								/>
 							</div>
 
 							<Image
 								src={chat.imageUrl || "/images/no-avatar.png"}
 								alt={"avatar"}
-								width={30}
-								height={30}
+								width={32}
+								height={32}
 								className="rounded-full"
 							/>
 						</Button>
 						<div className="overflow-hidden max-w-[80px] h-full pr-2 flex items-center">
 							<Typography
 								tag="p"
-								className="text-[12px] font-bold truncate overflow-hidden whitespace-nowrap"
+								className="text-[12px] font-[400] truncate overflow-hidden whitespace-nowrap"
 							>
 								{chat.name}
 							</Typography>

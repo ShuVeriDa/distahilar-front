@@ -23,7 +23,7 @@ export const HoverCardWrapper: FC<IHoverCardWrapperProps> = ({
 				<HoverCardTrigger className="group">
 					<IconRenderer
 						iconName={iconUrl ? (iconUrl as string) : "Folder"}
-						className="w-[25px] h-[25px] [&>path]:fill-[#3E546A] group-hover:[&>path]:fill-[#40A7E3]"
+						className="w-[25px] h-[25px] [&>path]:fill-[#BBBBBB] dark:[&>path]:fill-[#3E546A] group-hover:[&>path]:fill-[#40A7E3]"
 					/>
 				</HoverCardTrigger>
 				<HoverCardContent className="border-none p-0 mr-6" align="end">

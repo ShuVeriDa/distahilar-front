@@ -17,8 +17,8 @@ export const Chats: FC<IChatsProps> = ({
 }) => {
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="bg-[#202B38] h-[30px] flex items-center pl-4">
-				<Typography tag="p" className="text-[14px] text-[#8C98A4]">
+			<div className="bg-[#F1F1F1] dark:bg-[#202B38] h-[30px] flex items-center pl-4">
+				<Typography tag="p" className="text-[14px] text-[#919191]">
 					Chats
 				</Typography>
 			</div>

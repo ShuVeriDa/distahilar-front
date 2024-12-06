@@ -11,12 +11,13 @@ interface IHeaderFolderManagerProps {
 	title: string
 	folderName: string | undefined
 	iconUrl: string | null | undefined
+	className?: string
 	onChangeFolderName: (e: React.ChangeEvent<HTMLInputElement>) => void
 	onChangeIcon: (icon: IconsRendererType) => void
 }
 
 const CLASSNAME_UNDERLINE =
-	"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:bottom-0 after:bg-[#E7E7E7] after:dark:bg-[#101921]"
+	"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:bottom-0 after:bg-[#E0E0E0] after:dark:bg-[#101921]"
 
 export const HeaderFolderManager: FC<IHeaderFolderManagerProps> = ({
 	title,
@@ -24,12 +25,14 @@ export const HeaderFolderManager: FC<IHeaderFolderManagerProps> = ({
 	onChangeFolderName,
 	iconUrl,
 	onChangeIcon,
+	className,
 }) => {
 	return (
 		<div
 			className={cn(
-				"relative flex flex-col gap-3 px-4 py-4 ",
-				CLASSNAME_UNDERLINE
+				"relative flex flex-col gap-3 px-4 py-3 ",
+				CLASSNAME_UNDERLINE,
+				className
 			)}
 		>
 			<Typography tag="h4" className="font-normal">

@@ -103,8 +103,8 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 					`!text-[14px] font-semibold absolute left-0 top-1/2 -translate-y-1/2 transform transition-all duration-200 ease-in-out`,
 					focused || currentValue
 						? "!text-[13px] -top-[4px] text-[#6AB2F2]"
-						: "text-base text-[#5C6E81]",
-					currentValue && "text-[#5C6E81]",
+						: "text-base text-[#989798] dark:text-[#5C6E81]",
+					currentValue && "text-[#989798] dark:text-[#5C6E81]",
 					focused && currentValue && "text-[#6AB2F2]",
 					errors?.message && "text-red-500",
 					classNameLabel
@@ -134,7 +134,7 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 						className,
 						variant === "primary" && errors?.message
 							? "border-b border-[#ff0000]"
-							: "border-b border-[#313C49]"
+							: "border-b border-[#E0E0E0] dark:border-[#313C49]"
 					)}
 					value={value ?? undefined}
 					type={type}

@@ -20,7 +20,7 @@ export const IncludedChatItem: FC<IIncludedChatItemProps> = ({
 	return (
 		<Button
 			className={cn(
-				"group w-full flex items-center !justify-start gap-3 px-4 py-2 dark:hover:bg-[#292d35] hover:bg-[rgba(0,0,0,0.06)] transition duration-200"
+				"group w-full flex items-center !justify-start gap-5 px-4 py-2 dark:hover:bg-[#292d35] hover:bg-[rgba(0,0,0,0.06)] transition duration-200"
 			)}
 			onClick={onClickHandler}
 		>
@@ -43,11 +43,11 @@ export const IncludedChatItem: FC<IIncludedChatItemProps> = ({
 
 				<div
 					className={cn(
-						"absolute -bottom-1 -right-1 bg-[#5288C1] w-[20px] h-[20px] rounded-full flex items-center justify-center opacity-0 border border-black transition-opacity duration-200 ease-linear",
+						"absolute -bottom-1 -right-1 bg-[#40A7E3] dark:bg-[#4F83B9] w-[21px] h-[21px] rounded-full flex items-center justify-center opacity-0 border-[2px] border-white dark:border-black transition-opacity duration-200 ease-linear",
 						isAdded && "opacity-100"
 					)}
 				>
-					<FaCheck size={10} />
+					<FaCheck size={11} className="text-white" />
 				</div>
 			</div>
 			<div>

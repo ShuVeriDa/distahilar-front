@@ -64,6 +64,7 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 				onChangeFolderName={onChangeFolderName}
 				onChangeIcon={onChangeIcon}
 				iconUrl={iconValue}
+				className="after:hidden before:absolute before:w-full before:h-[1px] before:left-[0px] before:top-12 before:bg-[#E0E0E0] before:dark:bg-[#101921]"
 			/>
 			<div className="h-2 bg-[#F1F1F1] dark:bg-[#232E3C]" />
 
