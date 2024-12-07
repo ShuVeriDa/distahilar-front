@@ -100,7 +100,7 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 	const labelClassName =
 		variant === "primary"
 			? cn(
-					`!text-[14px] font-semibold absolute left-0 top-1/2 -translate-y-1/2 transform transition-all duration-200 ease-in-out`,
+					`!text-[14px] font-semibold font-[500] absolute left-0 top-1/2 -translate-y-1/2 transform transition-all duration-200 ease-in-out`,
 					focused || currentValue
 						? "!text-[13px] -top-[4px] text-[#6AB2F2]"
 						: "text-base text-[#989798] dark:text-[#5C6E81]",

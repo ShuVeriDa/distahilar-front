@@ -38,15 +38,16 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 				<div>
 					<IconRenderer
 						iconName={imageUrl as string}
-						className={"[&>path]:fill-[#40A7E3] w-[17px] h-[17px]"}
+						className={"[&>path]:fill-[#40A7E3] "}
+						size={20}
 					/>
 				</div>
 				<div className="flex flex-col gap-0.5 text-start">
-					<Typography tag="p" className="text-[14px] font-bold">
+					<Typography tag="p" className="text-[14px] font-[600]">
 						{name}
 					</Typography>
 
-					<Typography tag="p" className="text-[14px]">
+					<Typography tag="p" className="text-[14px] text-[#858585] font-[400]">
 						{chatLength === 0 ? "Folder is empty" : `${chatLength} chats`}
 					</Typography>
 				</div>

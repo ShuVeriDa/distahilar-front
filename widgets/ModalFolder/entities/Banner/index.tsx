@@ -11,7 +11,7 @@ export const Banner: FC<IBannerProps> = () => {
 				<FcFolder size={80} />
 			</div>
 			<div className="w-[270px]">
-				<Typography tag="p" className="text-[14px] text-center text-gray-500">
+				<Typography tag="p" className="text-[14px] text-center text-[#858585]">
 					Create folders for different groups of chats and quickly switch
 					between them.
 				</Typography>

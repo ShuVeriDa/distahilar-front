@@ -20,7 +20,7 @@ export const IncludedChatsFolderManager: FC<
 		<div className="flex flex-col gap-4  py-4">
 			<Typography
 				tag="h5"
-				className="font-[500] text-[#71a3d8] px-4 !text-[16px]"
+				className="font-[500] text-[#168ADE] px-4 !text-[16px]"
 			>
 				Included chats
 			</Typography>

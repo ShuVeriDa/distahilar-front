@@ -8,7 +8,7 @@ interface ILeftBarProps {}
 
 export const LeftBar: FC<ILeftBarProps> = () => {
 	return (
-		<div className="w-[70px] dark:bg-[#0E1621] flex flex-col items-center">
+		<div className="w-[70px] bg-[#293A4C] flex flex-col items-center">
 			<SheetComponent />
 			<Folders />
 		</div>

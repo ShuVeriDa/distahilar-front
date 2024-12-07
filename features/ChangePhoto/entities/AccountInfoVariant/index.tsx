@@ -60,7 +60,7 @@ export const AccountInfoVariant: FC<IAccountInfoVariantProps> = ({
 
 				<div
 					className={cn(
-						"absolute -bottom-1 -right-1 bg-[#2F6EA5] hover:bg-[#3975aa] w-[35px] h-[35px] rounded-full flex items-center justify-center border-[2px] border-black"
+						"absolute -bottom-1 -right-1 bg-[#40A7E3] dark:bg-[#2F6EA5] dark:hover:bg-[#3975aa] w-[35px] h-[35px] rounded-full flex items-center justify-center border-[2px] border-white dark:border-black"
 					)}
 					tabIndex={0}
 					role="button"

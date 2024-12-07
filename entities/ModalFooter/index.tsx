@@ -1,3 +1,4 @@
+import { Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { FC } from "react"
@@ -20,7 +21,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 	type = "button",
 }) => {
 	const CLASSNAME_UPPERDERLINE =
-		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:top-0 after:bg-[#E7E7E7] after:dark:bg-[#101921]"
+		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:top-0 after:bg-[#E0E0E0] after:dark:bg-[#101921]"
 
 	return (
 		<div
@@ -37,7 +38,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 				onClick={() => onClose()}
 				disabled={isLoading}
 			>
-				Cancel
+				<Typography className="text-[15px]">Cancel</Typography>
 			</Button>
 			<Button
 				variant="withoutBg"
@@ -46,7 +47,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 				onClick={onSave}
 				disabled={isLoading}
 			>
-				Save
+				<Typography className="text-[15px]">Save</Typography>
 			</Button>
 		</div>
 	)

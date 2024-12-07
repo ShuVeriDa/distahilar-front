@@ -25,7 +25,7 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 	return (
 		<div className="w-full  flex flex-col">
 			<div className="px-5 py-4">
-				<Typography tag="h5" className="text-[#71a3d8] font-normal text-[16px]">
+				<Typography tag="h5" className="text-[#168ACD] font-normal text-[16px]">
 					My folders
 				</Typography>
 			</div>

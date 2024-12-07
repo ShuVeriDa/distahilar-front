@@ -52,7 +52,7 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 		<div className="w-12 h-12 flex flex-col justify-center items-center ">
 			<Sheet open={isOpen} onOpenChange={setIsOpen}>
 				<SheetTrigger>
-					<IoMdMenu className="w-5 h-5 dark:[&>path]:fill-white" />
+					<IoMdMenu className=" [&>path]:fill-[#8393A3]" size={25} />
 				</SheetTrigger>
 				<SheetContent className="flex flex-col gap-2 dark:bg-[#17212B]">
 					<SheetHeader className="hidden">

@@ -19,14 +19,14 @@ export const FolderItem: FC<IFolderItemProps> = ({
 				<IconRenderer
 					iconName={imageUrl as string}
 					className={
-						"group-hover:[&>path]:fill-[#5BB0F0] [&>path]:fill-[#73899A]"
+						"group-hover:[&>path]:fill-[#5BB0F0] [&>path]:fill-[#8393A3]"
 					}
 					size={size}
 				/>
 			</div>
 			<Typography
 				tag="p"
-				className="text-[12px] dark:text-white/40 text-center group-hover:text-[#5BB0F0]"
+				className="text-[12px] text-white/40 text-center group-hover:text-[#5BB0F0]"
 			>
 				{name}
 			</Typography>

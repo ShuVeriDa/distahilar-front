@@ -13,6 +13,7 @@ import {
 	FaClipboardList,
 	FaCrown,
 	FaGraduationCap,
+	FaUserCircle,
 } from "react-icons/fa"
 import {
 	FaBell,
@@ -22,7 +23,7 @@ import {
 	FaUserGroup,
 } from "react-icons/fa6"
 import { GiDominoMask } from "react-icons/gi"
-import { HiPaintBrush, HiUserCircle } from "react-icons/hi2"
+import { HiPaintBrush } from "react-icons/hi2"
 import { ImGlass2 } from "react-icons/im"
 import {
 	IoCallOutline,
@@ -130,7 +131,7 @@ export const iconList: { name: IconsRendererType; icon: IconType }[] = [
 	},
 	{
 		name: "User",
-		icon: HiUserCircle,
+		icon: FaUserCircle,
 	},
 	{
 		name: "Group",

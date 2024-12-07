@@ -27,7 +27,7 @@ export const InfoItem: FC<IInfoItemProps> = ({ icon, name, value, onOpen }) => {
 				</div>
 			</div>
 			<div>
-				<Typography tag="p" className="text-[14px] font-normal text-[#6AB3F3]">
+				<Typography tag="p" className="text-[14px] font-normal text-[#168ACD]">
 					{value}
 				</Typography>
 			</div>

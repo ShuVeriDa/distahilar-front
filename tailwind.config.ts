@@ -62,6 +62,10 @@ const config: Config = {
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
 			},
+			boxShadow: {
+				"inner-top-bottom":
+					"inset 0 5px 5px -5px rgba(0, 0, 0, 0.2), inset 0 -5px 5px -5px rgba(0, 0, 0, 0.2)",
+			},
 		},
 	},
 	plugins: [tailwindcssAnimate],

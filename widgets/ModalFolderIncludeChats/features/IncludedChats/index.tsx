@@ -1,3 +1,4 @@
+import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import Image from "next/image"
@@ -15,7 +16,12 @@ export const IncludedChats: FC<IIncludedChatsProps> = ({
 	removeChat,
 }) => {
 	return (
-		<div className="p-2 flex flex-wrap gap-3 h-[100px] overflow-y-auto">
+		<div
+			className={cn(
+				"p-2 hidden flex-wrap gap-3 min-h-[40px] max-h-[100px] overflow-y-auto",
+				chats.length > 0 && "flex"
+			)}
+		>
 			{chats?.map(chat => {
 				const onClickHandler = () => removeChat(chat.chatId)
 				return (
