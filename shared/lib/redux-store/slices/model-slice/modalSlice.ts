@@ -1,3 +1,4 @@
+import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { createSlice } from "@reduxjs/toolkit"
 import { EnumModel, IModalData, IModelSlice } from "./type"
@@ -10,6 +11,13 @@ const initialState: IModelSlice = {
 			data: null,
 		},
 	],
+	folderManage: {
+		folderNameValue: "",
+		iconValue: "Folder",
+		chatsLocale: [],
+		addedChatsIds: [],
+		deletedChatIds: [],
+	},
 }
 
 export const modalSlice = createSlice({
@@ -33,16 +41,62 @@ export const modalSlice = createSlice({
 		removeLastModal: state => {
 			state.stack.pop()
 		},
+		setFolderManage: state => {
+			const folderManage = {
+				addedChatsIds: [],
+				chatsLocale: [],
+				deletedChatIds: [],
+				folderNameValue: "",
+				iconValue: "Folder",
+			}
+
+			state.folderManage = folderManage
+		},
 		setIsFetchModal: (state, action: PayloadAction<boolean>) => {
 			const lastModal = state.stack[state.stack.length - 1]
-			if (lastModal.data && lastModal.data.folderEdit) {
-				lastModal.data.folderEdit.isFetching = action.payload
+			if (lastModal.data && lastModal.data.folderManage) {
+				lastModal.data.folderManage.isFetching = action.payload
+			}
+		},
+		setFolderNameValue: (state, action: PayloadAction<string>) => {
+			if (state.folderManage) {
+				state.folderManage.folderNameValue = action.payload
+			}
+		},
+		setIconValue: (state, action: PayloadAction<string>) => {
+			if (state.folderManage) {
+				state.folderManage.iconValue = action.payload
+			}
+		},
+		setChatsLocale: (state, action: PayloadAction<ICutChat[]>) => {
+			if (state.folderManage) {
+				state.folderManage.chatsLocale = action.payload
+			}
+		},
+		setAddedChatsIds: (state, action: PayloadAction<string[]>) => {
+			if (state.folderManage) {
+				state.folderManage.addedChatsIds = action.payload
+			}
+		},
+		setDeletedChatIds: (state, action: PayloadAction<string[]>) => {
+			if (state.folderManage) {
+				state.folderManage.deletedChatIds = action.payload
 			}
 		},
 	},
 })
 
-export const { removeLastModal, pushModal, closeModal, setIsFetchModal } =
-	modalSlice.actions
+export const {
+	removeLastModal,
+	pushModal,
+	closeModal,
+	setIsFetchModal,
+	setFolderNameValue,
+	setChatsLocale,
+	setAddedChatsIds,
+	setDeletedChatIds,
+	setIconValue,
+	setFolderManage,
+} = modalSlice.actions
 export const modalReducer = modalSlice.reducer
 export type Type = IModelSlice

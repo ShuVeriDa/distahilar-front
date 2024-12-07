@@ -1,9 +1,16 @@
+import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared"
 import { useRef } from "react"
 import { useDispatch } from "react-redux"
 import {
 	closeModal,
 	pushModal,
 	removeLastModal,
+	setAddedChatsIds,
+	setChatsLocale,
+	setDeletedChatIds,
+	setFolderManage,
+	setFolderNameValue,
+	setIconValue,
 	setIsFetchModal,
 } from "../lib/redux-store/slices/model-slice/modalSlice"
 import {
@@ -14,7 +21,9 @@ import { useAppSelector } from "../lib/redux-store/store"
 
 export const useModal = () => {
 	const popoverRef = useRef<HTMLDivElement>(null)
-	const modalStack = useAppSelector(state => state.modal.stack)
+	const { folderManage, stack: modalStack } = useAppSelector(
+		state => state.modal
+	)
 	const dispatch = useDispatch()
 
 	const onClose = () => {
@@ -37,6 +46,10 @@ export const useModal = () => {
 				data,
 			})
 		)
+
+		if (type === EnumModel.CREATE_FOLDER) {
+			dispatch(setFolderManage())
+		}
 	}
 
 	const onSetIsFetchModal = (value: boolean) => {
@@ -50,14 +63,26 @@ export const useModal = () => {
 
 	const isModalOpen = modalStack.length > 0
 
+	const onIconValue = (icon: string) => dispatch(setIconValue(icon))
+	const onFolderNameValue = (name: string) => dispatch(setFolderNameValue(name))
+	const onChatsLocale = (chats: ICutChat[]) => dispatch(setChatsLocale(chats))
+	const onAddedChatsIds = (ids: string[]) => dispatch(setAddedChatsIds(ids))
+	const onDeletedChatsIds = (ids: string[]) => dispatch(setDeletedChatIds(ids))
+
 	return {
+		folderManage,
 		modalStack,
 		currentModal,
 		isModalOpen,
+		popoverRef,
 		onClose,
 		onOpenModal,
 		onCloseCurrentModal,
-		popoverRef,
 		onSetIsFetchModal,
+		onIconValue,
+		onFolderNameValue,
+		onChatsLocale,
+		onAddedChatsIds,
+		onDeletedChatsIds,
 	}
 }

@@ -19,7 +19,7 @@ export enum EnumModel {
 }
 
 export interface IModalData {
-	folderEdit?: {
+	folderManage?: {
 		folder: FolderType
 		isFetching: boolean
 	}
@@ -45,4 +45,11 @@ export interface IModelSlice {
 		data: IModalData | null
 		priority: number
 	}[]
+	folderManage?: {
+		folderNameValue: string
+		iconValue: "Folder" | string
+		chatsLocale: ICutChat[]
+		addedChatsIds: string[]
+		deletedChatIds: string[]
+	}
 }

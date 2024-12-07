@@ -1,6 +1,5 @@
 "use client"
 
-import { useModal } from "@/shared/hooks/useModal"
 import { FC } from "react"
 
 import { ModalFooter } from "@/entities/ModalFooter"
@@ -13,16 +12,11 @@ import { useFolderManager } from "../../shared/hooks/useFolderManager"
 interface IModalEditFolderProps {}
 
 export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
-	const { onCloseCurrentModal, currentModal, onOpenModal, onSetIsFetchModal } =
-		useModal()
-	const { data } = currentModal
-	const folder = data?.folderEdit?.folder
-	const isFetching = data?.folderEdit?.isFetching
-
 	const {
 		folderNameValue,
 		chatsLocale,
 		iconValue,
+		folder,
 		onDeleteChatLocale,
 		onChangeFolderName,
 		onSave,
@@ -30,13 +24,8 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 		onAddChatsIds,
 		onRemoveChatsIds,
 		onClose,
-	} = useFolderManager(
-		"edit",
-		onCloseCurrentModal,
-		onSetIsFetchModal,
-		folder,
-		isFetching
-	)
+		onOpenModal,
+	} = useFolderManager("edit")
 
 	const onOpenIncludeChats = () => {
 		if (folder) {

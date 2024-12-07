@@ -1,7 +1,6 @@
 import { ModalFooter } from "@/entities/ModalFooter"
 import { HeaderFolderManager, IncludedChatsFolderManager } from "@/features"
 import { useFolderManager } from "@/shared/hooks/useFolderManager"
-import { useModal } from "@/shared/hooks/useModal"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 
@@ -10,8 +9,6 @@ import { FC } from "react"
 interface IModalCreateFolderProps {}
 
 export const ModalCreateFolder: FC<IModalCreateFolderProps> = () => {
-	const { onCloseCurrentModal, onOpenModal, onSetIsFetchModal } = useModal()
-
 	const {
 		folderNameValue,
 		iconValue,
@@ -24,7 +21,8 @@ export const ModalCreateFolder: FC<IModalCreateFolderProps> = () => {
 		onRemoveChatsIds,
 		onChangeFolderName,
 		onChangeIcon,
-	} = useFolderManager("create", onCloseCurrentModal, onSetIsFetchModal)
+		onOpenModal,
+	} = useFolderManager("create")
 
 	const onOpenIncludeChats = () => {
 		onOpenModal(EnumModel.INCLUDE_CHATS, {

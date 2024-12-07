@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useMemo } from "react"
 import {
 	folderService,
 	ICreateFolder,
@@ -7,48 +6,61 @@ import {
 	IUpdateFolder,
 } from "./folder.service"
 
-export const useFolderQuery = (
-	folderId?: string,
-	autoFetch: boolean = false
-) => {
-	const fetchFoldersQuery = useQuery({
+// Хук для запроса списка папок
+export const useFetchFolders = () =>
+	useQuery({
 		queryFn: async () => folderService.fetchFolders(),
 		queryKey: ["fetchFolders"],
 	})
 
-	const fetchFolderQuery = useQuery({
-		queryFn: async () => folderService.fetchFolder(folderId!),
+// Хук для запроса конкретной папки
+export const useFetchFolder = (folderId: string) =>
+	useQuery({
+		queryFn: async () => folderService.fetchFolder(folderId),
 		queryKey: ["fetchFolder", folderId],
-		enabled: !!folderId && autoFetch,
+		enabled: !!folderId,
 	})
 
+// Хук для создания папки
+export const useCreateFolder = () => {
 	const client = useQueryClient()
-
-	const createFolderQuery = useMutation({
+	return useMutation({
 		mutationFn: (data: ICreateFolder) => folderService.createFolder(data),
 		mutationKey: ["createFolderQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
 	})
+}
 
-	const addChatToFolderQuery = useMutation({
+// Хук для добавления чата в папку
+export const useAddChatToFolder = () => {
+	const client = useQueryClient()
+	return useMutation({
 		mutationFn: (data: IFolderData) => folderService.addChatToFolder(data),
 		mutationKey: ["addChatToFolderQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
 	})
+}
 
-	const deleteChatFromFolderQuery = useMutation({
+// Хук для удаления чата из папки
+export const useDeleteChatFromFolder = () => {
+	const client = useQueryClient()
+	return useMutation({
 		mutationFn: (data: IFolderData) => folderService.deleteChatFromFolder(data),
 		mutationKey: ["deleteChatFromFolderQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
 	})
+}
 
-	const updateFolderQuery = useMutation({
+// Хук для обновления папки
+export const useUpdateFolder = (folderId?: string) => {
+	const client = useQueryClient()
+	return useMutation({
 		mutationFn: (data: IUpdateFolder) =>
 			folderService.updateFolder(folderId!, data),
 		mutationKey: ["updateFolderQuery"],
@@ -56,33 +68,16 @@ export const useFolderQuery = (
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
 	})
+}
 
-	const deleteFolderByIdQuery = useMutation({
+// Хук для удаления папки
+export const useDeleteFolderById = () => {
+	const client = useQueryClient()
+	return useMutation({
 		mutationFn: (folderId: string) => folderService.deleteFolderById(folderId),
 		mutationKey: ["deleteFolderByIdQuery"],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["fetchFolders"] })
 		},
 	})
-
-	return useMemo(
-		() => ({
-			fetchFoldersQuery,
-			fetchFolderQuery,
-			createFolderQuery,
-			addChatToFolderQuery,
-			deleteChatFromFolderQuery,
-			updateFolderQuery,
-			deleteFolderByIdQuery,
-		}),
-		[
-			fetchFoldersQuery,
-			fetchFolderQuery,
-			createFolderQuery,
-			addChatToFolderQuery,
-			deleteChatFromFolderQuery,
-			updateFolderQuery,
-			deleteFolderByIdQuery,
-		]
-	)
 }

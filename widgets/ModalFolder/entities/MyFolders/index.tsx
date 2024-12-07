@@ -1,6 +1,10 @@
 import { useModal } from "@/shared/hooks/useModal"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
-import { useFolderQuery } from "@/shared/lib/services/folder/useFolderQuery"
+
+import {
+	useDeleteFolderById,
+	useFetchFolders,
+} from "@/shared/lib/services/folder/useFolderQuery"
 import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { Skeleton } from "@/shared/ui/Skeleton/skeleton"
@@ -12,9 +16,9 @@ interface IMyFoldersProps {}
 
 export const MyFolders = ({}: IMyFoldersProps) => {
 	const { onOpenModal } = useModal()
-	const { fetchFoldersQuery, deleteFolderByIdQuery } = useFolderQuery()
-	const { data, isSuccess, isLoading } = fetchFoldersQuery
-	const { mutateAsync: deleteFolderMutate } = deleteFolderByIdQuery
+
+	const { data, isSuccess, isLoading } = useFetchFolders()
+	const { mutateAsync: deleteFolderMutate } = useDeleteFolderById()
 
 	const onOpenCreateFolder = () => onOpenModal(EnumModel.CREATE_FOLDER)
 
@@ -39,7 +43,7 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 						.map(folder => {
 							const onClick = () => {
 								onOpenModal(EnumModel.EDIT_FOLDER, {
-									folderEdit: { folder: folder, isFetching: true },
+									folderManage: { folder: folder, isFetching: true },
 								})
 							}
 

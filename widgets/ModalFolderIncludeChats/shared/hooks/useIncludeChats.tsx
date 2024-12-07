@@ -69,10 +69,10 @@ export const useIncludeChats = () => {
 	}
 
 	const onSave = async () => {
-		if (removedChatsIdsLocale && onRemoveChatsIds) {
+		if (removedChatsIdsLocale.length !== 0 && onRemoveChatsIds) {
 			onRemoveChatsIds(removedChatsIdsLocale)
 		}
-		if (addedChatsIdsLocale && onAddChatsIds) {
+		if (addedChatsIdsLocale.length !== 0 && onAddChatsIds) {
 			onAddChatsIds(includedChats, addedChatsIdsLocale)
 		}
 
