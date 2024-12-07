@@ -61,8 +61,8 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 
 					<div className="flex flex-col gap-2 relative p-5 pb-0">
 						<ModalHeaderInfo variant="sheet" />
-						<div className="h-[1px] w-full left-[-24px] dark:bg-[#2c3241] bg-gray-300" />
 					</div>
+					<div className="h-[1px] w-full left-[-24px] dark:bg-[#101921] bg-[#E7E7E7]" />
 
 					<SheetLinks variant="sheet" closeSheet={closeSheet} items={items} />
 				</SheetContent>

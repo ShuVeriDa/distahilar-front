@@ -52,7 +52,7 @@ export const ModalLayout: FC<IModalLayoutProps> = ({
 		<>
 			<MotionDiv
 				className={cn(
-					"fixed left-0 top-0 z-[100] flex h-full w-full flex-col items-center justify-center bg-black/80"
+					"fixed left-0 top-0 z-[100] flex h-full w-full flex-col items-center justify-center bg-black/40"
 				)}
 				style={{ zIndex: 100 + stackIndex }} // Увеличиваем `z-index` по глубине стека
 			>
