@@ -3,6 +3,7 @@ import { Skeleton, Typography, useUser } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatDateTelegramStyle } from "@/shared/lib/utils/formatDateTelegramStyle"
 import { ChatRole } from "@prisma/client"
+import { useTheme } from "next-themes"
 import Image from "next/image"
 import { LuCheck, LuCheckCheck } from "react-icons/lu"
 
@@ -11,6 +12,7 @@ interface IChatProps {
 }
 
 export const Chat = ({ chat }: IChatProps) => {
+	const { theme } = useTheme()
 	const { user } = useUser()
 	const date = formatDateTelegramStyle(chat.lastMessageDate)
 
@@ -39,7 +41,7 @@ export const Chat = ({ chat }: IChatProps) => {
 					!chat.lastMessage && "hidden"
 				)}
 			>
-				<span className="text-white">
+				<span className="text-[#168ACD]">
 					{chat.lastMessage?.user?.name}: &nbsp;
 				</span>
 				<span className="text-[#6D7883]">{chat.lastMessage?.content}</span>
@@ -47,7 +49,7 @@ export const Chat = ({ chat }: IChatProps) => {
 		)
 
 	return (
-		<div className="w-full flex items-center gap-2 px-3 py-2 flex-nowrap hover:cursor-pointer hover:bg-[#232E3C]">
+		<div className="w-full flex items-center gap-2 px-3 py-2 flex-nowrap hover:cursor-pointer hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C]">
 			<div
 				className={"flex w-full h-full"}
 				style={{
@@ -84,9 +86,11 @@ export const Chat = ({ chat }: IChatProps) => {
 						{chat.type === ChatRole.DIALOG && isMyMessage && (
 							<div>
 								{chat.lastMessage?.isRead ? (
-									<LuCheckCheck color="#71BBFC" />
+									<LuCheckCheck
+										color={theme === "light" ? "#5DC452" : "#71BBFC"}
+									/>
 								) : (
-									<LuCheck color="#71BBFC" />
+									<LuCheck color={theme === "light" ? "#5DC452" : "#71BBFC"} />
 								)}
 							</div>
 						)}
@@ -103,7 +107,7 @@ export const Chat = ({ chat }: IChatProps) => {
 					<div className="flex overflow-hidden w-full">{lastMessage}</div>
 					<div
 						className={cn(
-							"bg-[#3E546A] text-white h-[22px] min-w-[22px] text-[12px] px-[7px] flex justify-center items-center rounded-full",
+							"bg-[#BBBBBB] dark:bg-[#3E546A] text-white h-[22px] min-w-[22px] text-[12px] px-[7px] flex justify-center items-center rounded-full",
 							!lengthUnread && "hidden"
 						)}
 					>
@@ -118,10 +122,10 @@ export const Chat = ({ chat }: IChatProps) => {
 Chat.Skeleton = function MyChats() {
 	return (
 		<div className="w-full h-[61px] flex items-center gap-2 px-3 py-2 flex-nowrap hover:cursor-pointer ">
-			<Skeleton className="max-h-[45px] max-w-[45px] w-full h-full rounded-full bg-[#202B38]" />
+			<Skeleton className="max-h-[45px] max-w-[45px] w-full h-full rounded-full bg-[#F1F1F1] dark:bg-[#202B38]" />
 			<div className="w-full  flex flex-col gap-2 ">
-				<Skeleton className="h-[14px] w-[70px] rounded-full bg-[#202B38]" />
-				<Skeleton className="h-[14px] w-[110px] rounded-full bg-[#202B38]" />
+				<Skeleton className="h-[14px] w-[70px] rounded-full bg-[#F1F1F1] dark:bg-[#202B38]" />
+				<Skeleton className="h-[14px] w-[110px] rounded-full bg-[#F1F1F1] dark:bg-[#202B38]" />
 			</div>
 		</div>
 	)

@@ -40,7 +40,7 @@ export const InputNS = {
 				"flex justify-center items-center"
 			),
 			className: cn(
-				"pl-3 pr-3 !h-[35px] dark:bg-[#242F3D] !border-b-0 !rounded-full !font-[400]",
+				"pl-3 pr-3 !h-[35px] bg-[#F1F1F1] dark:bg-[#242F3D] !border-b-0 !rounded-full !font-[400]",
 				DEFAULT_CLASSES
 			),
 		},

@@ -17,12 +17,15 @@ export const StatusSearch: FC<IStatusSearchProps> = ({
 	return (
 		<div
 			className={cn(
-				"hidden w-full items-center px-3 bg-[#202B38] h-[25px]",
+				"hidden w-full items-center px-3 bg-[#F1F1F1] dark:bg-[#202B38] h-[25px]",
 				(isLoading || (chats && chats?.length > 0 && query.length > 0)) &&
 					"flex"
 			)}
 		>
-			<Typography tag="p" className={cn("text-white font-normal text-[13px]")}>
+			<Typography
+				tag="p"
+				className={cn("text-[#919191] dark:text-white font-normal text-[13px]")}
+			>
 				{isLoading ? "Loading..." : `Found ${chats?.length} chats`}
 			</Typography>
 		</div>

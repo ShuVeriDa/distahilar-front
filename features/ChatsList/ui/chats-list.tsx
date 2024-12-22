@@ -28,7 +28,8 @@ export const ChatsList: FC<IChatsProps> = () => {
 		query.length > 0 && isSuccessChats ? chatsData : currentFolder?.chats
 
 	return (
-		<div className="w-[300px] h-screen dark:bg-[#17212B] border-r-[1px] border-r-[#18222d] overflow-hidden">
+		// min-w-[250px] max-w-[470px]
+		<div className="min-w-[250px] max-w-[470px]  h-screen dark:bg-[#17212B] border-r-[1px] dark:border-r-[#18222d] overflow-hidden">
 			<div className="w-full h-[50px] flex items-center justify-center px-3">
 				<Search
 					variant="searchV2"
