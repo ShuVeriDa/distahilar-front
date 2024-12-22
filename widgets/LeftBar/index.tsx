@@ -1,5 +1,3 @@
-"use client"
-
 import { FC } from "react"
 import { SheetComponent } from "../SheetComponent/SheetComponent"
 import { Folders } from "./entities/folders"

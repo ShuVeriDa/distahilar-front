@@ -1,3 +1,5 @@
+"use client"
+
 import { ModalHeaderInfo } from "@/entities/ModalHeaderInfo"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import {
@@ -54,7 +56,7 @@ export const SheetComponent: FC<ISheetComponentProps> = () => {
 				<SheetTrigger>
 					<IoMdMenu className=" [&>path]:fill-[#8393A3]" size={25} />
 				</SheetTrigger>
-				<SheetContent className="flex flex-col gap-2 dark:bg-[#17212B]">
+				<SheetContent className="w-[300px] flex flex-col gap-2  dark:bg-[#17212B]">
 					<SheetHeader className="hidden">
 						<SheetTitle></SheetTitle>
 					</SheetHeader>

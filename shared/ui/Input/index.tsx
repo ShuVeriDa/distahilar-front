@@ -34,6 +34,16 @@ export const InputNS = {
 			wrapperClassName: DEFAULT_WRAPPER_CLASSES,
 			className: cn("pl-8 pr-2 dark:bg-transparent", DEFAULT_CLASSES),
 		},
+		searchV2: {
+			wrapperClassName: cn(
+				DEFAULT_WRAPPER_CLASSES,
+				"flex justify-center items-center"
+			),
+			className: cn(
+				"pl-3 pr-3 !h-[35px] dark:bg-[#242F3D] !border-b-0 !rounded-full !font-[400]",
+				DEFAULT_CLASSES
+			),
+		},
 		primary: {
 			wrapperClassName: "relative mt-4 w-full",
 			className: cn("w-full py-2 text-base bg-transparent  focus:outline-none"),

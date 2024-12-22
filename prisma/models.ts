@@ -16,7 +16,10 @@ export type FoundedChatsType = {
 	imageUrl: string
 	lastMessage: MessageType | null
 	lastMessageDate: Date | null
+	lengthUnread: number | null
 	// isChat: boolean;
+	lastSeen?: Date | null
+	isOnline?: boolean | undefined | null
 	type: ChatRole
 }
 
@@ -51,6 +54,15 @@ export type VideoMessageType = Prisma.VideoMessageGetPayload<{
 export type ReactionType = Prisma.ReactionGetPayload<{
 	include: Prisma.ReactionInclude
 }>
+
+export type FolderWSType = {
+	id: string
+	name: string
+	imageUrl: string
+	chats: FoundedChatsType[]
+	userId: string
+	user?: UserType
+}
 
 export type FolderType = Prisma.FolderGetPayload<{
 	include: Prisma.FolderInclude

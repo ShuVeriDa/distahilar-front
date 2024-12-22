@@ -6,6 +6,7 @@ import { modalReducer } from "./slices/model-slice/modalSlice"
 import { userReducer } from "./slices/user-slice/userSlice"
 
 import createWebStorage from "redux-persist/lib/storage/createWebStorage"
+import { folderReducer } from "./slices/folderSlice/folderSlice"
 
 function createPersistStorage(): WebStorage {
 	const isServer = typeof window === "undefined"
@@ -31,15 +32,17 @@ function createPersistStorage(): WebStorage {
 const persistConfig = {
 	key: "root",
 	storage: createPersistStorage(),
-	whitelist: ["user"],
+	whitelist: ["user", "folder"],
 }
 
 const persistedUserReducer = persistReducer(persistConfig, userReducer)
+const persistedFolderReducer = persistReducer(persistConfig, folderReducer)
 
 export const store = configureStore({
 	reducer: {
 		user: persistedUserReducer,
 		modal: modalReducer,
+		folder: persistedFolderReducer,
 	},
 	/**
 	 * You cant set up more middlewares

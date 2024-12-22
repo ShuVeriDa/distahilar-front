@@ -1,3 +1,5 @@
+"use client"
+
 import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { passwordPattern } from "@/shared/lib/utils/patterns"
 import { Button } from "@/shared/ui/Button"

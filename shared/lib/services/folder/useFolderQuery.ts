@@ -1,3 +1,6 @@
+import { FolderWSType } from "@/prisma/models"
+import { useUser } from "@/shared/hooks"
+import { useSocket } from "@/shared/providers/SocketProvider"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
 	folderService,
@@ -12,6 +15,43 @@ export const useFetchFolders = () =>
 		queryFn: async () => folderService.fetchFolders(),
 		queryKey: ["fetchFolders"],
 	})
+
+export const useFetchFoldersWS = () => {
+	const { socket } = useSocket()
+	const { user } = useUser()
+	const userId = user?.id
+
+	return useQuery<FolderWSType[], Error>({
+		queryKey: ["fetchFoldersWS", userId], // Ключ запроса
+		queryFn: () =>
+			new Promise<FolderWSType[]>((resolve, reject) => {
+				if (!socket) {
+					reject(new Error("WebSocket is not connected"))
+					return
+				}
+
+				const fetchKey = `folders:user:${userId}:fetch`
+
+				// Обработчик данных
+				const handleFolders = (data: FolderWSType[]) => {
+					resolve(data)
+				}
+
+				// Подписка на событие
+				socket.on(fetchKey, handleFolders)
+
+				// Отправка запроса
+				socket.emit("folders", userId)
+
+				// Очистка подписки при завершении запроса
+				return () => {
+					socket.off(fetchKey, handleFolders)
+				}
+			}),
+		// Запрос выполняется только при наличии значения
+		staleTime: 1000 * 30, // Данные считаются актуальными в течение 30 секунд
+	})
+}
 
 // Хук для запроса конкретной папки
 export const useFetchFolder = (folderId: string) =>

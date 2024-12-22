@@ -1,6 +1,6 @@
 import { useModal } from "@/shared/hooks/useModal"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
-import { useChatQuery } from "@/shared/lib/services/chat/useChatQuery"
+import { useFetchChatsQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { useEffect, useState } from "react"
 import { ICutChat } from "../types/types.type"
 
@@ -23,8 +23,7 @@ export const useIncludeChats = () => {
 		[]
 	)
 
-	const { fetchChatsQuery } = useChatQuery()
-	const { data: localChats, isLoading } = fetchChatsQuery
+	const { data: localChats, isLoading } = useFetchChatsQuery()
 
 	const addChat = (chat: ICutChat) => {
 		setIncludedChats(prev => [...prev, chat])
