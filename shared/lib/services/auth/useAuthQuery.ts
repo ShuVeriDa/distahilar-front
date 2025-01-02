@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
+import { useLocale } from "next-intl"
 import { useRouter } from "next/navigation"
 import { useMemo } from "react"
 import { useDispatch } from "react-redux"
@@ -8,6 +9,7 @@ import { authService } from "./auth.service"
 import { ILoginFormData, IRegisterFormData } from "./auth.type"
 
 export const useAuthQuery = () => {
+	const locale = useLocale()
 	const dispatch = useDispatch()
 	const { push } = useRouter()
 
@@ -17,7 +19,7 @@ export const useAuthQuery = () => {
 		onSuccess: ({ data }) => {
 			saveTokenStorage(data.accessToken)
 			dispatch(setUser(data.user))
-			push("/")
+			push(`/${data.user.settings.language.toLocaleLowerCase()}/chat`)
 		},
 	})
 
@@ -27,7 +29,7 @@ export const useAuthQuery = () => {
 		onSuccess({ data }) {
 			saveTokenStorage(data.accessToken)
 			// reset()
-			push("/auth")
+			push(`/${locale}/auth`)
 		},
 	})
 
@@ -37,7 +39,7 @@ export const useAuthQuery = () => {
 		onSuccess() {
 			dispatch(setUser(null))
 			// reset()
-			push("/auth")
+			push(`/${locale}/auth`)
 		},
 	})
 

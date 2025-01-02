@@ -1,0 +1,23 @@
+{
+	"pages": {
+		"Chat": {
+			"lastSeen": {
+				"justNow": "last seen just now",
+				"minutesAgo": "last seen {count} minute ago",
+				"minutesAgo_plural": "last seen {count} minutes ago",
+				"todayAt": "last seen today at {time}",
+				"weekdayAt": "last seen {day} at {time}",
+				"date": "last seen on {date}",
+				"daysOfWeek": [
+					"Sunday",
+					"Monday",
+					"Tuesday",
+					"Wednesday",
+					"Thursday",
+					"Friday",
+					"Saturday"
+				]
+			}
+		}
+	}
+}

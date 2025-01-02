@@ -1,3 +1,5 @@
+"use client"
+
 import { ChangeEvent, useRef, useState } from "react"
 import { useFileQuery } from "../lib/services/file/usefileQuery"
 import { useUserQuery } from "../lib/services/user/useUserQuery"

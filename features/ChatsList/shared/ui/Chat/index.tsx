@@ -1,20 +1,24 @@
 import { FoundedChatsType } from "@/prisma/models"
-import { Skeleton, Typography, useUser } from "@/shared"
+import { Button, Skeleton, Typography, useUser } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatDateTelegramStyle } from "@/shared/lib/utils/formatDateTelegramStyle"
+import { IsRead } from "@/shared/ui/isRead"
 import { ChatRole } from "@prisma/client"
-import { useTheme } from "next-themes"
 import Image from "next/image"
-import { LuCheck, LuCheckCheck } from "react-icons/lu"
+import { redirect } from "next/navigation"
 
 interface IChatProps {
 	chat: FoundedChatsType
+	locale: string
 }
 
-export const Chat = ({ chat }: IChatProps) => {
-	const { theme } = useTheme()
+export const Chat = ({ chat, locale }: IChatProps) => {
 	const { user } = useUser()
 	const date = formatDateTelegramStyle(chat.lastMessageDate)
+
+	const navigate = () => {
+		redirect(`/${locale}/chat/${chat.chatId}`)
+	}
 
 	const isMyMessage = chat.lastMessage?.userId === user?.id
 
@@ -49,7 +53,10 @@ export const Chat = ({ chat }: IChatProps) => {
 		)
 
 	return (
-		<div className="w-full flex items-center gap-2 px-3 py-2 flex-nowrap hover:cursor-pointer hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C]">
+		<Button
+			className="w-full flex items-center gap-2 px-3 py-2 flex-nowrap hover:cursor-pointer hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C]"
+			onClick={navigate}
+		>
 			<div
 				className={"flex w-full h-full"}
 				style={{
@@ -83,17 +90,13 @@ export const Chat = ({ chat }: IChatProps) => {
 					</div>
 
 					<div className="flex items-center gap-0.5">
-						{chat.type === ChatRole.DIALOG && isMyMessage && (
-							<div>
-								{chat.lastMessage?.isRead ? (
-									<LuCheckCheck
-										color={theme === "light" ? "#5DC452" : "#71BBFC"}
-									/>
-								) : (
-									<LuCheck color={theme === "light" ? "#5DC452" : "#71BBFC"} />
-								)}
-							</div>
-						)}
+						{chat.type === ChatRole.DIALOG &&
+							isMyMessage &&
+							chat.lastMessage && (
+								<div>
+									<IsRead isRead={chat.lastMessage.isRead} />
+								</div>
+							)}
 
 						<Typography
 							tag="p"
@@ -115,7 +118,7 @@ export const Chat = ({ chat }: IChatProps) => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</Button>
 	)
 }
 

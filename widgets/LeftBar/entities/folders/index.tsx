@@ -15,7 +15,6 @@ export const Folders: FC<IFoldersProps> = () => {
 	const { onChangeFolderName, currentName: folderName } = useFolder()
 
 	const { data, isSuccess, isLoading } = useFetchFoldersWS()
-	console.log({ data })
 
 	const onOpen = () => onOpenModal(EnumModel.FOLDERS)
 

@@ -1,3 +1,5 @@
+"use client"
+
 import { ChatType } from "@/prisma/models"
 import { IconsRendererType } from "@/shared/ui/IconRenderer/data"
 import { mapToCutChat } from "@/widgets/ModalFolderIncludeChats/shared/lib/mapToCutChat"
@@ -137,8 +139,6 @@ export const useFolderManager = (type: "create" | "edit") => {
 	}
 
 	const onSave = async () => {
-		console.log("onSave", { addedChatsIds, deletedChatIds, chatsLocale })
-
 		if (type === "edit") {
 			await onDeleteChats()
 			await onAddChats()

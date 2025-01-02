@@ -43,9 +43,13 @@ export type MediaType = Prisma.MediaGetPayload<{
 	include: Prisma.MediaInclude
 }>
 
-export type VoiceMessageType = Prisma.VoiceMessageGetPayload<{
-	include: Prisma.VoiceMessageInclude
-}>
+export type VoiceMessageType = {
+	id: string
+	createdAt: Date
+	url: string
+	duration: number
+	messageId: string | null
+}
 
 export type VideoMessageType = Prisma.VideoMessageGetPayload<{
 	include: Prisma.VideoMessageInclude
@@ -95,12 +99,12 @@ export enum EnumLanguage {
 // 	FILE,
 // }
 
-// export enum MessageType {
-// 	TEXT,
-// 	VIDEO,
-// 	VOICE,
-// 	FILE,
-// }
+export enum MessageEnum {
+	TEXT = "TEXT",
+	VIDEO = "VIDEO",
+	VOICE = "VOICE",
+	FILE = "FILE",
+}
 
 export enum ChatRole {
 	DIALOG = "DIALOG",

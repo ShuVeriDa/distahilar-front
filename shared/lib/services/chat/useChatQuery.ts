@@ -3,6 +3,14 @@ import { useSocket } from "@/shared/providers/SocketProvider"
 import { useQuery } from "@tanstack/react-query"
 import { chatService } from "./chat.service"
 
+export const useFetchChatByIdQuery = (chatId: string) => {
+	return useQuery({
+		queryFn: async () => await chatService.getChatById(chatId),
+		queryKey: ["fetchChatById", chatId],
+		enabled: !!chatId,
+	})
+}
+
 export const useFetchChatsQuery = (params?: string) => {
 	return useQuery({
 		queryFn: async () => await chatService.searchChat(params!),
@@ -29,8 +37,6 @@ export const useSearchChatsWSQuery = (query: string) => {
 				const handleChats = (data: FoundedChatsType[]) => {
 					resolve(data)
 				}
-
-				console.log("useSearchChatsWSQuery")
 
 				// Подписка на событие
 				socket.on(fetchKey, handleChats)

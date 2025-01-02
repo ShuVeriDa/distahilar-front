@@ -6,8 +6,6 @@ import { useAppSelector } from "../lib/redux-store/store"
 export const useFolder = () => {
 	const { name, folder } = useAppSelector(state => state.folder)
 
-	console.log({ name, folder })
-
 	const dispatch = useDispatch()
 
 	const onChangeFolderName = (name: string, folder: FolderWSType) => {

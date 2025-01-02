@@ -1,3 +1,5 @@
+"use client"
+
 import { useDebounceValue } from "@siberiacancode/reactuse"
 import { ChangeEvent, useState } from "react"
 import { useContactQuery } from "../lib/services/contact/useContactQuery"

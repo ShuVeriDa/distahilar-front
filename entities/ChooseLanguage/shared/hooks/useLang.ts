@@ -1,9 +1,12 @@
 import { EnumLanguage, UserType } from "@/prisma/models"
 import { useUser } from "@/shared/hooks/useUser"
 import { useUserQuery } from "@/shared/lib/services/user/useUserQuery"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export const useLang = () => {
+	const { push } = useRouter()
+
 	const { user } = useUser()
 
 	const [language, setLanguage] = useState<
@@ -17,8 +20,10 @@ export const useLang = () => {
 		newLanguage: UserType["settings"]["language"]
 	) => {
 		setLanguage(newLanguage)
+
 		if (language !== newLanguage) {
 			await changeLanguageMutate({ language: newLanguage })
+			push(`/${newLanguage.toLocaleLowerCase()}/chat`)
 		}
 	}
 

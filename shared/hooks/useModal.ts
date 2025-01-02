@@ -1,3 +1,5 @@
+"use client"
+
 import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared"
 import { useRef } from "react"
 import { useDispatch } from "react-redux"
