@@ -6,6 +6,7 @@ import { IsRead } from "@/shared/ui/isRead"
 
 import { FC, useEffect, useRef, useState } from "react"
 import { MessageVoice } from "../MessageVoice"
+import { VideoMessage } from "../VideoMessage"
 
 interface IMessageProps {
 	message: MessageType
@@ -32,11 +33,12 @@ export const Message: FC<IMessageProps> = ({
 		}
 	}, [message])
 
+	const isVoice = message.messageType === MessageEnum.VOICE
+	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const isFirstMessageOfDay =
 		!previousMessage ||
 		new Date(message.createdAt).toDateString() !==
 			new Date(previousMessage.createdAt).toDateString()
-	const isVoice = message.messageType === MessageEnum.VOICE
 
 	const formattedDate = formatTime(message.createdAt, "Month number", locale)
 
@@ -62,7 +64,8 @@ export const Message: FC<IMessageProps> = ({
 						"bg-white rounded-r-2xl rounded-tl-[16px] self-start after:-left-[20px] after:rounded-br-[13px] after:shadow-[13px_0_0_0_#ffffff]",
 					"after:absolute after:w-[20px] after:h-[13px] after:bottom-0 after:transparent",
 					isMoreTwoLine && `flex-col gap-0 pb-5`,
-					isVoice && "pb-2"
+					isVoice && "pb-2",
+					isCircleVideo && "bg-transparent after:hidden"
 				)}
 			>
 				<div>
@@ -71,32 +74,41 @@ export const Message: FC<IMessageProps> = ({
 							{message.content}
 						</Typography>
 					)}
-					{/* {isVoice && <MessageVoice voice={message.voiceMessages} />} */}
 					{isVoice && <MessageVoice voice={message.voiceMessages} />}
+					{isCircleVideo && <VideoMessage video={message.videoMessages} />}
 				</div>
 
 				<div
 					className={cn(
-						"h-full flex items-end gap-1.5 relative",
+						"h-full flex items-end  relative",
 						isMoreTwoLine && "justify-end absolute bottom-2 right-[12px]",
 						isVoice && "absolute bottom-2"
 					)}
 				>
-					<Typography
-						tag="p"
+					<div
 						className={cn(
-							"text-[12px] leading-5 relative top-1.5 ",
-							isMyMessage ? "text-[#6DB566]" : "text-[#A0ACB6]"
+							" flex gap-1.5 items-center relative top-1.5 ",
+							isCircleVideo &&
+								"bg-green-900/30 py-0.5 px-1.5 rounded-md absolute top-[230px]"
 						)}
 					>
-						{date}
-					</Typography>
+						<Typography
+							tag="p"
+							className={cn(
+								"text-[12px] leading-5",
+								isMyMessage ? "text-[#6DB566]" : "text-[#A0ACB6]",
+								isCircleVideo && "text-white"
+							)}
+						>
+							{date}
+						</Typography>
 
-					{isMyMessage && (
-						<div className={cn("flex relative top-1")}>
-							<IsRead isRead={message.isRead} />
-						</div>
-					)}
+						{isMyMessage && (
+							<div className={cn("flex")}>
+								<IsRead isRead={message.isRead} isCircleVideo={isCircleVideo} />
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</>

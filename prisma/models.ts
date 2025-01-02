@@ -43,7 +43,7 @@ export type MediaType = Prisma.MediaGetPayload<{
 	include: Prisma.MediaInclude
 }>
 
-export type VoiceMessageType = {
+export type VoiceVideoMessageType = {
 	id: string
 	createdAt: Date
 	url: string

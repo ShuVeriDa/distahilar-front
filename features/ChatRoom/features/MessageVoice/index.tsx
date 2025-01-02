@@ -1,46 +1,23 @@
-import { VoiceMessageType } from "@/prisma/models"
+import { VoiceVideoMessageType } from "@/prisma/models"
 import { Button, Typography } from "@/shared"
 import { formatTimeForAudio } from "@/shared/lib/utils/formatTimeForAudio"
-import { useWavesurfer } from "@wavesurfer/react"
-import { FC, useCallback, useEffect, useRef } from "react"
+import { FC } from "react"
 import { FaPause, FaPlay } from "react-icons/fa"
+import { useVoice } from "../../shared/hooks/useVoice"
 
 interface IMessageVoiceProps {
-	voice: VoiceMessageType[]
+	voice: VoiceVideoMessageType[]
 }
 
 export const MessageVoice: FC<IMessageVoiceProps> = ({ voice }) => {
-	const containerRef = useRef<HTMLDivElement | null>(null)
-
-	const { wavesurfer, isPlaying, currentTime, isReady } = useWavesurfer({
-		container: containerRef,
-		height: 20,
-		waveColor: "#B3E2B4",
-		progressColor: "#5EBD66",
-		cursorWidth: 0,
-		// normalize: true,
-		barWidth: 2.4,
-		barRadius: 10,
-		barHeight: 4,
-		barGap: 0,
-		width: 200,
-		url: voice[0].url,
-	})
-
-	const onPlayPause = useCallback(() => {
-		if (wavesurfer) {
-			wavesurfer.playPause()
-		}
-	}, [wavesurfer])
-
-	const duration = wavesurfer?.getDuration()
-	const isStop = currentTime === duration
-
-	useEffect(() => {
-		if (isStop) {
-			wavesurfer?.stop()
-		}
-	}, [isStop, wavesurfer])
+	const {
+		containerRef,
+		currentTime,
+		duration,
+		isPlaying,
+		isReady,
+		onPlayPause,
+	} = useVoice(voice)
 
 	return (
 		<div className="flex items-center gap-3">
