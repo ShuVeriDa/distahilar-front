@@ -57,7 +57,7 @@ export const Message: FC<IMessageProps> = ({
 			<div
 				ref={ref}
 				className={cn(
-					"relative w-fit px-3 py-2 flex max-w-[60%] gap-3",
+					"relative w-fit px-3 py-2 flex max-w-[70%] gap-3",
 					isMyMessage &&
 						"bg-[#EFFDDE] rounded-l-2xl rounded-tr-[16px] self-end after:-right-[20px] after:rounded-bl-[13px] after:shadow-[-13px_0_0_0_#EFFDDE]",
 					!isMyMessage &&

@@ -47,6 +47,7 @@ export type VoiceVideoMessageType = {
 	id: string
 	createdAt: Date
 	url: string
+	size?: number
 	duration: number
 	messageId: string | null
 }
