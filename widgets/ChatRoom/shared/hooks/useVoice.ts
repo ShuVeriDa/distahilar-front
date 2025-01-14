@@ -1,3 +1,5 @@
+"use client"
+
 import { VoiceVideoMessageType } from "@/prisma/models"
 import { useWavesurfer } from "@wavesurfer/react"
 import { useCallback, useEffect, useRef } from "react"

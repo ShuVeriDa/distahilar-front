@@ -1,8 +1,8 @@
 "use client"
 
-import { MessageType } from "@/prisma/models"
+import { MediaType, MessageEnum, MessageType } from "@/prisma/models"
 import { useSocket } from "@/shared/providers/SocketProvider"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export const useMessagesWSQuery = (chatId: string) => {
 	const { socket } = useSocket()
@@ -42,5 +42,43 @@ export const useMessagesWSQuery = (chatId: string) => {
 			),
 		staleTime: 1000 * 30, // 30 секунд
 		enabled: !!chatId.trim(),
+	})
+}
+
+export interface CreateMessageDto {
+	content: string
+	mediaId?: string
+	url?: string
+	duration?: number
+	size?: number
+	messageType: MessageEnum
+	mediaType?: MediaType
+}
+
+export const useSendMessage = (chatId: string) => {
+	const { socket } = useSocket()
+
+	const client = useQueryClient()
+
+	return useMutation<void, Error, CreateMessageDto>({
+		mutationKey: ["message:create", chatId],
+		mutationFn: messageData =>
+			new Promise<void>((resolve, reject) => {
+				if (!socket) {
+					reject(new Error("WebSocket is not connected"))
+					return
+				}
+
+				socket.emit(
+					"createMessage",
+					{ chatId, ...messageData },
+					(response: MessageType) => {
+						resolve()
+					}
+				)
+			}),
+		onSuccess: () => {
+			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
+		},
 	})
 }

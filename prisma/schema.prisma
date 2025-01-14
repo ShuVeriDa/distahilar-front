@@ -133,9 +133,10 @@ model Message {
   voiceMessages VoiceMessage[]
   videoMessages VideoMessage[]
   isPinned      Boolean        @default(false)
+  status        MessageStatus  @default(PENDING)
   // fileUrl       String?        @db.Text
 
-  isRead      Boolean  @default(false) // статус прочтения
+  // isRead      Boolean  @default(false) // статус прочтения
   readByUsers String[] @default([])
 
   userId String
@@ -276,4 +277,10 @@ enum ChatRole {
   DIALOG
   CHANNEL
   GROUP
+}
+
+enum MessageStatus {
+  PENDING
+  SENT
+  READ
 }

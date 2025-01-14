@@ -52,6 +52,13 @@ export const InputNS = {
 			wrapperClassName: "",
 			className: cn(""),
 		},
+		messageInput: {
+			wrapperClassName: cn(
+				DEFAULT_WRAPPER_CLASSES,
+				"flex justify-center items-center"
+			),
+			className: cn("w-full bg-transparent focus:outline-none border-none"),
+		},
 	} as const,
 }
 

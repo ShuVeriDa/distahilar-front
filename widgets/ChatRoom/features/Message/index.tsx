@@ -1,4 +1,6 @@
-import { MessageEnum, MessageType } from "@/prisma/models"
+"use client"
+
+import { MessageEnum, MessageStatus, MessageType } from "@/prisma/models"
 import { Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatTime } from "@/shared/lib/utils/formatTime"
@@ -11,6 +13,7 @@ import { VideoMessage } from "../VideoMessage"
 interface IMessageProps {
 	message: MessageType
 	previousMessage: MessageType
+	nextMessage: MessageType
 	userId: string | undefined
 	locale: string
 }
@@ -19,13 +22,13 @@ export const Message: FC<IMessageProps> = ({
 	message,
 	userId,
 	previousMessage,
+	nextMessage,
 	locale,
 }) => {
-	const isMyMessage = message.userId === userId
-	const date = formatTime(message.createdAt, "hh:mm")
-	const ref = useRef<HTMLDivElement>(null)
 	const [height, setHeight] = useState<number | null>(null)
-	const isMoreTwoLine = height && height > 36
+	const ref = useRef<HTMLDivElement>(null)
+
+	const date = formatTime(message.createdAt, "hh:mm")
 
 	useEffect(() => {
 		if (ref.current) {
@@ -33,6 +36,9 @@ export const Message: FC<IMessageProps> = ({
 		}
 	}, [message])
 
+	const isMyMessage = message.userId === userId
+	const isNextMessageMine = nextMessage && nextMessage.userId === userId
+	const isMoreTwoLine = height && height > 36
 	const isVoice = message.messageType === MessageEnum.VOICE
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const isFirstMessageOfDay =
@@ -58,11 +64,25 @@ export const Message: FC<IMessageProps> = ({
 				ref={ref}
 				className={cn(
 					"relative w-fit px-3 py-2 flex max-w-[70%] gap-3",
+					isMyMessage && "bg-[#EFFDDE] rounded-l-2xl self-end",
 					isMyMessage &&
-						"bg-[#EFFDDE] rounded-l-2xl rounded-tr-[16px] self-end after:-right-[20px] after:rounded-bl-[13px] after:shadow-[-13px_0_0_0_#EFFDDE]",
+						!isNextMessageMine &&
+						"rounded-tr-[16px] after:-right-[20px] after:rounded-bl-[13px] after:shadow-[-13px_0_0_0_#EFFDDE]",
+					isMyMessage && isNextMessageMine && "rounded-tr-2xl rounded-br-md",
+
+					!isMyMessage && "bg-white rounded-r-2xl self-start",
 					!isMyMessage &&
-						"bg-white rounded-r-2xl rounded-tl-[16px] self-start after:-left-[20px] after:rounded-br-[13px] after:shadow-[13px_0_0_0_#ffffff]",
+						isNextMessageMine &&
+						"rounded-tl-[13px] after:-left-[20px]  after:rounded-br-[13px] after:shadow-[13px_0_0_0_#ffffff]",
 					"after:absolute after:w-[20px] after:h-[13px] after:bottom-0 after:transparent",
+					!isMyMessage &&
+						!isNextMessageMine &&
+						"rounded-tl-[16px] rounded-bl-md ",
+					nextMessage &&
+						message &&
+						(nextMessage.userId === userId) === (message.userId === userId)
+						? "mb-1"
+						: "mb-3",
 					isMoreTwoLine && `flex-col gap-0 pb-5`,
 					isVoice && "pb-2",
 					isCircleVideo && "bg-transparent after:hidden"
@@ -105,7 +125,10 @@ export const Message: FC<IMessageProps> = ({
 
 						{isMyMessage && (
 							<div className={cn("flex")}>
-								<IsRead isRead={message.isRead} isCircleVideo={isCircleVideo} />
+								<IsRead
+									status={message.status as MessageStatus}
+									isCircleVideo={isCircleVideo}
+								/>
 							</div>
 						)}
 					</div>

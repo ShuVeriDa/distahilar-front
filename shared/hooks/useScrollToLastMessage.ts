@@ -1,3 +1,5 @@
+"use client"
+
 import { MessageType } from "@/prisma/models"
 import { useLayoutEffect, useRef } from "react"
 

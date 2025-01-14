@@ -1,4 +1,4 @@
-import { FoundedChatsType } from "@/prisma/models"
+import { FoundedChatsType, MessageStatus } from "@/prisma/models"
 import { Button, Skeleton, Typography, useUser } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatDateTelegramStyle } from "@/shared/lib/utils/formatDateTelegramStyle"
@@ -94,7 +94,7 @@ export const Chat = ({ chat, locale }: IChatProps) => {
 							isMyMessage &&
 							chat.lastMessage && (
 								<div>
-									<IsRead isRead={chat.lastMessage.isRead} />
+									<IsRead status={chat.lastMessage.status as MessageStatus} />
 								</div>
 							)}
 

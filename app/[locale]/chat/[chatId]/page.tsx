@@ -1,4 +1,4 @@
-import { ChatRoom } from "@/features/ChatRoom"
+import { ChatRoom } from "@/widgets/ChatRoom"
 import { NextPage } from "next"
 
 interface IChatProps {
@@ -10,7 +10,7 @@ const Chat: NextPage<IChatProps> = async ({ params }) => {
 	const { chatId, locale } = await params
 
 	return (
-		<div className="w-full h-screen flex dark:bg-[#0E1621] bg-white">
+		<div className="w-full h-screen flex dark:bg-[#0E1621] bg-white ">
 			<ChatRoom chatId={chatId as string} locale={locale} />
 		</div>
 	)

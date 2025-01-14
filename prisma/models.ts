@@ -112,3 +112,9 @@ export enum ChatRole {
 	CHANNEL = "CHANNEL",
 	GROUP = "GROUP",
 }
+
+export enum MessageStatus {
+	PENDING = "PENDING",
+	SENT = "SENT",
+	READ = "READ",
+}

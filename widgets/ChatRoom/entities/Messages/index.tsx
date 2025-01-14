@@ -19,7 +19,7 @@ export const Messages: FC<IMessagesProps> = ({ messages, locale }) => {
 	return (
 		<div
 			ref={containerRef}
-			className="w-full h-full overflow-y-auto flex flex-col gap-3 px-5 py-3"
+			className="w-full h-full overflow-y-auto flex flex-1 flex-col  px-5 py-3"
 		>
 			{messages.map((message, index) => {
 				return (
@@ -27,6 +27,7 @@ export const Messages: FC<IMessagesProps> = ({ messages, locale }) => {
 						key={message.id}
 						message={message}
 						previousMessage={messages[index - 1]}
+						nextMessage={messages[index + 1]}
 						userId={userId}
 						locale={locale}
 					/>

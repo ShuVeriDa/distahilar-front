@@ -1,13 +1,14 @@
+import { MessageStatus } from "@/prisma/models"
 import { useTheme } from "next-themes"
 import { FC } from "react"
-import { LuCheck, LuCheckCheck } from "react-icons/lu"
+import { LuCheck, LuCheckCheck, LuClock3 } from "react-icons/lu"
 
 interface IIsReadProps {
-	isRead: boolean
+	status: MessageStatus
 	isCircleVideo?: boolean
 }
 
-export const IsRead: FC<IIsReadProps> = ({ isRead, isCircleVideo }) => {
+export const IsRead: FC<IIsReadProps> = ({ status, isCircleVideo }) => {
 	const { theme } = useTheme()
 	const color =
 		theme === "light" && !isCircleVideo
@@ -16,6 +17,10 @@ export const IsRead: FC<IIsReadProps> = ({ isRead, isCircleVideo }) => {
 			? "#ffffff"
 			: "#71BBFC"
 	return (
-		<>{isRead ? <LuCheckCheck color={color} /> : <LuCheck color={color} />}</>
+		<>
+			{status === MessageStatus.PENDING && <LuClock3 color={color} />}
+			{status === MessageStatus.READ && <LuCheckCheck color={color} />}
+			{status === MessageStatus.SENT && <LuCheck color={color} />}
+		</>
 	)
 }
