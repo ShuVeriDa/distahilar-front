@@ -34,6 +34,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 			<div className="w-[47px] h-full flex flex-col justify-end">
 				<Button
 					variant="default"
+					type="button"
 					className="w-[47px] h-[47px] flex items-center justify-center"
 				>
 					<ImAttachment
@@ -83,6 +84,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 					<Button
 						variant="default"
 						className="w-[47px]  h-[47px]  flex items-center justify-center"
+						type="button"
 						onDoubleClick={onChangeTypeMessage}
 						onClick={manageRecording}
 					>

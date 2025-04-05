@@ -17,6 +17,15 @@
 					"Friday",
 					"Saturday"
 				]
+			},
+			"options": {
+				"reply": "Reply",
+				"edit": "Edit",
+				"pin": "Pin",
+				"copy_text": "Copy text",
+				"forward": "Forward",
+				"delete": "Delete",
+				"select": "Select"
 			}
 		}
 	}

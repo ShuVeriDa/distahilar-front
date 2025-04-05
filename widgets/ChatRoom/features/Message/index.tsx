@@ -1,69 +1,47 @@
 "use client"
 
-import { MessageEnum, MessageStatus, MessageType } from "@/prisma/models"
+import { MessageStatus, MessageType } from "@/prisma/models"
 import { Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatTime } from "@/shared/lib/utils/formatTime"
 import { IsRead } from "@/shared/ui/isRead"
 
-import { FC, useEffect, useRef, useState } from "react"
+import { FC, RefObject } from "react"
 import { MessageVoice } from "../MessageVoice"
 import { VideoMessage } from "../VideoMessage"
 
 interface IMessageProps {
 	message: MessageType
-	previousMessage: MessageType
 	nextMessage: MessageType
+	isCircleVideo: boolean
+	isVoice: boolean
+	isMyMessage: boolean
+	isMoreTwoLine: boolean | 0 | null
+	isNextMessageMine: boolean
+	ref: RefObject<HTMLDivElement>
 	userId: string | undefined
-	locale: string
 }
 
 export const Message: FC<IMessageProps> = ({
 	message,
-	userId,
-	previousMessage,
 	nextMessage,
-	locale,
+	isCircleVideo,
+	isVoice,
+	isMoreTwoLine,
+	isMyMessage,
+	isNextMessageMine,
+	ref,
+
+	userId,
 }) => {
-	const [height, setHeight] = useState<number | null>(null)
-	const ref = useRef<HTMLDivElement>(null)
-
 	const date = formatTime(message.createdAt, "hh:mm")
-
-	useEffect(() => {
-		if (ref.current) {
-			setHeight(ref.current.offsetHeight)
-		}
-	}, [message])
-
-	const isMyMessage = message.userId === userId
-	const isNextMessageMine = nextMessage && nextMessage.userId === userId
-	const isMoreTwoLine = height && height > 36
-	const isVoice = message.messageType === MessageEnum.VOICE
-	const isCircleVideo = message.messageType === MessageEnum.VIDEO
-	const isFirstMessageOfDay =
-		!previousMessage ||
-		new Date(message.createdAt).toDateString() !==
-			new Date(previousMessage.createdAt).toDateString()
-
-	const formattedDate = formatTime(message.createdAt, "Month number", locale)
 
 	return (
 		<>
-			{isFirstMessageOfDay && (
-				<div className="w-full flex items-center justify-center ">
-					<Typography
-						tag="h6"
-						className="bg-black/20 text-white font-[400] px-3 py-0.5 rounded-full text-[14px]"
-					>
-						{formattedDate}
-					</Typography>
-				</div>
-			)}
 			<div
 				ref={ref}
 				className={cn(
-					"relative w-fit px-3 py-2 flex max-w-[70%] gap-3",
+					"relative min-w-[80px] w-fit px-3 py-2 flex max-w-[70%] gap-3",
 					isMyMessage && "bg-[#EFFDDE] rounded-l-2xl self-end",
 					isMyMessage &&
 						!isNextMessageMine &&

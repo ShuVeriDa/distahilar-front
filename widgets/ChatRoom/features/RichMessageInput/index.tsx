@@ -66,7 +66,10 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
 		setValue("content", currentValue + icon, { shouldValidate: true })
 	}
 
-	const onSendVoice = () => {}
+	const onSendVoice = () => {
+		stopRecording()
+		console.log({ mediaRecorder, audioUrl })
+	}
 
 	const onSubmit: SubmitHandler<IFormRichMessageInput> = async data => {
 		console.log({ data })
@@ -101,7 +104,7 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
 						glowIntensity={glowIntensity}
 						recordingTime={recordingTime}
 						volume={volume}
-						stopRecording={stopRecording}
+						stopRecording={onSendVoice}
 					/>
 				) : (
 					<ContentType
