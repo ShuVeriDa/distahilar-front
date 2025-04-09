@@ -46,6 +46,11 @@ h6 {
 	}
 }
 
+.custom-emoji-picker {
+	--epr-emoji-size: 20px !important; /* Увеличиваем размер эмодзи */
+	--epr-emoji-gap: 10px !important; /* Расстояние между эмодзи */
+}
+
 @layer base {
 	:root {
 		--background: 0 0% 100%;

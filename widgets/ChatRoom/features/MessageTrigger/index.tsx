@@ -35,6 +35,8 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	const isMoreTwoLine = height && height > 36
 	const isVoice = message.messageType === MessageEnum.VOICE
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
+	// const isHasReactions = true
+	const isHasReactions = message.reactions?.length > 0
 	console.log({ width })
 
 	return (
@@ -56,6 +58,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 					isCircleVideo={isCircleVideo}
 					isMoreTwoLine={isMoreTwoLine}
 					isMyMessage={isMyMessage}
+					isHasReactions={isHasReactions}
 				/>
 			</ContextMenuTrigger>
 		</>
