@@ -4,6 +4,7 @@ import { cn } from "@/shared/lib/utils/cn"
 import { formatTime } from "@/shared/lib/utils/formatTime"
 import { IsRead } from "@/shared/ui/isRead"
 import { FC } from "react"
+import { TiPin } from "react-icons/ti"
 
 interface IMessageInfoProps {
 	message: MessageType
@@ -23,6 +24,8 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 	isHasReactions,
 }) => {
 	const date = formatTime(message.createdAt, "hh:mm")
+	const isPinned = message.isPinned
+
 	return (
 		<div
 			className={cn(
@@ -64,6 +67,9 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 					isHasReactions && "-right-5"
 				)}
 			>
+				{isPinned && (
+					<TiPin size={20} color={isMyMessage ? "#6DB566" : "#A0ACB6"} />
+				)}
 				<Typography
 					tag="p"
 					className={cn(

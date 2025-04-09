@@ -1,4 +1,6 @@
+import { MessageType } from "@/prisma/models"
 import { Typography } from "@/shared"
+import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { cn } from "@/shared/lib/utils/cn"
 import {
 	ContextMenuContent,
@@ -11,6 +13,7 @@ import { BsReply } from "react-icons/bs"
 import { IoCheckmarkCircleOutline } from "react-icons/io5"
 import { LuCheckCheck } from "react-icons/lu"
 import { PiPencilSimple } from "react-icons/pi"
+import { RiUnpinLine } from "react-icons/ri"
 import { TbCopy } from "react-icons/tb"
 import { TiArrowForwardOutline } from "react-icons/ti"
 
@@ -25,46 +28,62 @@ interface IMessageMenuProps {
 	isMyMessage: boolean
 	createdDate: string | undefined
 	locale: string
+	message: MessageType
 }
 
 export const MessageMenu: FC<IMessageMenuProps> = ({
 	createdDate,
 	isMyMessage,
 	locale,
+	message,
 }) => {
+	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
+
 	const options = useMemo(
 		() => [
 			{
 				icon: <BsReply size={20} />,
 				title: "Reply",
+				function: () => {},
 			},
 			{
 				icon: <PiPencilSimple size={20} />,
 				title: "Edit",
+				function: () => {},
 			},
 			{
-				icon: <AiOutlinePushpin size={20} />,
-				title: "Pin",
+				icon: message.isPinned ? (
+					<RiUnpinLine size={20} />
+				) : (
+					<AiOutlinePushpin size={20} />
+				),
+				title: message.isPinned ? "Unpin" : "Pin",
+				function: pinMessage,
 			},
 			{
 				icon: <TbCopy size={20} />,
 				title: "Copy text",
+				function: () => {},
 			},
 			{
 				icon: <TiArrowForwardOutline size={20} />,
 				title: "Forward",
+				function: () => {},
 			},
 			{
 				icon: <AiOutlineDelete size={20} />,
 				title: "Delete",
+				function: () => {},
 			},
 			{
 				icon: <IoCheckmarkCircleOutline size={20} />,
 				title: "Select",
+				function: () => {},
 			},
 		],
-		[locale]
+		[locale, message.isPinned]
 	)
+
 	return (
 		<ContextMenuContent className="flex flex-col justify-center px-0 gap-4 relative bg-transparent border-none shadow-none">
 			<Picker reactionsDefaultOpen={true} className="!bg-white " />
@@ -76,17 +95,23 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 				)}
 			>
 				<div className="py-1">
-					{options.map(option => (
-						<ContextMenuItem
-							key={option.title}
-							className="flex text-black gap-4 px-4 hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C] rounded-none"
-						>
-							<div>{option.icon}</div>
-							<Typography tag="p" className="text-[14px] !font-[400]">
-								{option.title}
-							</Typography>
-						</ContextMenuItem>
-					))}
+					{options.map(option => {
+						const onClickHandler = () => {
+							option.function({ messageId: message.id, chatId: message.chatId })
+						}
+						return (
+							<ContextMenuItem
+								key={option.title}
+								className="flex text-black gap-4 px-4 hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C] rounded-none"
+								onClick={onClickHandler}
+							>
+								<div>{option.icon}</div>
+								<Typography tag="p" className="text-[14px] !font-[400]">
+									{option.title}
+								</Typography>
+							</ContextMenuItem>
+						)
+					})}
 				</div>
 
 				<div className="h-[10px] w-full bg-[#F1F1F1]" />

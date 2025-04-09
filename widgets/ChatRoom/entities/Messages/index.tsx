@@ -65,6 +65,7 @@ export const Messages: FC<IMessagesProps> = ({ messages, locale }) => {
 								isMyMessage={isMyMessage}
 								createdDate={createdDate}
 								locale={locale}
+								message={message}
 							/>
 						</ContextMenu>
 					</>

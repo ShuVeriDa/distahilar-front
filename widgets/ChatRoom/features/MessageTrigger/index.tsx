@@ -21,12 +21,10 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [height, setHeight] = useState<number | null>(null)
-	const [width, setWidth] = useState<number | null>(null)
 
 	useEffect(() => {
 		if (ref.current) {
 			setHeight(ref.current.offsetHeight)
-			setWidth(ref.current.offsetWidth)
 		}
 	}, [message])
 
@@ -37,7 +35,6 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	// const isHasReactions = true
 	const isHasReactions = message.reactions?.length > 0
-	console.log({ width })
 
 	return (
 		<>

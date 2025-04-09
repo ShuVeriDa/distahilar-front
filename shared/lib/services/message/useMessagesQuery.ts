@@ -82,3 +82,36 @@ export const useSendMessage = (chatId: string) => {
 		},
 	})
 }
+
+export interface PinMessageDto {
+	chatId: string
+	messageId: string
+}
+
+export const usePinMessage = (chatId: string) => {
+	const { socket } = useSocket()
+
+	const client = useQueryClient()
+
+	return useMutation<void, Error, PinMessageDto>({
+		mutationKey: [`chat:${chatId}:message:update`, chatId],
+		mutationFn: pinMessage =>
+			new Promise<void>((resolve, reject) => {
+				if (!socket) {
+					reject(new Error("WebSocket is not connected"))
+					return
+				}
+
+				socket.emit(
+					"pinMessage",
+					{ ...pinMessage },
+					(response: MessageType) => {
+						resolve()
+					}
+				)
+			}),
+		onSuccess: () => {
+			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
+		},
+	})
+}
