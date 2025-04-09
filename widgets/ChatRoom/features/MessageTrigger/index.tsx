@@ -4,7 +4,7 @@ import { MessageEnum, MessageType } from "@/prisma/models"
 import { cn } from "@/shared/lib/utils/cn"
 import { ContextMenuTrigger } from "@/shared/ui/ContenxtMenu/context-menu"
 import { FC, useEffect, useRef, useState } from "react"
-import { Message } from ".."
+import { Message } from "./Message"
 
 interface IMessageTriggerProps {
 	message: MessageType

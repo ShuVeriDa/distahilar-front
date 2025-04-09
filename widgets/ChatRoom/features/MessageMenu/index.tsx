@@ -1,6 +1,7 @@
 import { MessageType } from "@/prisma/models"
 import { Typography } from "@/shared"
 import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
+import { writeClipboardText } from "@/shared/lib/utils/clipboardText"
 import { cn } from "@/shared/lib/utils/cn"
 import {
 	ContextMenuContent,
@@ -58,12 +59,15 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 					<AiOutlinePushpin size={20} />
 				),
 				title: message.isPinned ? "Unpin" : "Pin",
-				function: pinMessage,
+				function: () =>
+					pinMessage({ messageId: message.id, chatId: message.chatId }),
 			},
 			{
 				icon: <TbCopy size={20} />,
 				title: "Copy text",
-				function: () => {},
+				function: () => {
+					if (message.content) writeClipboardText(message.content)
+				},
 			},
 			{
 				icon: <TiArrowForwardOutline size={20} />,
@@ -96,14 +100,11 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 			>
 				<div className="py-1">
 					{options.map(option => {
-						const onClickHandler = () => {
-							option.function({ messageId: message.id, chatId: message.chatId })
-						}
 						return (
 							<ContextMenuItem
 								key={option.title}
 								className="flex text-black gap-4 px-4 hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C] rounded-none"
-								onClick={onClickHandler}
+								onClick={option.function}
 							>
 								<div>{option.icon}</div>
 								<Typography tag="p" className="text-[14px] !font-[400]">
