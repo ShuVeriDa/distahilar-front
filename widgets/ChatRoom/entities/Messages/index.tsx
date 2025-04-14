@@ -42,7 +42,7 @@ export const Messages: FC<IMessagesProps> = ({ messages, locale }) => {
 				)
 
 				return (
-					<>
+					<div key={message.id}>
 						{isFirstMessageOfDay && (
 							<div className="w-full flex items-center justify-center ">
 								<Typography
@@ -54,7 +54,7 @@ export const Messages: FC<IMessagesProps> = ({ messages, locale }) => {
 							</div>
 						)}
 
-						<ContextMenu key={message.id}>
+						<ContextMenu>
 							<MessageTrigger
 								message={message}
 								nextMessage={messages[index + 1]}
@@ -68,7 +68,7 @@ export const Messages: FC<IMessagesProps> = ({ messages, locale }) => {
 								message={message}
 							/>
 						</ContextMenu>
-					</>
+					</div>
 				)
 			})}
 		</div>

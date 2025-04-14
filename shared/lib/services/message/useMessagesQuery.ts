@@ -115,3 +115,37 @@ export const usePinMessage = (chatId: string) => {
 		},
 	})
 }
+
+export interface DeleteMessageDto {
+	chatId: string
+	messageId: string
+	delete_both: boolean
+}
+
+export const useDeleteMessage = (chatId: string) => {
+	const { socket } = useSocket()
+
+	const client = useQueryClient()
+
+	return useMutation<void, Error, DeleteMessageDto>({
+		mutationKey: [`chat:${chatId}:message:update`, chatId],
+		mutationFn: pinMessage =>
+			new Promise<void>((resolve, reject) => {
+				if (!socket) {
+					reject(new Error("WebSocket is not connected"))
+					return
+				}
+
+				socket.emit(
+					"deleteMessage",
+					{ ...pinMessage },
+					(response: MessageType) => {
+						resolve()
+					}
+				)
+			}),
+		onSuccess: () => {
+			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
+		},
+	})
+}

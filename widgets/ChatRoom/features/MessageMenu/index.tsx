@@ -1,6 +1,9 @@
 import { MessageType } from "@/prisma/models"
 import { Typography } from "@/shared"
-import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
+import {
+	useDeleteMessage,
+	usePinMessage,
+} from "@/shared/lib/services/message/useMessagesQuery"
 import { writeClipboardText } from "@/shared/lib/utils/clipboardText"
 import { cn } from "@/shared/lib/utils/cn"
 import {
@@ -39,6 +42,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	message,
 }) => {
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
+	const { mutateAsync: deleteMessage } = useDeleteMessage(message.chatId)
 
 	const options = useMemo(
 		() => [
@@ -77,7 +81,13 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 			{
 				icon: <AiOutlineDelete size={20} />,
 				title: "Delete",
-				function: () => {},
+				function: () => {
+					deleteMessage({
+						messageId: message.id,
+						chatId: message.chatId,
+						delete_both: isMyMessage ? true : false,
+					})
+				},
 			},
 			{
 				icon: <IoCheckmarkCircleOutline size={20} />,
@@ -85,7 +95,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 				function: () => {},
 			},
 		],
-		[locale, message.isPinned]
+		[locale, message.isPinned, message.chatId, message.id, message.content]
 	)
 
 	return (

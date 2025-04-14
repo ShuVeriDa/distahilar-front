@@ -53,11 +53,11 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 					</Typography>
 				</div>
 			</div>
-			<div className="h-full w-10">
-				<Button
-					variant="clean"
-					type="button"
-					className="w-full h-full"
+			<div className="h-full w-10 flex ">
+				<div
+					role="button"
+					tabIndex={0}
+					className="w-full h-full flex items-center justify-center"
 					onClick={handleUnpin}
 				>
 					<FiX
@@ -65,7 +65,7 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 						color=""
 						className="text-[#8A8A8A] hover:text-[#747474]"
 					/>
-				</Button>
+				</div>
 			</div>
 		</Button>
 	)
