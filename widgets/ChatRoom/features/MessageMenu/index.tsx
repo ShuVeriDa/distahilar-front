@@ -1,9 +1,9 @@
-import { MessageType } from "@/prisma/models"
-import { Typography } from "@/shared"
-import {
-	useDeleteMessage,
-	usePinMessage,
-} from "@/shared/lib/services/message/useMessagesQuery"
+"use client"
+
+import { ChatRole, MessageType } from "@/prisma/models"
+import { Typography, useModal } from "@/shared"
+import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
+import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { writeClipboardText } from "@/shared/lib/utils/clipboardText"
 import { cn } from "@/shared/lib/utils/cn"
 import {
@@ -33,6 +33,8 @@ interface IMessageMenuProps {
 	createdDate: string | undefined
 	locale: string
 	message: MessageType
+	interlocutorsName: string | undefined
+	onSelectMessage: () => void
 }
 
 export const MessageMenu: FC<IMessageMenuProps> = ({
@@ -40,9 +42,11 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	isMyMessage,
 	locale,
 	message,
+	interlocutorsName,
+	onSelectMessage,
 }) => {
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
-	const { mutateAsync: deleteMessage } = useDeleteMessage(message.chatId)
+	const { onOpenModal } = useModal()
 
 	const options = useMemo(
 		() => [
@@ -82,17 +86,23 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 				icon: <AiOutlineDelete size={20} />,
 				title: "Delete",
 				function: () => {
-					deleteMessage({
-						messageId: message.id,
-						chatId: message.chatId,
-						delete_both: isMyMessage ? true : false,
+					onOpenModal(EnumModel.DELETE_MESSAGES, {
+						deleteMessages: {
+							messageIds: [message.id],
+							chatId: message.chatId,
+							interlocutorsName:
+								message.chat.type === ChatRole.DIALOG
+									? interlocutorsName
+									: undefined,
+							chatType: message.chat.type as ChatRole,
+						},
 					})
 				},
 			},
 			{
 				icon: <IoCheckmarkCircleOutline size={20} />,
 				title: "Select",
-				function: () => {},
+				function: () => onSelectMessage(),
 			},
 		],
 		[locale, message.isPinned, message.chatId, message.id, message.content]

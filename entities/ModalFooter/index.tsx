@@ -11,6 +11,7 @@ interface IModalFooterProps {
 	onSave?: () => Promise<void>
 	className?: string
 	type?: "submit" | "button"
+	anotherName?: string
 }
 
 export const ModalFooter: FC<IModalFooterProps> = ({
@@ -19,6 +20,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 	onSave,
 	className,
 	type = "button",
+	anotherName = "Save",
 }) => {
 	const CLASSNAME_UPPERDERLINE =
 		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:top-0 after:bg-[#E0E0E0] after:dark:bg-[#101921]"
@@ -47,7 +49,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 				onClick={onSave}
 				disabled={isLoading}
 			>
-				<Typography className="text-[15px]">Save</Typography>
+				<Typography className="text-[15px]">{anotherName}</Typography>
 			</Button>
 		</div>
 	)

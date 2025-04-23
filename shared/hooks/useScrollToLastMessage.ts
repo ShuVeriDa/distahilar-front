@@ -5,6 +5,7 @@ import { useLayoutEffect, useRef } from "react"
 
 export const useScrollToLastMessage = (messages: MessageType[]) => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
+	const isFirstVisit = useRef(true)
 
 	useLayoutEffect(() => {
 		const container = containerRef.current
@@ -13,21 +14,14 @@ export const useScrollToLastMessage = (messages: MessageType[]) => {
 				container.scrollTop = container.scrollHeight
 			}
 
-			const observer = new MutationObserver(() => {
+			// Прокрутка при первом посещении
+			if (isFirstVisit.current) {
 				scrollToBottom()
-			})
-
-			observer.observe(container, {
-				childList: true,
-				subtree: true,
-			})
-
-			// Прокручиваем к последнему сообщению при первой загрузке
-			scrollToBottom()
-
-			return () => {
-				observer.disconnect()
+				isFirstVisit.current = false
 			}
+
+			// Прокрутка при изменении сообщений
+			scrollToBottom()
 		}
 	}, [messages])
 

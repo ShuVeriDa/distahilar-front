@@ -1,4 +1,4 @@
-import { FolderType } from "@/prisma/models"
+import { ChatRole, FolderType } from "@/prisma/models"
 import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared/types/types.type"
 
 export enum EnumModel {
@@ -16,6 +16,7 @@ export enum EnumModel {
 	INCLUDE_CHATS = "INCLUDE_CHATS",
 	LANGUAGE = "LANGUAGE",
 	NO_TYPE = "NO_TYPE",
+	DELETE_MESSAGES = "DELETE_MESSAGES",
 }
 
 export interface IModalData {
@@ -29,6 +30,13 @@ export interface IModalData {
 		surname?: string
 		phone?: string
 		username?: string
+	}
+	deleteMessages: {
+		messageIds: string[]
+		chatId: string
+		interlocutorsName?: string
+		chatType: ChatRole
+		clearSelectedMessages: () => void
 	}
 }
 

@@ -1,4 +1,5 @@
 import { Header } from "./Header"
-import { Messages } from "./Messages"
+import { WrapperMessages } from "./WrapperMessages"
+import { Messages } from "./WrapperMessages/Messages"
 
-export { Header, Messages }
+export { Header, Messages, WrapperMessages }

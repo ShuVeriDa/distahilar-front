@@ -118,7 +118,7 @@ export const usePinMessage = (chatId: string) => {
 
 export interface DeleteMessageDto {
 	chatId: string
-	messageId: string
+	messageIds: string[]
 	delete_both: boolean
 }
 
@@ -128,7 +128,7 @@ export const useDeleteMessage = (chatId: string) => {
 	const client = useQueryClient()
 
 	return useMutation<void, Error, DeleteMessageDto>({
-		mutationKey: [`chat:${chatId}:message:update`, chatId],
+		mutationKey: [`chat:${chatId}:messages:update`, chatId],
 		mutationFn: pinMessage =>
 			new Promise<void>((resolve, reject) => {
 				if (!socket) {
