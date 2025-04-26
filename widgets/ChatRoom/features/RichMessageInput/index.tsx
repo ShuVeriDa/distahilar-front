@@ -115,6 +115,8 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
 						onChangeTypeMessage={onChangeTypeMessage}
 						manageRecording={manageRecording}
 						onAddEmoji={onAddEmoji}
+						handleSubmit={handleSubmit}
+						onSubmit={onSubmit}
 					/>
 				)}
 			</form>

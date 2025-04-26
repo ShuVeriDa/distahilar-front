@@ -3,7 +3,11 @@ import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { IconPicker } from "@/shared/ui/EmojiPicker"
 import { FC } from "react"
-import { UseFormRegister } from "react-hook-form"
+import {
+	SubmitHandler,
+	UseFormHandleSubmit,
+	UseFormRegister,
+} from "react-hook-form"
 import { ImAttachment } from "react-icons/im"
 import { IoSend } from "react-icons/io5"
 import { PiInstagramLogoLight, PiMicrophone, PiSmiley } from "react-icons/pi"
@@ -18,6 +22,8 @@ interface IContentTypeProps {
 	manageRecording: () => void
 	onChangeTypeMessage: () => void
 	onAddEmoji: (icon: string) => void
+	handleSubmit: UseFormHandleSubmit<IFormRichMessageInput, undefined>
+	onSubmit: SubmitHandler<IFormRichMessageInput>
 }
 
 export const ContentType: FC<IContentTypeProps> = ({
@@ -28,6 +34,8 @@ export const ContentType: FC<IContentTypeProps> = ({
 	register,
 	manageRecording,
 	onChangeTypeMessage,
+	handleSubmit,
+	onSubmit,
 }) => {
 	return (
 		<>
@@ -50,6 +58,12 @@ export const ContentType: FC<IContentTypeProps> = ({
 					rows={1}
 					maxRows={11}
 					placeholder="Write a message..."
+					onKeyDown={e => {
+						if (e.key === "Enter" && !e.shiftKey) {
+							e.preventDefault()
+							handleSubmit(onSubmit)()
+						}
+					}}
 					{...register("content")}
 				/>
 			</div>
