@@ -92,7 +92,7 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
 	}
 
 	return (
-		<div className="w-full min-h-[47px] bg-white border-t border-t-[#E7E7E7] relative">
+		<div className="w-full min-h-[47px] bg-white dark:bg-[#17212B] border-t border-t-[#E7E7E7] dark:border-t-[#101921] relative">
 			<form
 				className="flex items-center justify-between"
 				onSubmit={handleSubmit(onSubmit)}

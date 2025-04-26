@@ -87,7 +87,12 @@ export const Message: FC<IMessageProps> = ({
 							{message.content}
 						</Typography>
 					)}
-					{isVoice && <MessageVoice voice={message.voiceMessages} />}
+					{isVoice && (
+						<MessageVoice
+							voice={message.voiceMessages}
+							isMyMessage={isMyMessage}
+						/>
+					)}
 					{isCircleVideo && <VideoMessage video={message.videoMessages} />}
 				</div>
 

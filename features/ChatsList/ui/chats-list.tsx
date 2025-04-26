@@ -31,7 +31,7 @@ export const ChatsList: FC<IChatsProps> = ({ locale }) => {
 
 	return (
 		// min-w-[250px] max-w-[470px]
-		<div className="min-w-[250px] max-w-[350px] w-full h-screen dark:bg-[#17212B] border-r-[1px] dark:border-r-[#18222d] overflow-hidden">
+		<div className="min-w-[250px] max-w-[350px] w-full h-screen dark:bg-[#17212B] border-r-[1px] dark:border-r-[#101921] overflow-hidden">
 			<div className="w-full h-[50px] flex items-center justify-center px-3">
 				<Search
 					variant="searchV2"

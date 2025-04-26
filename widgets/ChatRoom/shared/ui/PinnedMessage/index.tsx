@@ -27,7 +27,7 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 		<Button
 			variant="default"
 			className={cn(
-				"!w-full min-h-[50px] hidden !justify-between  !items-start bg-white py-2 px-3 border-b border-b-[#E7E7E7]"
+				"!w-full min-h-[50px] hidden !justify-between  !items-start bg-white dark:bg-[#1B2734] py-2 px-3 border-b border-b-[#E7E7E7] dark:border-b-[#101921]"
 			)}
 		>
 			<div className="flex flex-col">
@@ -40,7 +40,7 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 					<Typography
 						tag="p"
 						className={cn(
-							"!font-[400] text-[12px] text-[#A0ACB6] text-left",
+							"!font-[400] text-[12px] text-[#A0ACB6] dark:text-white text-left",
 							pinnedMessages?.messageType === MessageEnum.TEXT && "text-black"
 						)}
 					>

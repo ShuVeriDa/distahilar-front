@@ -49,12 +49,12 @@ export const Header: FC<IHeaderProps> = ({
 		: `${chat?.members.length} subscribers `
 
 	return (
-		<div className="w-full flex flex-col items-center  bg-white min-h-[50px] py-2 px-3 border-b border-b-[#E7E7E7]">
+		<div className="w-full flex flex-col items-center dark:bg-[#17212B] bg-white min-h-[50px] py-2 px-3 border-b border-b-[#E7E7E7] dark:border-b-[#101921]">
 			<AnimatePresence mode="wait">
 				{!hasSelectedMessages ? (
 					<MotionDiv
 						key="chat-header"
-						initial={{ y: 20, opacity: 0 }}
+						// initial={{ y: 20, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
 						exit={{ y: 20, opacity: 0 }}
 						transition={{ duration: 0.1 }}

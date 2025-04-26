@@ -74,7 +74,7 @@ export const Messages: FC<IMessagesProps> = ({
 				<div className="w-full flex items-center justify-center ">
 					<Typography
 						tag="h6"
-						className="bg-black/20 text-white font-[400] px-3 py-0.5 rounded-full text-[14px]"
+						className="bg-black/20 dark:bg-[#1E2C3A] text-white font-[400] px-3 py-0.5 rounded-full text-[14px]"
 					>
 						{formattedDate}
 					</Typography>

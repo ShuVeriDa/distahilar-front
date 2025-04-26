@@ -7,8 +7,8 @@ export const getMessageBackgroundClasses = (
 ) => {
 	if (isCircleVideo) return ""
 	return isMyMessage
-		? "bg-[#EFFDDE] rounded-l-2xl self-end"
-		: "bg-white rounded-r-2xl self-start"
+		? "bg-[#EFFDDE] dark:bg-[#2B5278] rounded-l-2xl self-end"
+		: "bg-white dark:bg-[#182533] rounded-r-2xl self-start"
 }
 
 export const getMessageBorderRadiusClasses = (
@@ -47,12 +47,12 @@ export const getMessageTailClasses = (
 			!isNextMessageMine &&
 			(isSameMessage
 				? "after:shadow-[-13px_0_0_0_#B9D8E5]"
-				: "after:shadow-[-13px_0_0_0_#EFFDDE]"),
+				: "after:shadow-[-13px_0_0_0_#EFFDDE] dark:after:shadow-[-13px_0_0_0_#2B5278]"),
 		!isMyMessage &&
 			isNextMessageMine &&
 			(isSameMessage
 				? "after:shadow-[13px_0_0_0_#C4D9FC]"
-				: "after:shadow-[13px_0_0_0_#ffffff]")
+				: "after:shadow-[13px_0_0_0_#ffffff] dark:after:shadow-[13px_0_0_0_#182533]")
 	)
 }
 

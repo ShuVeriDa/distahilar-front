@@ -2,16 +2,20 @@
 
 import { VoiceVideoMessageType } from "@/prisma/models"
 import { useWavesurfer } from "@wavesurfer/react"
+import { useTheme } from "next-themes"
 import { useCallback, useEffect, useRef } from "react"
 
 export const useVoice = (voice: VoiceVideoMessageType[]) => {
+	const { theme } = useTheme()
+	console.log({ theme })
+
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
 	const { wavesurfer, isPlaying, currentTime, isReady } = useWavesurfer({
 		container: containerRef,
 		height: 20,
-		waveColor: "#B3E2B4",
-		progressColor: "#5EBD66",
+		waveColor: theme === "light" ? "#B3E2B4" : "#4B7FB3",
+		progressColor: theme === "light" ? "#5EBD66" : "#62B2FD",
 		cursorWidth: 0,
 		// normalize: true,
 		barWidth: 2.4,

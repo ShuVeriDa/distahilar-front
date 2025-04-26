@@ -68,13 +68,23 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 				)}
 			>
 				{isPinned && (
-					<TiPin size={20} color={isMyMessage ? "#6DB566" : "#A0ACB6"} />
+					<TiPin
+						size={20}
+						className={cn(
+							"",
+							isMyMessage
+								? "text-[#6DB566] dark:text-[#488DD3]"
+								: "text-[#A0ACB6] dark:text-[#6D7F8F]"
+						)}
+					/>
 				)}
 				<Typography
 					tag="p"
 					className={cn(
 						"text-[12px] leading-5",
-						isMyMessage ? "text-[#6DB566]" : "text-[#A0ACB6]",
+						isMyMessage
+							? "text-[#6DB566] dark:text-[#488DD3]"
+							: "text-[#A0ACB6] dark:text-[#6D7F8F]",
 						isCircleVideo && "text-white"
 					)}
 				>

@@ -54,7 +54,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 
 			<div className="h-full w-full flex items-center bg-red-400">
 				<TextareaAutosize
-					className="w-full min-h-[47px] text-[13px] resize-none outline-none py-3 placeholder:text-[14px] placeholder:!font-[400]"
+					className="w-full min-h-[47px] text-[13px] resize-none outline-none py-3 placeholder:text-[14px] placeholder:!font-[400] dark:bg-[#17212B]"
 					rows={1}
 					maxRows={11}
 					placeholder="Write a message..."
