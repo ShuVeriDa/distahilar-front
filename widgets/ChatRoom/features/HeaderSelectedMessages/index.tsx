@@ -1,7 +1,12 @@
 import { ChatRole, MessageType } from "@/prisma/models"
 import { Button, useModal } from "@/shared"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
+import dynamic from "next/dynamic"
 import { FC } from "react"
+
+const MotionDiv = dynamic(() =>
+	import("framer-motion").then(mod => mod.motion.div)
+)
 
 interface IHeaderSelectedMessagesProps {
 	selectedMessages: MessageType[]
@@ -32,7 +37,14 @@ export const HeaderSelectedMessages: FC<IHeaderSelectedMessagesProps> = ({
 	}
 
 	return (
-		<div className="w-full flex h-full justify-between items-center">
+		<MotionDiv
+			key="selected-chat-header"
+			className="w-full flex h-full justify-between items-center "
+			initial={{ y: -20, opacity: 0 }}
+			animate={{ y: 0, opacity: 1 }}
+			exit={{ y: -20, opacity: 0 }}
+			transition={{ duration: 0.1 }}
+		>
 			<div className="flex gap-2">
 				<Button variant="blue" className="uppercase">
 					<span>Forward</span>
@@ -52,6 +64,6 @@ export const HeaderSelectedMessages: FC<IHeaderSelectedMessagesProps> = ({
 					Cancel
 				</Button>
 			</div>
-		</div>
+		</MotionDiv>
 	)
 }

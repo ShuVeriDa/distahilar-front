@@ -3,9 +3,15 @@
 import { MessageEnum, MessageType } from "@/prisma/models"
 import { cn } from "@/shared/lib/utils/cn"
 import { ContextMenuTrigger } from "@/shared/ui/ContenxtMenu/context-menu"
+import { AnimatePresence } from "framer-motion"
+import dynamic from "next/dynamic"
 import { FC, useEffect, useRef, useState } from "react"
 import { FaCheck } from "react-icons/fa6"
 import { Message } from "./Message"
+
+const MotionDiv = dynamic(() =>
+	import("framer-motion").then(mod => mod.motion.div)
+)
 
 interface IMessageTriggerProps {
 	message: MessageType
@@ -73,21 +79,27 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 					isDifferentSenderNext={isDifferentSenderNext}
 					isDifferentSenderPrevious={isDifferentSenderPrevious}
 					isFirstMessage={isFirstMessage}
+					// hasSelectedMessages={hasSelectedMessages}
 				/>
 			</ContextMenuTrigger>
-
-			{hasSelectedMessages && (
-				<div
-					className={cn(
-						"flex justify-center items-center bg-[#8EA97A] w-full max-w-[22px] h-[22px] rounded-full ml-[6px] mb-2 border-[2px] border-white",
-						// height && height > 40 && "mb-3",
-						(isDifferentSenderNext || isLastMessage) && "mb-4",
-						isSameMessage && "bg-[#4AB44A] pt-0.5"
-					)}
-				>
-					{isSameMessage && <FaCheck color="white" size={14} />}
-				</div>
-			)}
+			<AnimatePresence>
+				{hasSelectedMessages && (
+					<MotionDiv
+						key="selected-message-indicator"
+						initial={{ opacity: 0, x: 20 }}
+						animate={{ opacity: 1, x: 0 }}
+						exit={{ opacity: 0, x: 20 }}
+						transition={{ duration: 0.2, ease: "easeOut" }}
+						className={cn(
+							"flex justify-center items-center bg-[#8EA97A] w-full max-w-[22px] h-[22px] rounded-full ml-[6px] mb-2 border-[2px] border-white",
+							(isDifferentSenderNext || isLastMessage) && "mb-4",
+							isSameMessage && "bg-[#4AB44A] pt-0.5"
+						)}
+					>
+						{isSameMessage && <FaCheck color="white" size={14} />}
+					</MotionDiv>
+				)}
+			</AnimatePresence>
 		</div>
 	)
 }
