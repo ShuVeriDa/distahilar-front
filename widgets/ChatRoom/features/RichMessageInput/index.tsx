@@ -1,6 +1,7 @@
 "use client"
 
 import { MessageEnum, VoiceVideoMessageType } from "@/prisma/models"
+import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import { useSendMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { FC, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -20,44 +21,33 @@ interface IRichMessageInputProps {
 export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
 	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
 
-	const {
-		mutateAsync: sendMessage,
-		isLoading,
-		isPending,
-		isSuccess,
-	} = useSendMessage(chatId)
+	const { register, handleSubmit, reset, watch, setValue } =
+		useForm<IFormRichMessageInput>()
+	const { mutateAsync: sendMessage } = useSendMessage(chatId)
+	const { uploadFileQuery } = useFileQuery("audio-message")
+	const { mutateAsync: audioUpload } = uploadFileQuery
 
 	const {
-		audioUrl,
 		recording,
 		shadowColor,
 		glowIntensity,
 		recordingTime,
 		volume,
-		mediaRecorder,
 		startRecording,
 		stopRecording,
 	} = useVoiceRecord()
 
-	const { register, handleSubmit, reset, watch, setValue } =
-		useForm<IFormRichMessageInput>()
-
 	const currentValue = watch("content")
-
-	const onChangeTypeMessage = () => {
-		if (typeMessage === MessageEnum.VOICE) {
-			setTypeMessage(MessageEnum.VIDEO)
-		} else {
-			setTypeMessage(MessageEnum.VOICE)
-		}
-	}
 
 	const manageRecording = () => {
 		if (recording && typeMessage === MessageEnum.VOICE) {
 			stopRecording()
+			setTypeMessage(MessageEnum.TEXT)
 		}
-		if (!recording && typeMessage === MessageEnum.VOICE) {
+
+		if (!recording && typeMessage !== MessageEnum.VOICE) {
 			startRecording()
+			setTypeMessage(MessageEnum.VOICE)
 		}
 	}
 
@@ -66,29 +56,56 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
 		setValue("content", currentValue + icon, { shouldValidate: true })
 	}
 
-	const onSendVoice = () => {
-		stopRecording()
-		console.log({ mediaRecorder, audioUrl })
+	const handleTextSubmit = async (content: string) => {
+		await sendMessage({
+			content,
+			messageType: MessageEnum.TEXT,
+		})
+
+		reset()
+	}
+
+	const handleVoiceSubmit = async () => {
+		const blob = await stopRecording()
+		if (!blob) return
+
+		try {
+			const formData = new FormData()
+			formData.append("file", blob, "audio-message.webm")
+
+			const { size, url, duration } = await audioUpload(formData)
+
+			await sendMessage({
+				content: "audio-message",
+				messageType: MessageEnum.VOICE,
+				url,
+				size,
+				duration,
+			})
+		} catch (err) {
+			console.error("Ошибка загрузки аудио:", err)
+		} finally {
+			setTypeMessage(MessageEnum.TEXT)
+
+			reset()
+		}
 	}
 
 	const onSubmit: SubmitHandler<IFormRichMessageInput> = async data => {
-		console.log({ data })
-		console.log("manageRecording", { mediaRecorder })
-
 		if (typeMessage === MessageEnum.TEXT) {
-			await sendMessage({
-				content: data.content,
-				messageType: MessageEnum.TEXT,
-			})
+			await handleTextSubmit(data.content)
+			return
 		}
 
 		if (typeMessage === MessageEnum.VOICE) {
+			await handleVoiceSubmit()
+			return
 		}
 
 		if (typeMessage === MessageEnum.VIDEO) {
+			reset()
+			return
 		}
-
-		reset()
 	}
 
 	return (
@@ -104,15 +121,13 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
 						glowIntensity={glowIntensity}
 						recordingTime={recordingTime}
 						volume={volume}
-						stopRecording={onSendVoice}
+						stopRecording={stopRecording}
 					/>
 				) : (
 					<ContentType
-						typeMessage={typeMessage}
 						currentValue={currentValue}
 						recording={recording}
 						register={register}
-						onChangeTypeMessage={onChangeTypeMessage}
 						manageRecording={manageRecording}
 						onAddEmoji={onAddEmoji}
 						handleSubmit={handleSubmit}

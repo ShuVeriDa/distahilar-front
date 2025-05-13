@@ -1,4 +1,3 @@
-import { MessageEnum } from "@/prisma/models"
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { IconPicker } from "@/shared/ui/EmojiPicker"
@@ -17,10 +16,8 @@ import { IFormRichMessageInput } from "../features/RichMessageInput"
 interface IContentTypeProps {
 	recording: boolean
 	currentValue: string
-	typeMessage: MessageEnum
 	register: UseFormRegister<IFormRichMessageInput>
 	manageRecording: () => void
-	onChangeTypeMessage: () => void
 	onAddEmoji: (icon: string) => void
 	handleSubmit: UseFormHandleSubmit<IFormRichMessageInput, undefined>
 	onSubmit: SubmitHandler<IFormRichMessageInput>
@@ -29,11 +26,9 @@ interface IContentTypeProps {
 export const ContentType: FC<IContentTypeProps> = ({
 	currentValue,
 	recording,
-	typeMessage,
 	onAddEmoji,
 	register,
 	manageRecording,
-	onChangeTypeMessage,
 	handleSubmit,
 	onSubmit,
 }) => {
@@ -95,26 +90,29 @@ export const ContentType: FC<IContentTypeProps> = ({
 						<IoSend size={23} className="fill-[#40A7E3] hover:fill-[#20a3ef]" />
 					</Button>
 				) : (
-					<Button
-						variant="default"
-						className="w-[47px]  h-[47px]  flex items-center justify-center"
-						type="button"
-						onDoubleClick={onChangeTypeMessage}
-						onClick={manageRecording}
-					>
-						{typeMessage === MessageEnum.TEXT ||
-						typeMessage === MessageEnum.VOICE ? (
+					<>
+						<Button
+							variant="default"
+							className="w-[47px]  h-[47px]  flex items-center justify-center"
+							type="button"
+							onClick={manageRecording}
+						>
 							<PiMicrophone
 								size={26}
 								className="fill-[#999999] hover:fill-[#807f7f]"
 							/>
-						) : (
+						</Button>
+						<Button
+							variant="default"
+							className="w-[47px]  h-[47px]  flex items-center justify-center"
+							type="button"
+						>
 							<PiInstagramLogoLight
 								size={26}
 								className="fill-[#999999] hover:fill-[#807f7f]"
 							/>
-						)}
-					</Button>
+						</Button>
+					</>
 				)}
 			</div>
 		</>

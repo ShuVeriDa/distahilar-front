@@ -25,7 +25,7 @@ export const MessageVoice: FC<IMessageVoiceProps> = ({
 		onPlayPause,
 	} = useVoice(voice)
 
-	const size = formatBytes(voice[0]?.size || 0)
+	const size = formatBytes((voice ? voice[0]?.size : 0) || 0)
 
 	return (
 		<div className="flex items-center gap-3 h-full">

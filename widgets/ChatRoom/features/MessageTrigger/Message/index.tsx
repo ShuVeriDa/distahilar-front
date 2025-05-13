@@ -63,7 +63,7 @@ export const Message: FC<IMessageProps> = ({
 		{
 			"flex-col gap-0 pb-5": isMoreTwoLine,
 			"flex-col gap-2 pb-0": isHasReactions,
-			"pb-2": isVoice,
+			"pb-2 w-full max-w-[280px]": isVoice,
 			"bg-transparent after:hidden": isCircleVideo,
 		}
 	)

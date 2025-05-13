@@ -7,7 +7,6 @@ import { useCallback, useEffect, useRef } from "react"
 
 export const useVoice = (voice: VoiceVideoMessageType[]) => {
 	const { theme } = useTheme()
-	console.log({ theme })
 
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -23,7 +22,7 @@ export const useVoice = (voice: VoiceVideoMessageType[]) => {
 		barHeight: 4,
 		barGap: 0,
 		width: 200,
-		url: voice[0].url,
+		url: voice ? voice[0].url : "",
 	})
 
 	const onPlayPause = useCallback(() => {

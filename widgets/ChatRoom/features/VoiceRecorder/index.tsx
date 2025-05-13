@@ -13,9 +13,7 @@ interface IVoiceRecorderProps {
 	glowIntensity: number
 	recordingTime: number
 	volume: number
-	// manageRecording: () => void
 	stopRecording: () => void
-	// startRecording: () => void
 }
 
 export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
@@ -90,7 +88,6 @@ export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
 						<Button
 							variant="default"
 							className="w-[47px] h-[47px] !pl-0.5 flex items-center justify-center bg-[#40A7E3] rounded-full"
-							onClick={stopRecording}
 							type="submit"
 						>
 							<PiMicrophoneFill size={26} className="fill-white " />
