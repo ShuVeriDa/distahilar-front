@@ -3,6 +3,7 @@
 import { MessageEnum, VoiceVideoMessageType } from "@/prisma/models"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import { useSendMessage } from "@/shared/lib/services/message/useMessagesQuery"
+import { $Enums } from "@prisma/client"
 import { FC, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { useVoiceRecord } from "../../shared/hooks/useVoiceRecord"
@@ -16,14 +17,18 @@ export interface IFormRichMessageInput {
 
 interface IRichMessageInputProps {
 	chatId: string
+	chatType: $Enums.ChatRole | undefined
 }
 
-export const RichMessageInput: FC<IRichMessageInputProps> = ({ chatId }) => {
+export const RichMessageInput: FC<IRichMessageInputProps> = ({
+	chatId,
+	chatType,
+}) => {
 	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
 
 	const { register, handleSubmit, reset, watch, setValue } =
 		useForm<IFormRichMessageInput>()
-	const { mutateAsync: sendMessage } = useSendMessage(chatId)
+	const { mutateAsync: sendMessage } = useSendMessage(chatId, chatType)
 	const { uploadFileQuery } = useFileQuery("audio-message")
 	const { mutateAsync: audioUpload } = uploadFileQuery
 

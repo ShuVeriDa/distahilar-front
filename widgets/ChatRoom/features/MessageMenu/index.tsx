@@ -95,6 +95,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 									? interlocutorsName
 									: undefined,
 							chatType: message.chat.type as ChatRole,
+							clearSelectedMessages: () => {},
 						},
 					})
 				},

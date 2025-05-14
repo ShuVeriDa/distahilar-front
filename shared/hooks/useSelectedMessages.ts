@@ -16,8 +16,6 @@ export const useSelectedMessages = () => {
 
 	const { mutateAsync } = useDeleteMessage(selectedMessages[0]?.chatId ?? "")
 
-	console.log(!!selectedMessages.map(msg => msg.userId === userId))
-
 	const deleteMessages = () => {
 		mutateAsync({
 			messageIds: selectedMessages.map(msg => msg.id),

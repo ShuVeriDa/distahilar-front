@@ -1,8 +1,18 @@
 "use client"
 
-import { MediaType, MessageEnum, MessageType } from "@/prisma/models"
+import {
+	MediaType,
+	MessageEnum,
+	MessageStatus,
+	MessageType,
+} from "@/prisma/models"
+import { useUser } from "@/shared/hooks"
 import { useSocket } from "@/shared/providers/SocketProvider"
+import { ChatRole } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+
+const generateTemporaryId = () =>
+	`temp-${Math.random().toString(36).slice(2, 11)}`
 
 export const useMessagesWSQuery = (chatId: string) => {
 	const { socket } = useSocket()
@@ -55,8 +65,12 @@ export interface CreateMessageDto {
 	mediaType?: MediaType
 }
 
-export const useSendMessage = (chatId: string) => {
+export const useSendMessage = (
+	chatId: string,
+	chatRole: ChatRole | undefined
+) => {
 	const { socket } = useSocket()
+	const { user } = useUser()
 
 	const client = useQueryClient()
 
@@ -69,16 +83,73 @@ export const useSendMessage = (chatId: string) => {
 					return
 				}
 
+				const temporaryId = generateTemporaryId()
+
+				const optimisticMessage = {
+					...messageData,
+					id: temporaryId,
+					status: MessageStatus.PENDING,
+					userId: user?.id,
+					chatType: chatRole,
+					createdAt: new Date().toISOString(),
+				}
+
+				client.setQueryData(["messagesWS", chatId], (oldData: any) => {
+					if (
+						oldData.messages.some((msg: MessageType) => msg.id === temporaryId)
+					) {
+						return oldData
+					}
+
+					return {
+						...oldData,
+						messages: [...oldData.messages, optimisticMessage],
+					}
+				})
+
 				socket.emit(
 					"createMessage",
 					{ chatId, ...messageData },
 					(response: MessageType) => {
+						client.setQueryData(
+							["messagesWS", chatId],
+							(oldData: {
+								messages: MessageType[]
+								nextCursor: string | null
+							}) => {
+								console.log({ oldData })
+								const newMessage = {
+									...response,
+									chat: {
+										type: chatRole,
+									},
+								}
+
+								const updatedMessages = oldData.messages.map(
+									(msg: MessageType) =>
+										msg.id === temporaryId ? { ...newMessage } : msg
+								)
+								return { ...oldData, messages: updatedMessages }
+							}
+						)
 						resolve()
 					}
 				)
 			}),
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
+		},
+		onError: error => {
+			client.setQueryData(
+				["messagesWS", chatId],
+				(oldData: { messages: MessageType[]; nextCursor: string | null }) => {
+					const updatedMessages = oldData.messages.filter(
+						(msg: MessageType) => msg.status !== MessageStatus.PENDING
+					)
+					return { ...oldData, messages: updatedMessages }
+				}
+			)
+			console.error("Message sending failed:", error)
 		},
 	})
 }
