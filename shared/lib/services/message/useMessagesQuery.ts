@@ -6,13 +6,10 @@ import {
 	MessageStatus,
 	MessageType,
 } from "@/prisma/models"
-import { useUser } from "@/shared/hooks"
 import { useSocket } from "@/shared/providers/SocketProvider"
 import { ChatRole } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-
-const generateTemporaryId = () =>
-	`temp-${Math.random().toString(36).slice(2, 11)}`
+import { generateTemporaryId } from "../../utils/generateTemporaryId"
 
 export const useMessagesWSQuery = (chatId: string) => {
 	const { socket } = useSocket()
@@ -67,10 +64,10 @@ export interface CreateMessageDto {
 
 export const useSendMessage = (
 	chatId: string,
-	chatRole: ChatRole | undefined
+	chatRole: ChatRole | undefined,
+	userId: string | undefined
 ) => {
 	const { socket } = useSocket()
-	const { user } = useUser()
 
 	const client = useQueryClient()
 
@@ -85,27 +82,37 @@ export const useSendMessage = (
 
 				const temporaryId = generateTemporaryId()
 
-				const optimisticMessage = {
-					...messageData,
-					id: temporaryId,
-					status: MessageStatus.PENDING,
-					userId: user?.id,
-					chatType: chatRole,
-					createdAt: new Date().toISOString(),
+				if (messageData.messageType === MessageEnum.TEXT) {
+					const optimisticMessage = {
+						...messageData,
+						id: temporaryId,
+						status: MessageStatus.PENDING,
+						userId: userId,
+						chatType: chatRole,
+						createdAt: new Date().toISOString(),
+					}
+
+					client.setQueryData(
+						["messagesWS", chatId],
+						(oldData: {
+							messages: MessageType[]
+							nextCursor: string | null
+						}) => {
+							if (
+								oldData.messages.some(
+									(msg: MessageType) => msg.id === temporaryId
+								)
+							) {
+								return oldData
+							}
+
+							return {
+								...oldData,
+								messages: [...oldData.messages, optimisticMessage],
+							}
+						}
+					)
 				}
-
-				client.setQueryData(["messagesWS", chatId], (oldData: any) => {
-					if (
-						oldData.messages.some((msg: MessageType) => msg.id === temporaryId)
-					) {
-						return oldData
-					}
-
-					return {
-						...oldData,
-						messages: [...oldData.messages, optimisticMessage],
-					}
-				})
 
 				socket.emit(
 					"createMessage",
@@ -117,7 +124,6 @@ export const useSendMessage = (
 								messages: MessageType[]
 								nextCursor: string | null
 							}) => {
-								console.log({ oldData })
 								const newMessage = {
 									...response,
 									chat: {

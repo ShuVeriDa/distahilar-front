@@ -1,9 +1,17 @@
 "use client"
 
-import { MessageEnum, VoiceVideoMessageType } from "@/prisma/models"
+import {
+	MessageEnum,
+	MessageStatus,
+	MessageType,
+	VoiceVideoMessageType,
+} from "@/prisma/models"
+import { useUser } from "@/shared"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import { useSendMessage } from "@/shared/lib/services/message/useMessagesQuery"
+import { generateTemporaryId } from "@/shared/lib/utils/generateTemporaryId"
 import { $Enums } from "@prisma/client"
+import { useQueryClient } from "@tanstack/react-query"
 import { FC, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { useVoiceRecord } from "../../shared/hooks/useVoiceRecord"
@@ -25,10 +33,15 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 	chatType,
 }) => {
 	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
+	const { user } = useUser()
 
 	const { register, handleSubmit, reset, watch, setValue } =
 		useForm<IFormRichMessageInput>()
-	const { mutateAsync: sendMessage } = useSendMessage(chatId, chatType)
+	const { mutateAsync: sendMessage } = useSendMessage(
+		chatId,
+		chatType,
+		user?.id
+	)
 	const { uploadFileQuery } = useFileQuery("audio-message")
 	const { mutateAsync: audioUpload } = uploadFileQuery
 
@@ -70,6 +83,13 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 		reset()
 	}
 
+	const onCancel = () => {
+		stopRecording()
+		setTypeMessage(MessageEnum.TEXT)
+	}
+
+	const client = useQueryClient()
+
 	const handleVoiceSubmit = async () => {
 		const blob = await stopRecording()
 		if (!blob) return
@@ -77,6 +97,37 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 		try {
 			const formData = new FormData()
 			formData.append("file", blob, "audio-message.webm")
+
+			const formatDataAudio = formData.get("file")
+
+			console.log({ formData, formatDataAudio })
+
+			const optimisticMessage = {
+				id: generateTemporaryId(),
+				messageType: MessageEnum.VOICE,
+				status: MessageStatus.PENDING,
+				userId: user?.id,
+				chatType: chatType,
+				createdAt: new Date().toISOString(),
+			}
+
+			client.setQueryData(
+				["messagesWS", chatId],
+				(oldData: { messages: MessageType[]; nextCursor: string | null }) => {
+					if (
+						oldData.messages.some(
+							(msg: MessageType) => msg.id === generateTemporaryId()
+						)
+					) {
+						return oldData
+					}
+
+					return {
+						...oldData,
+						messages: [...oldData.messages, optimisticMessage],
+					}
+				}
+			)
 
 			const { size, url, duration } = await audioUpload(formData)
 
@@ -126,7 +177,7 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 						glowIntensity={glowIntensity}
 						recordingTime={recordingTime}
 						volume={volume}
-						stopRecording={stopRecording}
+						onCancel={onCancel}
 					/>
 				) : (
 					<ContentType

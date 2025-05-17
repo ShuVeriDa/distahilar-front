@@ -13,7 +13,7 @@ interface IVoiceRecorderProps {
 	glowIntensity: number
 	recordingTime: number
 	volume: number
-	stopRecording: () => void
+	onCancel: () => void
 }
 
 export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
@@ -22,14 +22,14 @@ export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
 	recordingTime,
 	shadowColor,
 	volume,
-	stopRecording,
+	onCancel,
 }) => {
 	return (
 		<div className="w-full text-white rounded-lg pl-[13px]">
 			<div className="flex items-center justify-between ">
 				<RecordingTimer recordingTime={recordingTime} recording={recording} />
 
-				<Button type="button" onClick={stopRecording}>
+				<Button type="button" onClick={onCancel}>
 					<Typography tag="p" className="text-[13px] text-[#40C5F6] font-[500]">
 						Cancel
 					</Typography>
