@@ -15,6 +15,20 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			keyframes: {
+				"toast-in": {
+					"0%": { opacity: "0", transform: "scale(0.95)" },
+					"100%": { opacity: "1", transform: "scale(1)" },
+				},
+				"toast-out": {
+					"0%": { opacity: "1", transform: "scale(1)" },
+					"100%": { opacity: "0", transform: "scale(0.95)" },
+				},
+			},
+			animation: {
+				"toast-in": "toast-in 300ms ease-out forwards",
+				"toast-out": "toast-out 300ms ease-in forwards",
+			},
 			colors: {
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",

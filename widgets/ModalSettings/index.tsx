@@ -7,6 +7,7 @@ import { ModalHeaderInfo } from "@/entities/ModalHeaderInfo"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { cn } from "@/shared/lib/utils/cn"
+import { Gap } from "@/shared/ui/Gap"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { FaRegCircleUser } from "react-icons/fa6"
 import { HiOutlineFolder } from "react-icons/hi"
@@ -54,7 +55,7 @@ export const ModalSettings: FC<IModalSettingsProps> = () => {
 
 				<ModalHeaderInfo classNameAvatar="w-20 h-20" variant="settings" />
 			</div>
-			<div className="h-2.5 bg-[#F1F1F1] dark:bg-[#232E3C]" />
+			<Gap />
 			<SheetLinks items={items} variant="settings" ref={popoverRef} />
 		</ModalLayout>
 	)

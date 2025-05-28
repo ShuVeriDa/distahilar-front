@@ -5,9 +5,11 @@ import { FC, useMemo } from "react"
 import { BsReverseLayoutSidebarReverse } from "react-icons/bs"
 import { IoIosSearch, IoMdCall } from "react-icons/io"
 
-interface IButtonsProps {}
+interface IButtonsProps {
+	actionsForButtons: (() => void)[]
+}
 
-export const Buttons: FC<IButtonsProps> = () => {
+export const Buttons: FC<IButtonsProps> = ({ actionsForButtons }) => {
 	const btns = useMemo(
 		() => [
 			{
@@ -39,10 +41,10 @@ export const Buttons: FC<IButtonsProps> = () => {
 						className="group-hover:[&>path]:fill-[#737373]"
 					/>
 				),
-				action: () => {},
+				action: actionsForButtons[0],
 			},
 		],
-		[]
+		[actionsForButtons]
 	)
 	return (
 		<div className="flex items-center gap-3 h-full">

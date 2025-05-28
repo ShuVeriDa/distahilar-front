@@ -1,11 +1,5 @@
-import {
-	ChatMemberType,
-	ChatRole,
-	ChatType,
-	MessageType,
-} from "@/prisma/models"
-import { useUser } from "@/shared"
-import { useFormatLastSeen } from "@/shared/lib/utils/formatLastSeen"
+import { ChatType, MessageType, UserType } from "@/prisma/models"
+import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { FC } from "react"
@@ -19,34 +13,22 @@ const MotionDiv = dynamic(() =>
 
 interface IHeaderProps {
 	chat: ChatType | undefined
+	user: UserType | null
 	hasSelectedMessages: boolean
 	selectedMessages: MessageType[]
 	clearSelectedMessages: () => void
+	actionsForButtons: (() => void)[]
 }
 
 export const Header: FC<IHeaderProps> = ({
 	chat,
+	user,
 	hasSelectedMessages,
 	selectedMessages,
 	clearSelectedMessages,
+	actionsForButtons,
 }) => {
-	const { user } = useUser()
-	const userInfo = chat?.members.find(
-		(m: ChatMemberType) => m.userId !== user?.id
-	)?.user
-
-	const isDialog = chat?.type === ChatRole.DIALOG
-
-	const name = isDialog ? userInfo?.name : chat?.name
-	const lastSeen = useFormatLastSeen(userInfo?.lastSeen)
-
-	const online = userInfo?.isOnline
-		? "online"
-		: `${userInfo?.lastSeen ? lastSeen : " "}`
-
-	const onlineOrFollowers = isDialog
-		? online
-		: `${chat?.members.length} subscribers `
+	const { onlineOrFollowers, name } = useChatInfo(chat, user)
 
 	return (
 		<div className="w-full flex flex-col items-center dark:bg-[#17212B] bg-white min-h-[50px] py-2 px-3 border-b border-b-[#E7E7E7] dark:border-b-[#101921]">
@@ -61,7 +43,7 @@ export const Header: FC<IHeaderProps> = ({
 						className="w-full flex items-center justify-between"
 					>
 						<Info name={name} onlineOrFollowers={onlineOrFollowers} />
-						<Buttons />
+						<Buttons actionsForButtons={actionsForButtons} />
 					</MotionDiv>
 				) : (
 					<HeaderSelectedMessages
