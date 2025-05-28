@@ -28,7 +28,7 @@ export const Header: FC<IHeaderProps> = ({
 	clearSelectedMessages,
 	actionsForButtons,
 }) => {
-	const { onlineOrFollowers, name } = useChatInfo(chat, user)
+	const { onlineOrFollowers, nameOfChat } = useChatInfo(chat, user)
 
 	return (
 		<div className="w-full flex flex-col items-center dark:bg-[#17212B] bg-white min-h-[50px] py-2 px-3 border-b border-b-[#E7E7E7] dark:border-b-[#101921]">
@@ -42,14 +42,14 @@ export const Header: FC<IHeaderProps> = ({
 						transition={{ duration: 0.1 }}
 						className="w-full flex items-center justify-between"
 					>
-						<Info name={name} onlineOrFollowers={onlineOrFollowers} />
+						<Info name={nameOfChat} onlineOrFollowers={onlineOrFollowers} />
 						<Buttons actionsForButtons={actionsForButtons} />
 					</MotionDiv>
 				) : (
 					<HeaderSelectedMessages
 						selectedMessages={selectedMessages}
 						clearSelectedMessages={clearSelectedMessages}
-						name={name}
+						name={nameOfChat}
 					/>
 				)}
 			</AnimatePresence>

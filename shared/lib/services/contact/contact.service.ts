@@ -20,16 +20,16 @@ export const contactService = {
 	},
 
 	async createContact(userId: string) {
-		const { data } = await instance.post<ContactType>(getContactUrl(``), {
+		const { data } = await instance.post<ContactType[]>(getContactUrl(``), {
 			userId,
 		})
 
 		return data
 	},
 
-	async deleteContact(contactId: string) {
-		const { data } = await instance.delete<string>(
-			getContactUrl(`/${contactId}`)
+	async deleteContact(interlocutorId: string) {
+		const { data } = await instance.delete<ContactType[]>(
+			getContactUrl(`/${interlocutorId}`)
 		)
 
 		return data

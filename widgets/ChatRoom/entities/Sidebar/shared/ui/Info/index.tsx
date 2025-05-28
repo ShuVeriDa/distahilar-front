@@ -37,9 +37,9 @@ export const Info: FC<IInfoProps> = ({ chat, user }) => {
 	)
 
 	return (
-		<div className="w-full flex gap-8 px-5 py-3">
+		<div className="w-full flex gap-8 px-5 py-4">
 			<div>
-				<FiInfo size={25} />
+				<FiInfo size={23} color="#444444" />
 			</div>
 			<div className="flex flex-col gap-2">
 				{infoObj.map((item, index) => (
@@ -48,13 +48,13 @@ export const Info: FC<IInfoProps> = ({ chat, user }) => {
 							{index === 2 && isDialog ? (
 								<CopyClickBoard className="text-[#47A2D7]" />
 							) : (
-								<Typography tag="p" className="text-[14px]">
+								<Typography tag="p" className="text-[13px] text-[#444444]">
 									{item.value}
 								</Typography>
 							)}
 						</div>
 						<div>
-							<Typography tag="p" className="text-[14px] text-[#999999]">
+							<Typography tag="p" className="text-[13px] text-[#999999]">
 								{item.description}
 							</Typography>
 						</div>

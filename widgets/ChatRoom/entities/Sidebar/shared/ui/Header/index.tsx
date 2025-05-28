@@ -1,24 +1,28 @@
-import { ChatType, UserType } from "@/prisma/models"
+import { ChatType } from "@/prisma/models"
 import { Button, Typography } from "@/shared"
-import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { ChatRole } from "@prisma/client"
 import Image from "next/image"
 import { FC } from "react"
 import { IoCloseOutline } from "react-icons/io5"
 
 interface IHeaderProps {
-	user: UserType | null
 	chat: ChatType | undefined
+	nameOfChat: string | undefined
+	onlineOrFollowers: string
+	imageUrl: string | null | undefined
 }
 
-export const Header: FC<IHeaderProps> = ({ chat, user }) => {
-	const { onlineOrFollowers, name, interlocutor } = useChatInfo(chat, user)
-
+export const Header: FC<IHeaderProps> = ({
+	chat,
+	nameOfChat,
+	onlineOrFollowers,
+	imageUrl,
+}) => {
 	const isDialog = chat?.type === ChatRole.DIALOG
 	const isGroup = chat?.type === ChatRole.GROUP
 	const title = isDialog ? "User Info" : isGroup ? "Group Info" : "Channel Info"
 	const image = isDialog
-		? interlocutor?.imageUrl ?? "/images/no-avatar.png"
+		? imageUrl ?? "/images/no-avatar.png"
 		: chat?.imageUrl ?? "/images/no-avatar.png"
 
 	return (
@@ -51,7 +55,7 @@ export const Header: FC<IHeaderProps> = ({ chat, user }) => {
 						tag="p"
 						className="text-[15px] font-semibold truncate overflow-hidden whitespace-nowrap max-w-full"
 					>
-						{name}
+						{nameOfChat}
 					</Typography>
 					<Typography
 						tag="p"

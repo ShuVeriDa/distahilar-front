@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
+import { useDispatch } from "react-redux"
+import { changeUser } from "../../redux-store/slices/user-slice/userSlice"
 import { contactService } from "./contact.service"
 
 export const useContactQuery = (
@@ -19,28 +21,42 @@ export const useContactQuery = (
 		enabled: !!contactId,
 	})
 
-	const createContactQuery = useMutation({
-		mutationFn: (userId: string) => contactService.createContact(userId),
-		mutationKey: ["createContactQuery"],
-	})
-
-	const deleteContactQuery = useMutation({
-		mutationFn: () => contactService.createContact(contactId!),
-		mutationKey: ["deleteContactQuery"],
-	})
-
 	return useMemo(
 		() => ({
 			searchContactsQuery,
 			fetchFolderQuery,
-			createContactQuery,
-			deleteContactQuery,
 		}),
-		[
-			searchContactsQuery,
-			fetchFolderQuery,
-			createContactQuery,
-			deleteContactQuery,
-		]
+		[searchContactsQuery, fetchFolderQuery]
 	)
+}
+
+export const useDeleteContactQuery = (interlocutorId: string) => {
+	const dispatch = useDispatch()
+
+	return useMutation({
+		mutationFn: () => contactService.deleteContact(interlocutorId),
+		mutationKey: ["deleteContactQuery"],
+		onSuccess: data => {
+			dispatch(
+				changeUser({
+					contactSaver: data,
+				})
+			)
+		},
+	})
+}
+export const useCreateContactQuery = () => {
+	const dispatch = useDispatch()
+
+	return useMutation({
+		mutationFn: (userId: string) => contactService.createContact(userId),
+		mutationKey: ["createContactQuery"],
+		onSuccess: data => {
+			dispatch(
+				changeUser({
+					contactSaver: data,
+				})
+			)
+		},
+	})
 }

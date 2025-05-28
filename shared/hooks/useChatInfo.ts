@@ -13,7 +13,7 @@ export const useChatInfo = (
 	const isDialog = chat?.type === ChatRole.DIALOG
 	const isGroup = chat?.type === ChatRole.GROUP
 
-	const name = isDialog
+	const nameOfChat = isDialog
 		? `${interlocutor?.name} ${interlocutor?.surname}`
 		: chat?.name
 
@@ -30,7 +30,7 @@ export const useChatInfo = (
 		: `${chat?.members.length} subscribers`
 
 	return {
-		name,
+		nameOfChat,
 		onlineOrFollowers,
 		interlocutor,
 	}

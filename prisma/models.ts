@@ -4,6 +4,7 @@ export type UserType = Prisma.UserGetPayload<{
 	include: Prisma.UserInclude
 }> & {
 	settings: UserSettingsType
+	contactSaver: ContactType[]
 }
 
 export type UserSettingsType = Prisma.UserSettingsGetPayload<{

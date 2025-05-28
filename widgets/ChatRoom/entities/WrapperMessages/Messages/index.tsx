@@ -71,7 +71,7 @@ export const Messages: FC<IMessagesProps> = ({
 			className="cursor-default"
 		>
 			{isFirstMessageOfDay && (
-				<div className="w-full flex items-center justify-center ">
+				<div className="w-full flex items-center justify-center py-4">
 					<Typography
 						tag="h6"
 						className="bg-black/20 dark:bg-[#1E2C3A] text-white font-[400] px-3 py-0.5 rounded-full text-[14px]"

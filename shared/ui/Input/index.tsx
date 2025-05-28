@@ -32,7 +32,7 @@ export const InputNS = {
 		},
 		searchV1: {
 			wrapperClassName: DEFAULT_WRAPPER_CLASSES,
-			className: cn("pl-8 pr-2 dark:bg-transparent", DEFAULT_CLASSES),
+			className: cn("pl-6 pr-2 dark:bg-transparent", DEFAULT_CLASSES),
 		},
 		searchV2: {
 			wrapperClassName: cn(
@@ -137,8 +137,8 @@ export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {
 			)}
 
 			{variant === "searchV1" && (
-				<div className="absolute">
-					<LiaSearchSolid color="gray" size={18} />
+				<div className="absolute bottom-[12px] z-[4]">
+					<LiaSearchSolid color="gray" size={16} />
 				</div>
 			)}
 			<div className="relative w-full">
