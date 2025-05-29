@@ -49,7 +49,10 @@ export const Info: FC<IInfoProps> = ({ chat, user }) => {
 								{index === 2 && isDialog ? (
 									<CopyClickBoard className="text-[#47A2D7]" />
 								) : (
-									<Typography tag="p" className="text-[13px] text-[#444444]">
+									<Typography
+										tag="p"
+										className="text-[13px] text-[#444444] dark:text-white"
+									>
 										{item.value}
 									</Typography>
 								)}

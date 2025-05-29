@@ -42,13 +42,19 @@ export const ManageContact: FC<IManageContactProps> = ({ interlocutorId }) => {
 			>
 				<div>
 					{isContactExist ? (
-						<GoTrash size={23} color="#444444" />
+						<GoTrash size={23} className="text-[#444444] dark:text-white" />
 					) : (
-						<MdOutlinePersonAddAlt size={23} color="#444444" />
+						<MdOutlinePersonAddAlt
+							size={23}
+							className="text-[#444444] dark:text-white"
+						/>
 					)}
 				</div>
 				<div className="flex flex-col gap-2">
-					<Typography tag="p" className="text-[13px] text-[#444444]">
+					<Typography
+						tag="p"
+						className="text-[13px] text-[#444444] dark:text-white"
+					>
 						{title}
 					</Typography>
 				</div>

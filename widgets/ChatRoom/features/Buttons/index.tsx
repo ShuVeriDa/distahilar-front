@@ -3,7 +3,7 @@
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { FC, useMemo } from "react"
-import { BsReverseLayoutSidebarReverse } from "react-icons/bs"
+import { FiSidebar } from "react-icons/fi"
 import { IoIosSearch, IoMdCall } from "react-icons/io"
 
 interface IButtonsProps {
@@ -40,17 +40,15 @@ export const Buttons: FC<IButtonsProps> = ({
 
 			{
 				icon: (
-					<BsReverseLayoutSidebarReverse
-						color="#999999"
-						size={20}
+					<FiSidebar
+						size={22}
 						className={cn(
-							"group-hover:[&>path]:fill-[#737373]",
-							openSideBar &&
-								"[&>path]:fill-[#4FA7D9] group-hover:[&>path]:fill-[#3298d8]"
+							"text-[#999999] group-hover:text-[#737373] rotate-180",
+							openSideBar && "text-[#4FA7D9] group-hover:text-[#3298d8]"
 						)}
 					/>
 				),
-				action: actionsForButtons[0],
+				action: actionsForButtons[2],
 			},
 		],
 		[actionsForButtons, openSideBar]

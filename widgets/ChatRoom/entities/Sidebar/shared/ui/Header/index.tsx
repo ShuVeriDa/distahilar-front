@@ -33,11 +33,7 @@ export const Header: FC<IHeaderProps> = ({
 				<Typography tag="p" className="text-[15px] font-normal">
 					{title}
 				</Typography>
-				<Button
-					variant="withoutBg"
-					className="hover:bg-white"
-					onClick={onToggleSideBar}
-				>
+				<Button variant="clean" className="" onClick={onToggleSideBar}>
 					<IoCloseOutline
 						size={25}
 						onClick={() => {}}
