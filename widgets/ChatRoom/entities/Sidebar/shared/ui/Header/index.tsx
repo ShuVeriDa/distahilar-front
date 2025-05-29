@@ -10,6 +10,7 @@ interface IHeaderProps {
 	nameOfChat: string | undefined
 	onlineOrFollowers: string
 	imageUrl: string | null | undefined
+	onToggleSideBar: () => void
 }
 
 export const Header: FC<IHeaderProps> = ({
@@ -17,6 +18,7 @@ export const Header: FC<IHeaderProps> = ({
 	nameOfChat,
 	onlineOrFollowers,
 	imageUrl,
+	onToggleSideBar,
 }) => {
 	const isDialog = chat?.type === ChatRole.DIALOG
 	const isGroup = chat?.type === ChatRole.GROUP
@@ -31,7 +33,11 @@ export const Header: FC<IHeaderProps> = ({
 				<Typography tag="p" className="text-[15px] font-normal">
 					{title}
 				</Typography>
-				<Button variant="withoutBg" className="hover:bg-white">
+				<Button
+					variant="withoutBg"
+					className="hover:bg-white"
+					onClick={onToggleSideBar}
+				>
 					<IoCloseOutline
 						size={25}
 						onClick={() => {}}

@@ -16,6 +16,7 @@ interface IHeaderProps {
 	user: UserType | null
 	hasSelectedMessages: boolean
 	selectedMessages: MessageType[]
+	openSideBar: boolean
 	clearSelectedMessages: () => void
 	actionsForButtons: (() => void)[]
 }
@@ -25,6 +26,7 @@ export const Header: FC<IHeaderProps> = ({
 	user,
 	hasSelectedMessages,
 	selectedMessages,
+	openSideBar,
 	clearSelectedMessages,
 	actionsForButtons,
 }) => {
@@ -43,7 +45,10 @@ export const Header: FC<IHeaderProps> = ({
 						className="w-full flex items-center justify-between"
 					>
 						<Info name={nameOfChat} onlineOrFollowers={onlineOrFollowers} />
-						<Buttons actionsForButtons={actionsForButtons} />
+						<Buttons
+							actionsForButtons={actionsForButtons}
+							openSideBar={openSideBar}
+						/>
 					</MotionDiv>
 				) : (
 					<HeaderSelectedMessages

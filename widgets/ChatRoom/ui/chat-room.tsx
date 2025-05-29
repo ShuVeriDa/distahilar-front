@@ -49,6 +49,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					selectedMessages={selectedMessages}
 					actionsForButtons={actionsForButtons}
 					clearSelectedMessages={clearSelectedMessages}
+					openSideBar={openSideBar}
 				/>
 				{pinnedMessages && <PinnedMessage pinnedMessages={pinnedMessages} />}
 				<WrapperMessages
@@ -61,7 +62,12 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 				/>
 				<RichMessageInput chatId={chatId} chatType={chat?.type} />
 			</div>
-			<SideBar openSideBar={openSideBar} user={user} chat={chat} />
+			<SideBar
+				openSideBar={openSideBar}
+				user={user}
+				chat={chat}
+				onToggleSideBar={onToggleSideBar}
+			/>
 		</div>
 	)
 }

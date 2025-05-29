@@ -42,24 +42,26 @@ export const Info: FC<IInfoProps> = ({ chat, user }) => {
 				<FiInfo size={23} color="#444444" />
 			</div>
 			<div className="flex flex-col gap-2">
-				{infoObj.map((item, index) => (
-					<div className="flex flex-col gap-0" key={index + infoObj.length}>
-						<div>
-							{index === 2 && isDialog ? (
-								<CopyClickBoard className="text-[#47A2D7]" />
-							) : (
-								<Typography tag="p" className="text-[13px] text-[#444444]">
-									{item.value}
+				{infoObj.map((item, index) => {
+					return (
+						<div className="flex flex-col gap-0" key={index + infoObj.length}>
+							<div>
+								{index === 2 && isDialog ? (
+									<CopyClickBoard className="text-[#47A2D7]" />
+								) : (
+									<Typography tag="p" className="text-[13px] text-[#444444]">
+										{item.value}
+									</Typography>
+								)}
+							</div>
+							<div>
+								<Typography tag="p" className="text-[13px] text-[#999999]">
+									{item.description}
 								</Typography>
-							)}
+							</div>
 						</div>
-						<div>
-							<Typography tag="p" className="text-[13px] text-[#999999]">
-								{item.description}
-							</Typography>
-						</div>
-					</div>
-				))}
+					)
+				})}
 			</div>
 		</div>
 	)

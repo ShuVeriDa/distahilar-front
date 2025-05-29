@@ -1,15 +1,20 @@
 "use client"
 
 import { Button } from "@/shared"
+import { cn } from "@/shared/lib/utils/cn"
 import { FC, useMemo } from "react"
 import { BsReverseLayoutSidebarReverse } from "react-icons/bs"
 import { IoIosSearch, IoMdCall } from "react-icons/io"
 
 interface IButtonsProps {
+	openSideBar: boolean
 	actionsForButtons: (() => void)[]
 }
 
-export const Buttons: FC<IButtonsProps> = ({ actionsForButtons }) => {
+export const Buttons: FC<IButtonsProps> = ({
+	openSideBar,
+	actionsForButtons,
+}) => {
 	const btns = useMemo(
 		() => [
 			{
@@ -38,13 +43,17 @@ export const Buttons: FC<IButtonsProps> = ({ actionsForButtons }) => {
 					<BsReverseLayoutSidebarReverse
 						color="#999999"
 						size={20}
-						className="group-hover:[&>path]:fill-[#737373]"
+						className={cn(
+							"group-hover:[&>path]:fill-[#737373]",
+							openSideBar &&
+								"[&>path]:fill-[#4FA7D9] group-hover:[&>path]:fill-[#3298d8]"
+						)}
 					/>
 				),
 				action: actionsForButtons[0],
 			},
 		],
-		[actionsForButtons]
+		[actionsForButtons, openSideBar]
 	)
 	return (
 		<div className="flex items-center gap-3 h-full">
@@ -53,7 +62,7 @@ export const Buttons: FC<IButtonsProps> = ({ actionsForButtons }) => {
 					variant="clean"
 					key={index}
 					onClick={btn.action}
-					className="h-full w-[30px] rounded-full hover:cursor-pointer group"
+					className={"h-full w-[30px] rounded-full hover:cursor-pointer group"}
 				>
 					{btn.icon}
 				</Button>

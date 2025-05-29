@@ -10,9 +10,15 @@ interface ISideBarProps {
 	user: UserType | null
 	chat: ChatType | undefined
 	openSideBar: boolean
+	onToggleSideBar: () => void
 }
 
-export const SideBar: FC<ISideBarProps> = ({ openSideBar, chat, user }) => {
+export const SideBar: FC<ISideBarProps> = ({
+	openSideBar,
+	chat,
+	user,
+	onToggleSideBar,
+}) => {
 	const { onlineOrFollowers, nameOfChat, interlocutor } = useChatInfo(
 		chat,
 		user
@@ -26,6 +32,7 @@ export const SideBar: FC<ISideBarProps> = ({ openSideBar, chat, user }) => {
 						nameOfChat={nameOfChat}
 						imageUrl={interlocutor?.imageUrl}
 						onlineOrFollowers={onlineOrFollowers}
+						onToggleSideBar={onToggleSideBar}
 					/>
 					<Gap />
 					<Info chat={chat} user={user} />

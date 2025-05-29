@@ -13,7 +13,7 @@ export const CopyClickBoard: FC<ICopyClickBoardProps> = ({ className }) => {
 	const { copy } = useClipboard()
 	const { toast } = useToast()
 	const onCopy = () => {
-		copy(`https://t.me/${user?.username}`)
+		copy(`https://d.hilar/${user?.username}`)
 
 		toast({
 			description: "Username copied to clipboard",
