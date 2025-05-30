@@ -17,6 +17,7 @@ export enum EnumModel {
 	LANGUAGE = "LANGUAGE",
 	NO_TYPE = "NO_TYPE",
 	DELETE_MESSAGES = "DELETE_MESSAGES",
+	DELETE_CHAT = "DELETE_CHAT",
 }
 
 export interface IModalData {
@@ -31,12 +32,18 @@ export interface IModalData {
 		phone?: string
 		username?: string
 	}
-	deleteMessages: {
+	deleteMessages?: {
 		messageIds: string[]
 		chatId: string
 		interlocutorsName?: string
 		chatType: ChatRole
 		clearSelectedMessages: () => void
+	}
+	deleteChat?: {
+		interlocutorsName?: string
+		interlocutorsAvatar?: string | null
+		chatId?: string
+		chatType: ChatRole
 	}
 }
 

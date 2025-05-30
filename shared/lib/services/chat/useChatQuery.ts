@@ -1,7 +1,7 @@
 import { FoundedChatsType } from "@/prisma/models"
 import { useSocket } from "@/shared/providers/SocketProvider"
-import { useQuery } from "@tanstack/react-query"
-import { chatService } from "./chat.service"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { chatService, IDeleteChatRequest } from "./chat.service"
 
 export const useFetchChatByIdQuery = (chatId: string) => {
 	return useQuery({
@@ -16,6 +16,20 @@ export const useFetchChatsQuery = (params?: string) => {
 		queryFn: async () => await chatService.searchChat(params!),
 		queryKey: ["fetchChats", params],
 		enabled: !!params,
+	})
+}
+
+export const useDeleteChatQuery = (chatId: string) => {
+	const client = useQueryClient()
+	return useMutation({
+		mutationFn: (data: IDeleteChatRequest) =>
+			chatService.deleteChat(chatId, data),
+		mutationKey: ["deleteChat", chatId],
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ["messagesWS", chatId],
+			})
+		},
 	})
 }
 

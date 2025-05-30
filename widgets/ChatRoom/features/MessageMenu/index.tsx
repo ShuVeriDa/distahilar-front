@@ -31,7 +31,6 @@ const Picker = dynamic(
 interface IMessageMenuProps {
 	isMyMessage: boolean
 	createdDate: string | undefined
-	locale: string
 	message: MessageType
 	interlocutorsName: string | undefined
 	onSelectMessage: () => void
@@ -40,7 +39,6 @@ interface IMessageMenuProps {
 export const MessageMenu: FC<IMessageMenuProps> = ({
 	createdDate,
 	isMyMessage,
-	locale,
 	message,
 	interlocutorsName,
 	onSelectMessage,
@@ -106,7 +104,17 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 				function: () => onSelectMessage(),
 			},
 		],
-		[locale, message.isPinned, message.chatId, message.id, message.content]
+		[
+			message?.isPinned,
+			message?.id,
+			message?.chatId,
+			message?.content,
+			message?.chat?.type,
+			pinMessage,
+			onOpenModal,
+			interlocutorsName,
+			onSelectMessage,
+		]
 	)
 
 	return (

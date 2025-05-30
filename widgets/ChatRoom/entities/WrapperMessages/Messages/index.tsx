@@ -96,7 +96,6 @@ export const Messages: FC<IMessagesProps> = ({
 				<MessageMenu
 					isMyMessage={isMyMessage}
 					createdDate={createdDate}
-					locale={locale}
 					message={message}
 					onSelectMessage={onSelectMessage}
 					interlocutorsName={interlocutorsName}

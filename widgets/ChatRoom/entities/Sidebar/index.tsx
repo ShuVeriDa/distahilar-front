@@ -1,4 +1,4 @@
-import { ChatType, UserType } from "@/prisma/models"
+import { ChatRole, ChatType, UserType } from "@/prisma/models"
 import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { Gap } from "@/shared/ui/Gap"
 import { FC } from "react"
@@ -26,7 +26,7 @@ export const SideBar: FC<ISideBarProps> = ({
 	return (
 		<>
 			{openSideBar && (
-				<div className="w-[415px] flex flex-col">
+				<div className="w-[415px] flex flex-col dark:bg-[#17212B] bg-white">
 					<Header
 						chat={chat}
 						nameOfChat={nameOfChat}
@@ -37,7 +37,13 @@ export const SideBar: FC<ISideBarProps> = ({
 					<Gap />
 					<Info chat={chat} user={user} />
 					<Gap />
-					<ManageContact interlocutorId={interlocutor?.id} />
+					<ManageContact
+						interlocutorId={interlocutor?.id}
+						interlocutorsName={interlocutor?.name}
+						interlocutorsAvatar={interlocutor?.imageUrl}
+						chatId={chat?.id}
+						chatType={chat?.type as ChatRole}
+					/>
 				</div>
 			)}
 		</>

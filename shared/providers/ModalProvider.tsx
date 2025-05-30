@@ -7,6 +7,7 @@ import { ModalChangeUserName } from "@/widgets/ModalChangeUsername"
 import { ModalContacts } from "@/widgets/ModalContacts"
 import { ModalCreateChannelGroup } from "@/widgets/ModalCreateChannelGroup"
 import { ModalCreateFolder } from "@/widgets/ModalCreateFolder"
+import { ModalDeleteChat } from "@/widgets/ModalDeleteChat"
 import { ModalDeleteMessages } from "@/widgets/ModalDeleteMessages"
 import { ModalEditFolder } from "@/widgets/ModalEditFolder"
 import { ModalFolder } from "@/widgets/ModalFolder"
@@ -77,6 +78,9 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 
 			{isModalOpen && currentModal.type === EnumModel.DELETE_MESSAGES && (
 				<ModalDeleteMessages key={"modal-delete-messages"} />
+			)}
+			{isModalOpen && currentModal.type === EnumModel.DELETE_CHAT && (
+				<ModalDeleteChat key={"modal-delete-chat"} />
 			)}
 		</AnimatePresence>
 	)
