@@ -92,7 +92,6 @@ export const Messages: FC<IMessagesProps> = ({
 					isFirstMessage={isFirstMessage}
 					isLastMessage={isLastMessage}
 				/>
-
 				<MessageMenu
 					isMyMessage={isMyMessage}
 					createdDate={createdDate}

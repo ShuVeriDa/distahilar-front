@@ -59,7 +59,18 @@ export type VideoMessageType = Prisma.VideoMessageGetPayload<{
 
 export type ReactionType = Prisma.ReactionGetPayload<{
 	include: Prisma.ReactionInclude
-}>
+}> & {
+	user: UserType
+}
+
+export type ReactionTypeFromMessage = {
+	id: string
+	userId: string
+	emoji: string
+	count: number
+	messageId: string
+	user: UserType
+}
 
 export type FolderWSType = {
 	id: string

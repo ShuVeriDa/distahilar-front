@@ -39,6 +39,8 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	} = useMessagesWSQuery(chatId)
 	const pinnedMessages = messages?.messages.find(msg => msg.isPinned)
 
+	console.log({ messages })
+
 	return (
 		<div className="w-full h-full flex ">
 			<div className="w-full h-full flex flex-col justify-between overflow-hidden dark:bg-[#0E1621] bg-slate-100 bg-[url('/images/bg-wallpaper.jpg')] bg-no-repeat bg-cover bg-center dark:bg-[url('/')] border-r border-r-[#E7E7E7] dark:border-r-[#101921]">

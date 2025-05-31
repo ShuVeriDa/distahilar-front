@@ -4,6 +4,7 @@ import { ChatRole, MessageType } from "@/prisma/models"
 import { Typography, useModal } from "@/shared"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
+import { useAddReaction } from "@/shared/lib/services/message/useReactionQuery"
 import { writeClipboardText } from "@/shared/lib/utils/clipboardText"
 import { cn } from "@/shared/lib/utils/cn"
 import {
@@ -44,6 +45,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	onSelectMessage,
 }) => {
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
+	const { mutateAsync: addReaction } = useAddReaction()
 	const { onOpenModal } = useModal()
 
 	const options = useMemo(
@@ -118,18 +120,28 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	)
 
 	return (
-		<ContextMenuContent className="flex flex-col justify-center px-0 gap-4 relative bg-transparent border-none shadow-none">
-			<div className="custom-emoji-picker">
+		<ContextMenuContent className="flex flex-col justify-center px-0 gap-4 relative bg-transparent border-none shadow-none ">
+			<ContextMenuItem
+				key={"emoji-picker"}
+				className="focus:bg-white-0 custom-emoji-picker"
+			>
 				<Picker
 					reactionsDefaultOpen={true}
-					className="!bg-white "
+					className="bg-white dark:bg-[#17212B] dark:border-[#17212B]"
 					lazyLoadEmojis
+					onEmojiClick={emoji => {
+						addReaction({
+							emoji: emoji.emoji,
+							messageId: message.id,
+							chatId: message.chatId,
+						})
+					}}
 				/>
-			</div>
+			</ContextMenuItem>
 
 			<div
 				className={cn(
-					"!w-[170px] border bg-white rounded-sm shadow-md ",
+					"!w-[170px] border bg-white dark:bg-[#17212B] dark:border-[#101921] rounded-sm shadow-md ",
 					isMyMessage ? "self-end" : "self-start"
 				)}
 			>
@@ -138,7 +150,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 						return (
 							<ContextMenuItem
 								key={option.title}
-								className="flex text-black gap-4 px-4 hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C] rounded-none"
+								className="flex dark:text-white text-black gap-4 px-4 hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C] rounded-none"
 								onClick={option.function}
 							>
 								<div>{option.icon}</div>
@@ -150,14 +162,14 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 					})}
 				</div>
 
-				<div className="h-[10px] w-full bg-[#F1F1F1]" />
+				<div className="h-[10px] w-full bg-[#F1F1F1] dark:bg-[#202B38]" />
 				<div className="flex px-4 py-2 items-center gap-2">
 					<div>
 						<Typography tag="p" className="text-[12px] !font-[400]">
 							{createdDate}
 						</Typography>
 					</div>
-					<LuCheckCheck color={"black"} size={14} />
+					<LuCheckCheck className="text-black dark:text-white" size={14} />
 				</div>
 			</div>
 		</ContextMenuContent>

@@ -105,6 +105,7 @@ export const Message: FC<IMessageProps> = ({
 					isMyMessage={isMyMessage}
 					isHasReactions={isHasReactions}
 					isVoice={isVoice}
+					userId={userId}
 				/>
 			</div>
 		</>

@@ -1,8 +1,15 @@
-import { MessageStatus, MessageType } from "@/prisma/models"
+import {
+	ChatRole,
+	MessageStatus,
+	MessageType,
+	ReactionTypeFromMessage,
+} from "@/prisma/models"
 import { Typography } from "@/shared"
+import { useAddReaction } from "@/shared/lib/services/message/useReactionQuery"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatTime } from "@/shared/lib/utils/formatTime"
 import { IsRead } from "@/shared/ui/isRead"
+import { ManageReaction } from "@/widgets/ChatRoom/features/ManageReaction/ui"
 import { FC } from "react"
 import { TiPin } from "react-icons/ti"
 
@@ -13,6 +20,7 @@ interface IMessageInfoProps {
 	isMyMessage: boolean
 	isVoice: boolean
 	isHasReactions: boolean
+	userId: string | undefined
 }
 
 export const MessageInfo: FC<IMessageInfoProps> = ({
@@ -22,9 +30,13 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 	isMyMessage,
 	isVoice,
 	isHasReactions,
+	userId,
 }) => {
 	const date = formatTime(message.createdAt, "hh:mm")
 	const isPinned = message.isPinned
+	const isDialog = message.chat?.type === ChatRole.DIALOG
+
+	const { mutateAsync: addReaction } = useAddReaction()
 
 	return (
 		<div
@@ -37,26 +49,18 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 					"justify-between relative bottom-2 right-[12px] z-[20] pl-2 gap-5"
 			)}
 		>
-			{isHasReactions && (
-				<div className=" flex gap-1 relative top-1.5">
-					<div
-						className={cn(
-							"flex items-center justify-center gap-0.5  rounded-full p-0.5 text-[15px] ",
-							isMyMessage ? "bg-[#dcf8da]" : "bg-[#E8F5FC]"
-						)}
-					>
-						<span>👍</span>
-						<span
-							className={cn(
-								"text-[12px] pr-2 ",
-								isMyMessage ? "text-[#6DB566]" : "text-[#168ACD]"
-							)}
-						>
-							7
-						</span>
-					</div>
-				</div>
-			)}
+			{isHasReactions &&
+				message.reactions.map((r, i) => (
+					<ManageReaction
+						key={i}
+						userId={userId}
+						chatId={message.chatId}
+						isDialog={isDialog}
+						isMyMessage={isMyMessage}
+						reaction={r as ReactionTypeFromMessage}
+						addReaction={addReaction}
+					/>
+				))}
 			<div
 				className={cn(
 					" flex gap-1.5 items-center relative top-1.5 ",
