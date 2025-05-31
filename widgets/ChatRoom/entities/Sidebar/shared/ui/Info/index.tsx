@@ -47,7 +47,7 @@ export const Info: FC<IInfoProps> = ({ chat, user }) => {
 						<div className="flex flex-col gap-0" key={index + infoObj.length}>
 							<div>
 								{index === 2 && isDialog ? (
-									<CopyClickBoard className="text-[#47A2D7]" />
+									<CopyClickBoard className="text-[#47A2D7] dark:text-[#47A2D7]" />
 								) : (
 									<Typography
 										tag="p"

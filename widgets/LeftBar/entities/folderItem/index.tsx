@@ -23,7 +23,7 @@ export const FolderItem: FC<IFolderItemProps> = ({
 		<Button
 			onClick={onChange}
 			className={cn(
-				"group w-[64px] min-h-[64px] py-[11px] ga rounded flex flex-col gap-1 justify-center items-center hover:bg-white/10 cursor-pointer",
+				"group min-w-[70px] w-full min-h-[64px] py-[11px] flex flex-col gap-1 justify-center items-center hover:bg-white/10 cursor-pointer",
 				isActiveFolder && "bg-white/10"
 			)}
 		>

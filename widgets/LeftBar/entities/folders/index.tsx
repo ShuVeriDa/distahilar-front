@@ -19,7 +19,7 @@ export const Folders: FC<IFoldersProps> = () => {
 	const onOpen = () => onOpenModal(EnumModel.FOLDERS)
 
 	return (
-		<div className="flex flex-col gap-0.5">
+		<div className="flex flex-col gap-0.5 w-full">
 			{isLoading && <p>Loading...</p>}
 			{isSuccess &&
 				data.map(folder => {
