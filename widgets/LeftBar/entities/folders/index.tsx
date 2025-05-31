@@ -20,7 +20,12 @@ export const Folders: FC<IFoldersProps> = () => {
 
 	return (
 		<div className="flex flex-col gap-0.5 w-full">
-			{isLoading && <p>Loading...</p>}
+			{isLoading && (
+				<>
+					<FolderItem.Skeleton />
+					<FolderItem.Skeleton />
+				</>
+			)}
 			{isSuccess &&
 				data.map(folder => {
 					const onChange = () => {

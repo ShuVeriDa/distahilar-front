@@ -15,8 +15,7 @@ export const Providers: FC<IProvidersProps> = ({ children }) => {
 	return (
 		<ThemeProvider
 			attribute="class"
-			defaultTheme="system"
-			enableSystem
+			defaultTheme="light"
 			// disableTransitionOnChange
 		>
 			<TanStackQueryProvider>

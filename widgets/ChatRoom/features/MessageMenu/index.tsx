@@ -119,7 +119,13 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 
 	return (
 		<ContextMenuContent className="flex flex-col justify-center px-0 gap-4 relative bg-transparent border-none shadow-none">
-			<Picker reactionsDefaultOpen={true} className="!bg-white " />
+			<div className="custom-emoji-picker">
+				<Picker
+					reactionsDefaultOpen={true}
+					className="!bg-white "
+					lazyLoadEmojis
+				/>
+			</div>
 
 			<div
 				className={cn(

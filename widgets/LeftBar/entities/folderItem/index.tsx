@@ -1,8 +1,7 @@
-import { Button } from "@/shared"
+import { Button, Skeleton } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { IconRenderer } from "@/shared/ui/IconRenderer"
 import { Typography } from "@/shared/ui/Typography/Typography"
-import { FC } from "react"
 
 interface IFolderItemProps {
 	imageUrl: string
@@ -12,13 +11,13 @@ interface IFolderItemProps {
 	onChange?: () => void
 }
 
-export const FolderItem: FC<IFolderItemProps> = ({
+export const FolderItem = ({
 	imageUrl,
 	name,
 	size = 25,
 	onChange,
 	isActiveFolder,
-}) => {
+}: IFolderItemProps) => {
 	return (
 		<Button
 			onClick={onChange}
@@ -47,5 +46,18 @@ export const FolderItem: FC<IFolderItemProps> = ({
 				{name}
 			</Typography>
 		</Button>
+	)
+}
+
+FolderItem.Skeleton = function MyFolders() {
+	return (
+		<Skeleton className="min-w-[70px] w-full min-h-[64px] py-[11px] flex flex-col gap-1 justify-center items-center cursor-pointer rounded-none bg-[#202B38]">
+			<div className="max-h-[25px] max-w-[25px] w-full h-full">
+				<Skeleton className="w-full h-full rounded-full bg-[#F1F1F1] dark:bg-[#202B38]" />
+			</div>
+			<div>
+				<Skeleton className="h-[10px] w-[50px] rounded-full bg-[#F1F1F1] dark:bg-[#202B38]" />
+			</div>
+		</Skeleton>
 	)
 }

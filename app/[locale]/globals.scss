@@ -107,6 +107,23 @@ h6 {
 	}
 }
 
+.custom-emoji-picker .EmojiPickerReact {
+	height: 40px;
+	--epr-emoji-size: 23px;
+	--epr-emoji-gap: 6px;
+	// --epr-hover-bg-color: #e5e7eb; /* Tailwind gray-200 */
+	// --epr-bg-color: #ffffff;
+	// --epr-text-color: #111827; /* Tailwind gray-900 */
+	// --epr-category-label-bg-color: #ffffff;
+}
+
+.custom-emoji-picker .EmojiPickerReact.epr-dark-theme {
+	// --epr-bg-color: #1f2937; /* Tailwind gray-800 */
+	// --epr-text-color: #f9fafb;
+	// --epr-hover-bg-color: #374151; /* Tailwind gray-700 */
+	// --epr-category-label-bg-color: #1f2937;
+}
+
 @layer base {
 	* {
 		@apply border-border;
