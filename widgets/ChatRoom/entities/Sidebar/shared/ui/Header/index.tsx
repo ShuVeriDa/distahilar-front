@@ -1,6 +1,5 @@
-import { ChatType } from "@/prisma/models"
+import { ChatRole, ChatType } from "@/prisma/models"
 import { Button, Typography } from "@/shared"
-import { ChatRole } from "@prisma/client"
 import Image from "next/image"
 import { FC } from "react"
 import { IoCloseOutline } from "react-icons/io5"

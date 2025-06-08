@@ -1,9 +1,9 @@
-import { FoundedChatsType, MessageStatus } from "@/prisma/models"
+import { ChatRole, FoundedChatsType, MessageStatus } from "@/prisma/models"
 import { Button, Skeleton, Typography, useUser } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatDateTelegramStyle } from "@/shared/lib/utils/formatDateTelegramStyle"
 import { IsRead } from "@/shared/ui/isRead"
-import { ChatRole } from "@prisma/client"
+
 import Image from "next/image"
 import { redirect } from "next/navigation"
 

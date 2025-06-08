@@ -12,11 +12,17 @@ export const useVideoMessage = (video: VoiceVideoMessageType[]) => {
 
 	const updateProgress = useCallback(() => {
 		const videoElement = videoRef.current
-		if (videoElement && videoElement.duration) {
-			setProgress((videoElement.currentTime / videoElement.duration) * 100)
+		if (
+			videoElement &&
+			!isNaN(videoElement.duration) &&
+			isFinite(videoElement.duration)
+		) {
+			const currentTime = videoElement.currentTime
+			const duration = videoElement.duration
 
-			// Update remaining time
-			const timeLeft = videoElement.duration - videoElement.currentTime
+			setProgress((currentTime / duration) * 100)
+
+			const timeLeft = duration - currentTime
 			const minutes = Math.floor(timeLeft / 60)
 			const seconds = Math.floor(timeLeft % 60)
 			setRemainingTime(
@@ -25,6 +31,7 @@ export const useVideoMessage = (video: VoiceVideoMessageType[]) => {
 					.padStart(2, "0")}`
 			)
 		}
+
 		if (isPlaying) {
 			animationFrameRef.current = requestAnimationFrame(updateProgress)
 		}
@@ -67,27 +74,30 @@ export const useVideoMessage = (video: VoiceVideoMessageType[]) => {
 	useEffect(() => {
 		const videoElement = videoRef.current
 		if (videoElement) {
-			const handleLoadedData = () => {
+			const handleMetadataLoaded = () => {
 				videoElement.currentTime = 0
 				setProgress(0)
 
-				// Reset remaining time
-				const minutes = Math.floor(videoElement.duration / 60)
-				const seconds = Math.floor(videoElement.duration % 60)
-				setRemainingTime(
-					`${minutes.toString().padStart(2, "0")}:${seconds
-						.toString()
-						.padStart(2, "0")}`
-				)
+				if (!isNaN(videoElement.duration) && isFinite(videoElement.duration)) {
+					const minutes = Math.floor(videoElement.duration / 60)
+					const seconds = Math.floor(videoElement.duration % 60)
+					setRemainingTime(
+						`${minutes.toString().padStart(2, "0")}:${seconds
+							.toString()
+							.padStart(2, "0")}`
+					)
+				}
 			}
-			videoElement.addEventListener("loadeddata", handleLoadedData)
+
+			videoElement.addEventListener("loadedmetadata", handleMetadataLoaded)
 			return () => {
-				videoElement.removeEventListener("loadeddata", handleLoadedData)
+				videoElement.removeEventListener("loadedmetadata", handleMetadataLoaded)
 			}
 		}
 	}, [video])
 
 	return {
+		isPlaying,
 		videoRef,
 		progress,
 		remainingTime,

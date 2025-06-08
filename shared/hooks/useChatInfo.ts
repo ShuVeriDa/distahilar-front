@@ -1,5 +1,4 @@
-import { ChatMemberType, ChatType, UserType } from "@/prisma/models"
-import { ChatRole } from "@prisma/client"
+import { ChatMemberType, ChatRole, ChatType, UserType } from "@/prisma/models"
 import { useFormatLastSeen } from "../lib/utils/formatLastSeen"
 
 export const useChatInfo = (

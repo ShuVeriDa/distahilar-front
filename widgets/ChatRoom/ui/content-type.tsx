@@ -17,9 +17,13 @@ interface IContentTypeProps {
 	recording: boolean
 	currentValue: string
 	register: UseFormRegister<IFormRichMessageInput>
-	manageRecording: () => void
+	manageVoiceRecording: () => void
+	manageVideoRecording: () => void
 	onAddEmoji: (icon: string) => void
-	handleSubmit: UseFormHandleSubmit<IFormRichMessageInput, undefined>
+	handleSubmit: UseFormHandleSubmit<
+		IFormRichMessageInput,
+		IFormRichMessageInput
+	>
 	onSubmit: SubmitHandler<IFormRichMessageInput>
 }
 
@@ -28,7 +32,8 @@ export const ContentType: FC<IContentTypeProps> = ({
 	recording,
 	onAddEmoji,
 	register,
-	manageRecording,
+	manageVoiceRecording,
+	manageVideoRecording,
 	handleSubmit,
 	onSubmit,
 }) => {
@@ -95,7 +100,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 							variant="default"
 							className="w-[47px]  h-[47px]  flex items-center justify-center"
 							type="button"
-							onClick={manageRecording}
+							onClick={manageVoiceRecording}
 						>
 							<PiMicrophone
 								size={26}
@@ -106,6 +111,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 							variant="default"
 							className="w-[47px]  h-[47px]  flex items-center justify-center"
 							type="button"
+							onClick={manageVideoRecording}
 						>
 							<PiInstagramLogoLight
 								size={26}

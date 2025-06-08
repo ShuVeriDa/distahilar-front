@@ -82,7 +82,7 @@ export const Message: FC<IMessageProps> = ({
 		<>
 			<div ref={ref} className={messageClasses}>
 				<div>
-					{message.content && !isVoice && (
+					{message.content && !isVoice && !isCircleVideo && (
 						<Typography tag="p" className="text-[14px] leading-5">
 							{message.content}
 						</Typography>

@@ -1,27 +1,33 @@
 "use client"
 
-import { motion } from "framer-motion"
-
+import { MessageEnum } from "@/prisma/models"
 import { Button, Typography } from "@/shared"
+import dynamic from "next/dynamic"
 import { FC } from "react"
-import { PiMicrophoneFill } from "react-icons/pi"
+import { PiInstagramLogoFill, PiMicrophoneFill } from "react-icons/pi"
 import { RecordingTimer } from "../../shared/ui/RecordingTimer"
 
-interface IVoiceRecorderProps {
+const MotionDiv = dynamic(() =>
+	import("framer-motion").then(mod => mod.motion.div)
+)
+
+interface IRecorderProps {
 	recording: boolean
 	shadowColor: string
 	glowIntensity: number
 	recordingTime: number
 	volume: number
+	typeMessage: MessageEnum
 	onCancel: () => void
 }
 
-export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
+export const Recorder: FC<IRecorderProps> = ({
 	glowIntensity,
 	recording,
 	recordingTime,
 	shadowColor,
 	volume,
+	typeMessage,
 	onCancel,
 }) => {
 	return (
@@ -36,10 +42,9 @@ export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
 				</Button>
 
 				<div className="relative ">
-					{/* 🔥 Фоновые круги (радиоволны) */}
 					{recording && (
 						<>
-							<motion.div
+							<MotionDiv
 								className="absolute -top-3 -left-3 rounded-full bg-blue-400 opacity-50"
 								animate={{
 									scale: [0.8, 1, 1.1],
@@ -55,7 +60,7 @@ export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
 									height: "70px",
 								}}
 							/>
-							<motion.div
+							<MotionDiv
 								className="absolute -top-3 -left-3 rounded-full bg-blue-400 opacity-50"
 								animate={{
 									scale: [0.8, 1.05, 1.15],
@@ -75,24 +80,32 @@ export const VoiceRecorder: FC<IVoiceRecorderProps> = ({
 						</>
 					)}
 
-					{/* 🔥 Пульсирующий круг с Framer Motion */}
-					<motion.div
+					<MotionDiv
 						className="relative rounded-full"
 						initial={{ scale: 1 }}
 						animate={{
 							scale: 1 + volume / 100,
 							boxShadow: `0px 0px ${glowIntensity * 20}px ${shadowColor}`,
 						}}
-						transition={{ type: "spring", stiffness: 100, damping: 10 }}
+						transition={{
+							type: "spring",
+							stiffness: 100,
+							damping: 10,
+						}}
 					>
 						<Button
 							variant="default"
 							className="w-[47px] h-[47px] !pl-0.5 flex items-center justify-center bg-[#40A7E3] rounded-full"
 							type="submit"
 						>
-							<PiMicrophoneFill size={26} className="fill-white " />
+							{typeMessage === MessageEnum.VOICE && (
+								<PiMicrophoneFill size={26} className="fill-white" />
+							)}
+							{typeMessage === MessageEnum.VIDEO && (
+								<PiInstagramLogoFill size={26} className="fill-white" />
+							)}
 						</Button>
-					</motion.div>
+					</MotionDiv>
 				</div>
 			</div>
 		</div>
