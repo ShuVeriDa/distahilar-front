@@ -23,7 +23,8 @@ export const ManageReaction: FC<IManageReactionProps> = ({
 	userId,
 	addReaction,
 }) => {
-	const isMyReaction = reaction.userId === userId
+	const imageUrl = reaction.users[0].user.imageUrl
+	const isMyReaction = reaction.users.some(user => user.userId === userId)
 
 	const onHandleClick = () => {
 		addReaction({
@@ -46,10 +47,14 @@ export const ManageReaction: FC<IManageReactionProps> = ({
 					"flex items-center justify-center gap-0.5  rounded-full px-0.5 text-[15px] ",
 					isDialog && isMyMessage && isMyReaction && "bg-[#5FBE67]",
 					isDialog && isMyMessage && !isMyReaction && "bg-[#D5F1C9]",
-					isDialog && !isMyMessage && isMyReaction && "bg-[#40A7E3]",
+					isDialog &&
+						!isMyMessage &&
+						isMyReaction &&
+						"bg-[#40A7E3] dark:bg-[#3F96D0]",
 					isDialog && !isMyMessage && !isMyReaction && "bg-[#E8F5FC]",
-					!isDialog && isMyReaction && "bg-[#40A7E3]",
-					!isDialog && !isMyReaction && "bg-[#E8F5FC]"
+					!isDialog && isMyReaction && "bg-[#40A7E3] dark:bg-[#3F96D0]",
+					!isDialog && !isMyReaction && isMyMessage && "bg-[#5FBE67]",
+					!isDialog && !isMyReaction && !isMyMessage && "bg-[#E8F5FC]"
 				)}
 			>
 				<span>{reaction.emoji}</span>
@@ -58,7 +63,7 @@ export const ManageReaction: FC<IManageReactionProps> = ({
 					<span
 						className={cn(
 							"text-[12px] pr-2 ",
-							isMyMessage ? "text-[#f9faf9]" : "text-[#168ACD]"
+							isMyReaction || isMyMessage ? "text-[#f9faf9]" : "text-[#168ACD]"
 						)}
 					>
 						{reaction.count}
@@ -66,7 +71,7 @@ export const ManageReaction: FC<IManageReactionProps> = ({
 				) : (
 					<div>
 						<Image
-							src={reaction.user.imageUrl ?? "/images/no-avatar.png"}
+							src={imageUrl ?? "/images/no-avatar.png"}
 							alt={reaction.emoji}
 							width={20}
 							height={20}

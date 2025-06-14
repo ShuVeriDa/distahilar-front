@@ -65,11 +65,15 @@ export type ReactionType = Prisma.ReactionGetPayload<{
 
 export type ReactionTypeFromMessage = {
 	id: string
-	userId: string
 	emoji: string
 	count: number
 	messageId: string
-	user: UserType
+	users: {
+		id: string
+		reactionId: string
+		userId: string
+		user: UserType
+	}[]
 }
 
 export type FolderWSType = {

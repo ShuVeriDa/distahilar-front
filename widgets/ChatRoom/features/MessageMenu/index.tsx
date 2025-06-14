@@ -120,14 +120,14 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	)
 
 	return (
-		<ContextMenuContent className="flex flex-col justify-center px-0 gap-4 relative bg-transparent border-none shadow-none ">
+		<ContextMenuContent className="flex flex-col justify-center px-0 gap-2 relative bg-transparent border-none shadow-none ">
 			<ContextMenuItem
 				key={"emoji-picker"}
-				className="focus:bg-white-0 custom-emoji-picker"
+				className="focus:bg-white-0 custom-emoji-picker p-0"
 			>
 				<Picker
 					reactionsDefaultOpen={true}
-					className="bg-white dark:bg-[#17212B] dark:border-[#17212B]"
+					className="!bg-white dark:!bg-[#17212B] dark:border-[#17212B]"
 					lazyLoadEmojis
 					onEmojiClick={emoji => {
 						addReaction({

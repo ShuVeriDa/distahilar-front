@@ -28,10 +28,10 @@ model User {
 
   settings UserSettings?
 
-  messages  Message[]
-  reactions Reaction[]
-  folders   Folder[]
-  AuditLog  AuditLog[]
+  messages      Message[]
+  reactionUsers ReactionUser[] // заменили reactions → reactionUsers
+  folders       Folder[]
+  AuditLog      AuditLog[]
 
   lastSeen DateTime? @default(now())
   isOnline Boolean   @default(false)
@@ -133,7 +133,7 @@ model Message {
   voiceMessages VoiceMessage[]
   videoMessages VideoMessage[]
   isPinned      Boolean        @default(false)
-  status        MessageStatus  @default(PENDING)
+  status        MessageStatus  @default(SENT)
   // fileUrl       String?        @db.Text
 
   // isRead      Boolean  @default(false) // статус прочтения
@@ -153,6 +153,11 @@ model Message {
 
   pinnedChatId String?
   pinnedChat   Chat?   @relation("pinnedMessage", fields: [pinnedChatId], references: [id], onDelete: Cascade)
+
+  // Поля для reply functionality
+  repliedToId String? // ID сообщения, на которое отвечаем
+  repliedTo   Message?  @relation("messageReplies", fields: [repliedToId], references: [id], onDelete: NoAction)
+  replies     Message[] @relation("messageReplies") // Ответы на это сообщение
 
   @@unique([pinnedChatId])
   @@index([chatId, createdAt])
@@ -179,6 +184,7 @@ model VoiceMessage {
   id       String @id @default(uuid())
   url      String
   duration Int
+  size     Int
 
   messageId String?
   message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
@@ -193,6 +199,7 @@ model VideoMessage {
   id       String @id @default(uuid())
   url      String
   duration Int
+  size     Int
 
   messageId String?
   message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
@@ -225,11 +232,23 @@ model Reaction {
   messageId String
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
+  users ReactionUser[]
+
+  @@unique([messageId, emoji]) // Один тип реакции на сообщение
+  @@map("reactions")
+}
+
+model ReactionUser {
+  id String @id @default(uuid())
+
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([messageId, userId])
-  @@map("reactions")
+  reactionId String
+  reaction   Reaction @relation(fields: [reactionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, reactionId]) // Один пользователь может поставить только одну конкретную реакцию
+  @@map("reaction_users")
 }
 
 // Папки для чатов

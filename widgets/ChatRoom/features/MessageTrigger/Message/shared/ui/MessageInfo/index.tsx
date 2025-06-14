@@ -49,18 +49,20 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 					"justify-between relative bottom-2 right-[12px] z-[20] pl-2 gap-5"
 			)}
 		>
-			{isHasReactions &&
-				message.reactions.map((r, i) => (
-					<ManageReaction
-						key={i}
-						userId={userId}
-						chatId={message.chatId}
-						isDialog={isDialog}
-						isMyMessage={isMyMessage}
-						reaction={r as ReactionTypeFromMessage}
-						addReaction={addReaction}
-					/>
-				))}
+			<div className="w-full flex gap-1 ">
+				{isHasReactions &&
+					message.reactions.map((r, i) => (
+						<ManageReaction
+							key={i}
+							userId={userId}
+							chatId={message.chatId}
+							isDialog={isDialog}
+							isMyMessage={isMyMessage}
+							reaction={r as ReactionTypeFromMessage}
+							addReaction={addReaction}
+						/>
+					))}
+			</div>
 			<div
 				className={cn(
 					" flex gap-1.5 items-center relative top-1.5 ",
