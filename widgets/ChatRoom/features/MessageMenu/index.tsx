@@ -1,6 +1,11 @@
 "use client"
 
-import { ChatRole, MessageType } from "@/prisma/models"
+import {
+	ChatRole,
+	MessageEnum,
+	MessageStatus,
+	MessageType,
+} from "@/prisma/models"
 import { Typography, useModal } from "@/shared"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
@@ -11,12 +16,12 @@ import {
 	ContextMenuContent,
 	ContextMenuItem,
 } from "@/shared/ui/ContenxtMenu/context-menu"
+import { IsRead, IsReadType } from "@/shared/ui/isRead"
 import dynamic from "next/dynamic"
 import { FC, useMemo } from "react"
 import { AiOutlineDelete, AiOutlinePushpin } from "react-icons/ai"
 import { BsReply } from "react-icons/bs"
 import { IoCheckmarkCircleOutline } from "react-icons/io5"
-import { LuCheckCheck } from "react-icons/lu"
 import { PiPencilSimple } from "react-icons/pi"
 import { RiUnpinLine } from "react-icons/ri"
 import { TbCopy } from "react-icons/tb"
@@ -44,6 +49,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	interlocutorsName,
 	onSelectMessage,
 }) => {
+	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
 	const { mutateAsync: addReaction } = useAddReaction()
 	const { onOpenModal } = useModal()
@@ -74,7 +80,9 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 				icon: <TbCopy size={20} />,
 				title: "Copy text",
 				function: () => {
-					if (message.content) writeClipboardText(message.content)
+					if (message.content) {
+						writeClipboardText(message.content)
+					}
 				},
 			},
 			{
@@ -146,7 +154,12 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 				)}
 			>
 				<div className="py-1">
-					{options.map(option => {
+					{options.map((option, i) => {
+						if (
+							message.messageType !== MessageEnum.TEXT &&
+							(i === 1 || i === 3)
+						)
+							return null
 						return (
 							<ContextMenuItem
 								key={option.title}
@@ -162,15 +175,25 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 					})}
 				</div>
 
-				<div className="h-[10px] w-full bg-[#F1F1F1] dark:bg-[#202B38]" />
-				<div className="flex px-4 py-2 items-center gap-2">
-					<div>
-						<Typography tag="p" className="text-[12px] !font-[400]">
-							{createdDate}
-						</Typography>
-					</div>
-					<LuCheckCheck className="text-black dark:text-white" size={14} />
-				</div>
+				{isMyMessage && (
+					<>
+						<div className="h-[10px] w-full bg-[#F1F1F1] dark:bg-[#202B38]" />
+						<div className="flex px-4 py-2 items-center gap-2">
+							<div className={cn("flex")}>
+								<IsRead
+									status={message.status as MessageStatus}
+									isCircleVideo={isCircleVideo}
+									isReadType={IsReadType.MESSAGE_MENU}
+								/>
+							</div>
+							<div>
+								<Typography tag="p" className="text-[12px] !font-[400]">
+									{createdDate}
+								</Typography>
+							</div>
+						</div>
+					</>
+				)}
 			</div>
 		</ContextMenuContent>
 	)
