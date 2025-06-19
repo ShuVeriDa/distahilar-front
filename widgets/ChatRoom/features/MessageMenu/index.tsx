@@ -66,7 +66,10 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 			{
 				icon: <PiPencilSimple size={20} />,
 				title: "Edit",
-				function: () => handleEditMessage(message),
+				function: () => {
+					if (!isMyMessage) return
+					handleEditMessage(message)
+				},
 			},
 			{
 				icon: message.isPinned ? (
@@ -117,11 +120,9 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 			},
 		],
 		[
-			message?.isPinned,
-			message?.id,
-			message?.chatId,
-			message?.content,
-			message?.chat?.type,
+			message,
+			isMyMessage,
+			handleEditMessage,
 			pinMessage,
 			onOpenModal,
 			interlocutorsName,
@@ -158,8 +159,9 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 				<div className="py-1">
 					{options.map((option, i) => {
 						if (
-							message.messageType !== MessageEnum.TEXT &&
-							(i === 1 || i === 3)
+							(message.messageType !== MessageEnum.TEXT &&
+								(i === 1 || i === 3)) ||
+							(!isMyMessage && i === 1)
 						)
 							return null
 						return (
