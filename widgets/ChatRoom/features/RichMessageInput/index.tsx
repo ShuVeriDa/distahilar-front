@@ -10,11 +10,14 @@ import {
 import { useUser } from "@/shared"
 import { useCircleVideoRecorder } from "@/shared/hooks/useCircleVideoRecorder"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
-import { useSendMessage } from "@/shared/lib/services/message/useMessagesQuery"
+import {
+	useEditMessage,
+	useSendMessage,
+} from "@/shared/lib/services/message/useMessagesQuery"
 import { generateTemporaryId } from "@/shared/lib/utils/generateTemporaryId"
 import { $Enums } from "@prisma/client"
 import { useQueryClient } from "@tanstack/react-query"
-import { FC, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { useVoiceRecord } from "../../shared/hooks/useVoiceRecord"
 import { ContentType } from "../../ui/content-type"
@@ -28,11 +31,15 @@ export interface IFormRichMessageInput {
 interface IRichMessageInputProps {
 	chatId: string
 	chatType: $Enums.ChatRole | undefined
+	editedMessage: MessageType | null
+	handleEditMessage: (message: MessageType | null) => void
 }
 
 export const RichMessageInput: FC<IRichMessageInputProps> = ({
 	chatId,
 	chatType,
+	editedMessage,
+	handleEditMessage,
 }) => {
 	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
 	const { user } = useUser()
@@ -44,10 +51,23 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 		chatType,
 		user?.id
 	)
+
+	const { mutateAsync: editMessage } = useEditMessage(chatId)
+
 	const { uploadFileQuery } = useFileQuery(
 		typeMessage === MessageEnum.VIDEO ? "video-message" : "audio-message"
 	)
 	const { mutateAsync: audioUpload } = uploadFileQuery
+
+	useEffect(() => {
+		if (
+			editedMessage &&
+			editedMessage.content &&
+			editedMessage.messageType === MessageEnum.TEXT
+		) {
+			setValue("content", editedMessage.content)
+		}
+	}, [editedMessage, setValue])
 
 	const {
 		recording,
@@ -95,8 +115,6 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 			setTypeMessage(MessageEnum.VIDEO)
 		}
 	}
-
-	console.log({ cameraRecording, typeMessage })
 
 	const onAddEmoji = (icon: string) => {
 		const currentValue = watch("content")
@@ -227,17 +245,30 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 
 	const onSubmit: SubmitHandler<IFormRichMessageInput> = async data => {
 		if (typeMessage === MessageEnum.TEXT) {
-			await handleTextSubmit(data.content)
+			if (editedMessage && editedMessage.content) {
+				await editMessage({
+					messageId: editedMessage.id,
+					content: data.content,
+				})
+				handleEditMessage(null)
+			} else {
+				await handleTextSubmit(data.content)
+			}
+
+			reset()
 			return
 		}
 
 		if (typeMessage === MessageEnum.VOICE) {
 			await handleVoiceSubmit()
+
+			reset()
 			return
 		}
 
 		if (typeMessage === MessageEnum.VIDEO) {
 			await handleVideoSubmit()
+
 			reset()
 			return
 		}
@@ -267,19 +298,21 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 						shadowColor={cameraShadowColor}
 						glowIntensity={cameraGlowIntensity}
 						volume={cameraVolume}
-						stopRecording={cameraStopRecording}
 						typeMessage={typeMessage}
+						stopRecording={cameraStopRecording}
 					/>
 				) : (
 					<ContentType
 						currentValue={currentValue}
 						recording={recording}
+						editedMessage={editedMessage}
 						register={register}
 						manageVoiceRecording={manageVoiceRecording}
 						manageVideoRecording={manageVideoRecording}
 						onAddEmoji={onAddEmoji}
 						handleSubmit={handleSubmit}
 						onSubmit={onSubmit}
+						handleEditMessage={handleEditMessage}
 					/>
 				)}
 			</form>

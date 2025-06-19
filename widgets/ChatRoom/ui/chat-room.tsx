@@ -4,6 +4,7 @@ import { useFetchChatByIdQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { useMessagesWSQuery } from "@/shared/lib/services/message/useMessagesQuery"
 import { FC, useState } from "react"
 
+import { MessageType } from "@/prisma/models"
 import { useUser } from "@/shared"
 import { useSelectedMessages } from "@/shared/hooks/useSelectedMessages"
 import { WrapperMessages } from "../entities"
@@ -18,8 +19,14 @@ interface IChatRoomProps {
 }
 
 export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
-	const [openSideBar, setOpenSideBar] = useState(false)
 	const { user } = useUser()
+	const [openSideBar, setOpenSideBar] = useState(false)
+	const [editedMessage, setEditedMessage] = useState<MessageType | null>(null)
+
+	const handleEditMessage = (message: MessageType | null) =>
+		setEditedMessage(message)
+
+	const { data: chat } = useFetchChatByIdQuery(chatId)
 
 	const onToggleSideBar = () => setOpenSideBar(!openSideBar)
 	const actionsForButtons = [() => {}, () => {}, onToggleSideBar]
@@ -31,15 +38,12 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		clearSelectedMessages,
 	} = useSelectedMessages()
 
-	const { data: chat } = useFetchChatByIdQuery(chatId)
 	const {
 		data: messages,
 		isSuccess: isSuccessMessages,
 		// isLoading,
 	} = useMessagesWSQuery(chatId)
 	const pinnedMessages = messages?.messages.find(msg => msg.isPinned)
-
-	console.log({ messages })
 
 	return (
 		<div className="w-full h-full flex ">
@@ -61,8 +65,14 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					hasSelectedMessages={hasSelectedMessages}
 					selectedMessages={selectedMessages}
 					setSelectedMessages={setSelectedMessages}
+					handleEditMessage={handleEditMessage}
 				/>
-				<RichMessageInput chatId={chatId} chatType={chat?.type} />
+				<RichMessageInput
+					chatId={chatId}
+					chatType={chat?.type}
+					editedMessage={editedMessage}
+					handleEditMessage={handleEditMessage}
+				/>
 			</div>
 			<SideBar
 				openSideBar={openSideBar}

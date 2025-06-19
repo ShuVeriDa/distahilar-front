@@ -32,7 +32,10 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 		>
 			<div className="flex flex-col">
 				<div>
-					<Typography tag="p" className="text-[14px] font-[500] text-[#168ADE]">
+					<Typography
+						tag="p"
+						className="text-[14px] font-[500] text-[#168ADE] text-start"
+					>
 						Pinned Message
 					</Typography>
 				</div>

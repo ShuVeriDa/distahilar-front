@@ -9,12 +9,13 @@ import { Dispatch, FC, SetStateAction } from "react"
 import { Messages } from "./Messages"
 
 interface IWrapperMessagesProps {
+	chat: ChatType | undefined
 	messages: MessageType[]
 	selectedMessages: MessageType[]
 	hasSelectedMessages: boolean
 	locale: string
 	setSelectedMessages: Dispatch<SetStateAction<MessageType[]>>
-	chat: ChatType | undefined
+	handleEditMessage: (message: MessageType | null) => void
 }
 
 export const WrapperMessages: FC<IWrapperMessagesProps> = ({
@@ -23,6 +24,7 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 	hasSelectedMessages,
 	selectedMessages,
 	chat,
+	handleEditMessage,
 	setSelectedMessages,
 }) => {
 	const { containerRef } = useScrollToLastMessage(messages)
@@ -44,9 +46,10 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 						messages={messages}
 						selectedMessages={selectedMessages}
 						hasSelectedMessages={hasSelectedMessages}
-						setSelectedMessages={setSelectedMessages}
 						locale={locale}
 						chat={chat}
+						setSelectedMessages={setSelectedMessages}
+						handleEditMessage={handleEditMessage}
 					/>
 				)
 			})}

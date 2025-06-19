@@ -160,6 +160,36 @@ export const useSendMessage = (
 	})
 }
 
+export interface EditMessageDto extends Partial<CreateMessageDto> {
+	messageId: string
+}
+
+export const useEditMessage = (chatId: string) => {
+	const { socket } = useSocket()
+
+	const client = useQueryClient()
+
+	return useMutation<void, Error, EditMessageDto>({
+		mutationKey: ["message:update", chatId],
+		mutationFn: messageData =>
+			new Promise<void>((resolve, reject) => {
+				if (!socket) {
+					reject(new Error("WebSocket is not connected"))
+					return
+				}
+
+				socket.emit(
+					"editMessage",
+					{ chatId, ...messageData },
+					(response: MessageType) => resolve()
+				)
+			}),
+		onSuccess: () => {
+			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
+		},
+	})
+}
+
 export interface PinMessageDto {
 	chatId: string
 	messageId: string

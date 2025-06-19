@@ -1,3 +1,4 @@
+import { MessageType } from "@/prisma/models"
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { IconPicker } from "@/shared/ui/EmojiPicker"
@@ -16,6 +17,7 @@ import { IFormRichMessageInput } from "../features/RichMessageInput"
 interface IContentTypeProps {
 	recording: boolean
 	currentValue: string
+	editedMessage: MessageType | null
 	register: UseFormRegister<IFormRichMessageInput>
 	manageVoiceRecording: () => void
 	manageVideoRecording: () => void
@@ -25,17 +27,20 @@ interface IContentTypeProps {
 		IFormRichMessageInput
 	>
 	onSubmit: SubmitHandler<IFormRichMessageInput>
+	handleEditMessage: (message: MessageType | null) => void
 }
 
 export const ContentType: FC<IContentTypeProps> = ({
 	currentValue,
 	recording,
+	editedMessage,
 	onAddEmoji,
 	register,
 	manageVoiceRecording,
 	manageVideoRecording,
 	handleSubmit,
 	onSubmit,
+	handleEditMessage,
 }) => {
 	return (
 		<>
@@ -64,7 +69,13 @@ export const ContentType: FC<IContentTypeProps> = ({
 							handleSubmit(onSubmit)()
 						}
 					}}
-					{...register("content")}
+					{...register("content", {
+						onChange: e => {
+							if (e.target.value === "" && editedMessage) {
+								handleEditMessage(null)
+							}
+						},
+					})}
 				/>
 			</div>
 

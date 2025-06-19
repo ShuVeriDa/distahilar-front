@@ -40,6 +40,7 @@ interface IMessageMenuProps {
 	message: MessageType
 	interlocutorsName: string | undefined
 	onSelectMessage: () => void
+	handleEditMessage: (message: MessageType | null) => void
 }
 
 export const MessageMenu: FC<IMessageMenuProps> = ({
@@ -48,6 +49,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	message,
 	interlocutorsName,
 	onSelectMessage,
+	handleEditMessage,
 }) => {
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
@@ -64,7 +66,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 			{
 				icon: <PiPencilSimple size={20} />,
 				title: "Edit",
-				function: () => {},
+				function: () => handleEditMessage(message),
 			},
 			{
 				icon: message.isPinned ? (

@@ -17,6 +17,7 @@ interface IMessagesProps {
 	locale: string
 	chat: ChatType | undefined
 	setSelectedMessages: Dispatch<SetStateAction<MessageType[]>>
+	handleEditMessage: (message: MessageType | null) => void
 }
 
 export const Messages: FC<IMessagesProps> = ({
@@ -29,6 +30,7 @@ export const Messages: FC<IMessagesProps> = ({
 	selectedMessages,
 	chat,
 	setSelectedMessages,
+	handleEditMessage,
 }) => {
 	const isSameMessage = selectedMessages.some(item => item.id === message.id)
 
@@ -96,8 +98,9 @@ export const Messages: FC<IMessagesProps> = ({
 					isMyMessage={isMyMessage}
 					createdDate={createdDate}
 					message={message}
-					onSelectMessage={onSelectMessage}
 					interlocutorsName={interlocutorsName}
+					onSelectMessage={onSelectMessage}
+					handleEditMessage={handleEditMessage}
 				/>
 			</ContextMenu>
 		</div>
