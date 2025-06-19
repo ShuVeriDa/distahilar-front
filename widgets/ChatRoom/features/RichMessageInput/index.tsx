@@ -3,18 +3,17 @@
 import { CircleVideoRecorder } from "@/features/CircleVideoRecorder/ui"
 import {
 	MessageEnum,
-	MessageStatus,
 	MessageType,
 	VoiceVideoMessageType,
 } from "@/prisma/models"
 import { useUser } from "@/shared"
 import { useCircleVideoRecorder } from "@/shared/hooks/useCircleVideoRecorder"
+import { useMessageRecorderHandlers } from "@/shared/hooks/useMessageRecorderHandlers"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import {
 	useEditMessage,
 	useSendMessage,
 } from "@/shared/lib/services/message/useMessagesQuery"
-import { generateTemporaryId } from "@/shared/lib/utils/generateTemporaryId"
 import { $Enums } from "@prisma/client"
 import { useQueryClient } from "@tanstack/react-query"
 import { FC, useEffect, useState } from "react"
@@ -43,31 +42,23 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 }) => {
 	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
 	const { user } = useUser()
+	const client = useQueryClient()
 
 	const { register, handleSubmit, reset, watch, setValue } =
 		useForm<IFormRichMessageInput>()
+	const currentValue = watch("content")
+
 	const { mutateAsync: sendMessage } = useSendMessage(
 		chatId,
 		chatType,
 		user?.id
 	)
-
 	const { mutateAsync: editMessage } = useEditMessage(chatId)
 
 	const { uploadFileQuery } = useFileQuery(
 		typeMessage === MessageEnum.VIDEO ? "video-message" : "audio-message"
 	)
 	const { mutateAsync: audioUpload } = uploadFileQuery
-
-	useEffect(() => {
-		if (
-			editedMessage &&
-			editedMessage.content &&
-			editedMessage.messageType === MessageEnum.TEXT
-		) {
-			setValue("content", editedMessage.content)
-		}
-	}, [editedMessage, setValue])
 
 	const {
 		recording,
@@ -90,7 +81,28 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 		stopRecording: cameraStopRecording,
 	} = useCircleVideoRecorder()
 
-	const currentValue = watch("content")
+	const { handleVoiceSubmit, handleVideoSubmit } = useMessageRecorderHandlers({
+		chatId,
+		chatType,
+		userId: user?.id,
+		client,
+		stopRecording,
+		cameraStopRecording,
+		audioUpload,
+		sendMessage,
+		reset,
+		setTypeMessage,
+	})
+
+	useEffect(() => {
+		if (
+			editedMessage &&
+			editedMessage.content &&
+			editedMessage.messageType === MessageEnum.TEXT
+		) {
+			setValue("content", editedMessage.content)
+		}
+	}, [editedMessage, setValue])
 
 	const manageVoiceRecording = () => {
 		if (recording && typeMessage === MessageEnum.VOICE) {
@@ -133,114 +145,6 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 	const onCancel = () => {
 		stopRecording()
 		setTypeMessage(MessageEnum.TEXT)
-	}
-
-	const client = useQueryClient()
-
-	const handleVoiceSubmit = async () => {
-		const blob = await stopRecording()
-		if (!blob) return
-
-		try {
-			const formData = new FormData()
-			formData.append("file", blob, "audio-message.webm")
-
-			const optimisticMessage = {
-				id: generateTemporaryId(),
-				messageType: MessageEnum.VOICE,
-				status: MessageStatus.PENDING,
-				userId: user?.id,
-				chatType: chatType,
-				createdAt: new Date().toISOString(),
-			}
-
-			client.setQueryData(
-				["messagesWS", chatId],
-				(oldData: { messages: MessageType[]; nextCursor: string | null }) => {
-					if (
-						oldData.messages.some(
-							(msg: MessageType) => msg.id === generateTemporaryId()
-						)
-					) {
-						return oldData
-					}
-
-					return {
-						...oldData,
-						messages: [...oldData.messages, optimisticMessage],
-					}
-				}
-			)
-
-			const { size, url, duration } = await audioUpload(formData)
-
-			await sendMessage({
-				content: "audio-message",
-				messageType: MessageEnum.VOICE,
-				url,
-				size,
-				duration,
-			})
-		} catch (err) {
-			console.error("Ошибка загрузки аудио:", err)
-		} finally {
-			setTypeMessage(MessageEnum.TEXT)
-
-			reset()
-		}
-	}
-
-	const handleVideoSubmit = async () => {
-		const blob = await cameraStopRecording()
-		if (!blob) return
-
-		try {
-			const formData = new FormData()
-			formData.append("file", blob, "video-message.webm")
-
-			const optimisticMessage = {
-				id: generateTemporaryId(),
-				messageType: MessageEnum.VIDEO,
-				status: MessageStatus.PENDING,
-				userId: user?.id,
-				chatType: chatType,
-				createdAt: new Date().toISOString(),
-			}
-
-			client.setQueryData(
-				["messagesWS", chatId],
-				(oldData: { messages: MessageType[]; nextCursor: string | null }) => {
-					if (
-						oldData.messages.some(
-							(msg: MessageType) => msg.id === generateTemporaryId()
-						)
-					) {
-						return oldData
-					}
-
-					return {
-						...oldData,
-						messages: [...oldData.messages, optimisticMessage],
-					}
-				}
-			)
-
-			const { size, url, duration } = await audioUpload(formData)
-
-			await sendMessage({
-				content: "video-message",
-				messageType: MessageEnum.VIDEO,
-				url,
-				size,
-				duration,
-			})
-		} catch (err) {
-			console.error("Ошибка загрузки видео:", err)
-		} finally {
-			setTypeMessage(MessageEnum.TEXT)
-
-			reset()
-		}
 	}
 
 	const onSubmit: SubmitHandler<IFormRichMessageInput> = async data => {

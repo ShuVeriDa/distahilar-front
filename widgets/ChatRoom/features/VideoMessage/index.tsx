@@ -22,7 +22,7 @@ export const VideoMessage: FC<IVideoMessageProps> = ({ video }) => {
 
 	const formattedDuration = isPlaying
 		? remainingTime
-		: formatDuration(video[0].duration)
+		: formatDuration(video ? video[0].duration : 0)
 
 	return (
 		<div className="relative w-[240px] h-[240px]">

@@ -122,10 +122,10 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 		[
 			message,
 			isMyMessage,
+			interlocutorsName,
 			handleEditMessage,
 			pinMessage,
 			onOpenModal,
-			interlocutorsName,
 			onSelectMessage,
 		]
 	)
