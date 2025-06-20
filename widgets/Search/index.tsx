@@ -3,7 +3,7 @@ import { ComponentProps, FC } from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
 
 interface ISearchProps extends ComponentProps<"input"> {
-	register?: UseFormRegisterReturn<any>
+	register?: UseFormRegisterReturn
 	variant?: keyof typeof InputNS.variants
 }
 

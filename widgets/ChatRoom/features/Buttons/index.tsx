@@ -55,16 +55,21 @@ export const Buttons: FC<IButtonsProps> = ({
 	)
 	return (
 		<div className="flex items-center gap-3 h-full">
-			{btns.map((btn, index) => (
-				<Button
-					variant="clean"
-					key={index}
-					onClick={btn.action}
-					className={"h-full w-[30px] rounded-full hover:cursor-pointer group"}
-				>
-					{btn.icon}
-				</Button>
-			))}
+			{btns.map((btn, index) => {
+				if (index === 0) return
+				return (
+					<Button
+						variant="clean"
+						key={index}
+						onClick={btn.action}
+						className={
+							"h-full w-[30px] rounded-full hover:cursor-pointer group"
+						}
+					>
+						{btn.icon}
+					</Button>
+				)
+			})}
 		</div>
 	)
 }

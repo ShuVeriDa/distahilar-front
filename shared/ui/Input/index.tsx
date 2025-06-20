@@ -11,6 +11,7 @@ import {
 import {
 	FieldError,
 	FieldErrorsImpl,
+	FieldValues,
 	Merge,
 	UseFormRegisterReturn,
 	UseFormWatch,
@@ -63,13 +64,13 @@ export const InputNS = {
 }
 
 export type PropsType = {
-	register?: UseFormRegisterReturn<any>
+	register?: UseFormRegisterReturn
 	variant?: keyof typeof InputNS.variants
 	classNameLabel?: string
 	label?: string
 	id?: string
 	errors?: Merge<FieldError, FieldErrorsImpl<{ value: number }>> | undefined
-	watch?: UseFormWatch<any>
+	watch?: UseFormWatch<FieldValues>
 } & ComponentProps<"input">
 
 export const Input = forwardRef<InputRefType, PropsType>((props, ref) => {

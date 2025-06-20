@@ -44,7 +44,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 }) => {
 	return (
 		<>
-			<div className="w-[47px] h-full flex flex-col justify-end">
+			<div className="w-[47px] h-full flex flex-col justify-end group">
 				<Button
 					variant="default"
 					type="button"
@@ -52,7 +52,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 				>
 					<ImAttachment
 						size={21}
-						className="fill-[#999999] hover:fill-[#807f7f]"
+						className="fill-[#999999] group-hover:fill-[#807f7f]"
 					/>
 				</Button>
 			</div>
@@ -84,14 +84,14 @@ export const ContentType: FC<IContentTypeProps> = ({
 					<Button
 						variant="default"
 						className={cn(
-							"w-[47px]  h-[47px]  flex items-center justify-center"
+							"w-[47px]  h-[47px]  flex items-center justify-center group"
 						)}
 						type="button"
 					>
 						<IconPicker onChange={onAddEmoji}>
 							<PiSmiley
 								size={26}
-								className="fill-[#999999] hover:fill-[#807f7f]"
+								className="fill-[#999999] group-hover:fill-[#807f7f]"
 							/>
 						</IconPicker>
 					</Button>
@@ -100,7 +100,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 				{currentValue ? (
 					<Button
 						variant="default"
-						className="w-[47px]  h-[47px]  flex items-center justify-center"
+						className="w-[47px]  h-[47px]  flex items-center justify-center group"
 						type="submit"
 					>
 						<IoSend size={23} className="fill-[#40A7E3] hover:fill-[#20a3ef]" />
@@ -109,24 +109,24 @@ export const ContentType: FC<IContentTypeProps> = ({
 					<>
 						<Button
 							variant="default"
-							className="w-[47px]  h-[47px]  flex items-center justify-center"
+							className="w-[47px]  h-[47px]  flex items-center justify-center group"
 							type="button"
 							onClick={manageVoiceRecording}
 						>
 							<PiMicrophone
 								size={26}
-								className="fill-[#999999] hover:fill-[#807f7f]"
+								className="fill-[#999999] group-hover:fill-[#807f7f]"
 							/>
 						</Button>
 						<Button
 							variant="default"
-							className="w-[47px]  h-[47px]  flex items-center justify-center"
+							className="w-[47px]  h-[47px]  flex items-center justify-center group"
 							type="button"
 							onClick={manageVideoRecording}
 						>
 							<PiInstagramLogoLight
 								size={26}
-								className="fill-[#999999] hover:fill-[#807f7f]"
+								className="fill-[#999999] group-hover:fill-[#807f7f]"
 							/>
 						</Button>
 					</>

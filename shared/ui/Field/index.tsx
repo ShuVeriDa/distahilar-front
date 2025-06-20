@@ -3,6 +3,7 @@ import { FC, InputHTMLAttributes } from "react"
 import {
 	FieldError,
 	FieldErrorsImpl,
+	FieldValues,
 	Merge,
 	UseFormRegisterReturn,
 	UseFormWatch,
@@ -13,7 +14,7 @@ import { Typography } from "../Typography/Typography"
 
 interface IFieldProps
 	extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
-	register?: UseFormRegisterReturn<any>
+	register?: UseFormRegisterReturn
 	errors?: Merge<FieldError, FieldErrorsImpl<{ value: number }>> | undefined
 	colorScheme?: string
 	isType?: "input" | "textarea"
@@ -23,7 +24,7 @@ interface IFieldProps
 	classNameField?: string
 	id?: string
 	variant?: keyof typeof InputNS.variants | keyof typeof TextAreaNS.variants
-	watch?: UseFormWatch<any>
+	watch?: UseFormWatch<FieldValues>
 }
 
 export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
@@ -63,7 +64,11 @@ export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
 				<Textarea
 					label={label}
 					id={id}
-					variant={variant}
+					variant={
+						variant && variant in TextAreaNS.variants
+							? (variant as keyof typeof TextAreaNS.variants)
+							: undefined
+					}
 					className={className}
 					placeholder={placeholder}
 					register={register}
