@@ -9,7 +9,10 @@ export const useUploadPhoto = (url?: string, isFetching?: boolean) => {
 	const [imageUrl, setImageUrl] = useState<string | null>(url ?? null)
 	const inputRef = useRef<HTMLInputElement>(null)
 
-	const onSetImage = (value: string) => setImageUrl(value)
+	const onSetImage = (files: { url: string; size?: number }[]) => {
+		const url = files[0].url
+		setImageUrl(url)
+	}
 
 	const { uploadFileQuery } = useFileQuery("avatar", onSetImage)
 	const { mutateAsync } = uploadFileQuery
@@ -25,22 +28,25 @@ export const useUploadPhoto = (url?: string, isFetching?: boolean) => {
 		if (!fileValue) return
 
 		const formData = new FormData()
-		formData.append("file", fileValue)
+		formData.append("files", fileValue)
 
 		const data = await mutateAsync(formData)
-		return data.url
+		return data[0]
 	}
 
 	const onChangeImage = async (e: ChangeEvent<HTMLInputElement>) => {
 		const fileValue = e.currentTarget.files?.[0] || null
+		console.log({ files: e.currentTarget.files, fileValue })
 		setFile(fileValue)
 		const dataUrl = await onSubmitFile(fileValue)
+		console.log({ dataUrl })
+
 		if (dataUrl) {
-			setImageUrl(dataUrl)
+			setImageUrl(dataUrl.url)
 		}
 
 		if (isFetching) {
-			await userEditMutate({ imageUrl: dataUrl })
+			await userEditMutate({ imageUrl: dataUrl?.url })
 		}
 	}
 

@@ -20,7 +20,7 @@ interface IParams {
 			url: string
 			size: number
 			duration?: number
-		},
+		}[],
 		Error,
 		FormData,
 		unknown
@@ -72,7 +72,7 @@ export const useMessageRecorderHandlers = ({
 	) => {
 		if (!blob) return
 		const formData = new FormData()
-		formData.append("file", blob, fileName)
+		formData.append("files", blob, fileName)
 
 		const optimisticMessage = {
 			id: tempId,
@@ -86,14 +86,15 @@ export const useMessageRecorderHandlers = ({
 		addToCache(optimisticMessage as unknown as MessageType)
 
 		try {
-			const { size, url, duration } = await audioUpload(formData)
+			const audio = await audioUpload(formData)
+			console.log({ audio })
 
 			await sendMessage({
 				content: fileName.split(".")[0],
 				messageType,
-				url,
-				size,
-				duration,
+				url: audio[0].url,
+				size: audio[0].size,
+				duration: audio[0].duration,
 			})
 		} catch (err) {
 			console.error("Ошибка отправки", err)

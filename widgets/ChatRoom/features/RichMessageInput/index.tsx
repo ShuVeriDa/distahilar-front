@@ -8,6 +8,7 @@ import {
 } from "@/prisma/models"
 import { useUser } from "@/shared"
 import { useCircleVideoRecorder } from "@/shared/hooks/useCircleVideoRecorder"
+import { useFileManager } from "@/shared/hooks/useFileManager"
 import { useMessageRecorderHandlers } from "@/shared/hooks/useMessageRecorderHandlers"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import {
@@ -41,6 +42,8 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 	handleEditMessage,
 }) => {
 	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
+	const { files, onAddFiles, onClearFiles, onDeleteFile } = useFileManager()
+
 	const { user } = useUser()
 	const client = useQueryClient()
 
@@ -217,6 +220,7 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 						handleSubmit={handleSubmit}
 						onSubmit={onSubmit}
 						handleEditMessage={handleEditMessage}
+						onAddFiles={onAddFiles}
 					/>
 				)}
 			</form>

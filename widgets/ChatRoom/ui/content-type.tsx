@@ -2,7 +2,7 @@ import { MessageType } from "@/prisma/models"
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { IconPicker } from "@/shared/ui/EmojiPicker"
-import { FC } from "react"
+import { ChangeEvent, FC, useRef } from "react"
 import {
 	SubmitHandler,
 	UseFormHandleSubmit,
@@ -28,6 +28,7 @@ interface IContentTypeProps {
 	>
 	onSubmit: SubmitHandler<IFormRichMessageInput>
 	handleEditMessage: (message: MessageType | null) => void
+	onAddFiles: (fileList: FileList) => void
 }
 
 export const ContentType: FC<IContentTypeProps> = ({
@@ -41,7 +42,23 @@ export const ContentType: FC<IContentTypeProps> = ({
 	handleSubmit,
 	onSubmit,
 	handleEditMessage,
+	onAddFiles,
 }) => {
+	const fileInputRef = useRef<HTMLInputElement>(null)
+
+	const onOpenInput = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click()
+		}
+	}
+
+	const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+		const fileValue = e.currentTarget.files
+		if (fileValue) {
+			onAddFiles(fileValue)
+		}
+	}
+
 	return (
 		<>
 			<div className="w-[47px] h-full flex flex-col justify-end group">
@@ -49,12 +66,21 @@ export const ContentType: FC<IContentTypeProps> = ({
 					variant="default"
 					type="button"
 					className="w-[47px] h-[47px] flex items-center justify-center"
+					onClick={onOpenInput}
 				>
 					<ImAttachment
 						size={21}
 						className="fill-[#999999] group-hover:fill-[#807f7f]"
 					/>
 				</Button>
+
+				<input
+					ref={fileInputRef}
+					type="file"
+					onChange={onChangeFile}
+					multiple
+					hidden
+				/>
 			</div>
 
 			<div className="h-full w-full flex items-center bg-red-400">
