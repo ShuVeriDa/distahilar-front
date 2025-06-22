@@ -1,5 +1,6 @@
 import { ChatRole, FolderType } from "@/prisma/models"
 import { ICutChat } from "@/widgets/ModalFolderIncludeChats/shared/types/types.type"
+import { $Enums } from "@prisma/client"
 
 export enum EnumModel {
 	CHANNEL = "CHANNEL",
@@ -18,6 +19,7 @@ export enum EnumModel {
 	NO_TYPE = "NO_TYPE",
 	DELETE_MESSAGES = "DELETE_MESSAGES",
 	DELETE_CHAT = "DELETE_CHAT",
+	ADD_FILES = "ADD_FILES",
 }
 
 export interface IModalData {
@@ -44,6 +46,15 @@ export interface IModalData {
 		interlocutorsAvatar?: string | null
 		chatId?: string
 		chatType: ChatRole
+	}
+	addFiles?: {
+		files: File[]
+		chatId: string
+		userId: string | undefined
+		chatType: $Enums.ChatRole | undefined
+		onAddFiles: (fileList: FileList) => void
+		onClearFiles: () => void
+		onDeleteFile: (index: number) => void
 	}
 }
 

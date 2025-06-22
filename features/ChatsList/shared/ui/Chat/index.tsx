@@ -16,9 +16,15 @@ export const Chat = ({ chat, locale }: IChatProps) => {
 	const { user } = useUser()
 	const date = formatDateTelegramStyle(chat.lastMessageDate)
 
-	const navigate = () => {
-		redirect(`/${locale}/chat/${chat.chatId}`)
-	}
+	const chatType = chat.type
+
+	const avatar = chat?.imageUrl?.startsWith("https:")
+		? chat.imageUrl
+		: chatType === ChatRole.DIALOG
+		? "/images/no-avatar.png"
+		: chatType === ChatRole.CHANNEL
+		? "/images/no-channel.png"
+		: "/images/no-group.png"
 
 	const isMyMessage = chat.lastMessage?.userId === user?.id
 
@@ -52,6 +58,10 @@ export const Chat = ({ chat, locale }: IChatProps) => {
 			</Typography>
 		)
 
+	const navigate = () => {
+		redirect(`/${locale}/chat/${chat.chatId}`)
+	}
+
 	return (
 		<Button
 			className="w-full flex items-center gap-2 px-3 py-2 flex-nowrap hover:cursor-pointer hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C]"
@@ -65,7 +75,7 @@ export const Chat = ({ chat, locale }: IChatProps) => {
 				}}
 			>
 				<Image
-					src={chat?.imageUrl ?? "/images/no-avatar.png"}
+					src={avatar}
 					alt={`${chat.name}`}
 					className={cn(
 						"w-full h-full rounded-xl object-cover",

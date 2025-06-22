@@ -109,12 +109,12 @@ export enum EnumLanguage {
 	CHE = "CHE",
 }
 
-// export enum MediaType {
-// 	IMAGE,
-// 	VIDEO,
-// 	VOICE,
-// 	FILE,
-// }
+export enum MediaTypeEnum {
+	IMAGE = "IMAGE",
+	VIDEO = "VIDEO",
+	VOICE = "VOICE",
+	FILE = "FILE",
+}
 
 export enum MessageEnum {
 	TEXT = "TEXT",

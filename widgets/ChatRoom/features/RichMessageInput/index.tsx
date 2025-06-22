@@ -41,10 +41,11 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 	editedMessage,
 	handleEditMessage,
 }) => {
-	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
-	const { files, onAddFiles, onClearFiles, onDeleteFile } = useFileManager()
-
 	const { user } = useUser()
+
+	const [typeMessage, setTypeMessage] = useState<MessageEnum>(MessageEnum.TEXT)
+	const { onAddFiles } = useFileManager(chatId, chatType, user?.id)
+
 	const client = useQueryClient()
 
 	const { register, handleSubmit, reset, watch, setValue } =

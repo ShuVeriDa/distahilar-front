@@ -97,7 +97,7 @@ export const useMessageRecorderHandlers = ({
 				duration: audio[0].duration,
 			})
 		} catch (err) {
-			console.error("Ошибка отправки", err)
+			console.error("Ошибка отправки файлов:", err)
 		} finally {
 			setTypeMessage(MessageEnum.TEXT)
 			reset()

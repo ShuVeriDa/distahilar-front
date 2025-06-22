@@ -11,6 +11,7 @@ export const ButtonNS = {
 		default: "w-fit h-fit p-0",
 		blue: "bg-[#40A7E3] hover:bg-[#289adb] text-white gap-1 text-[13px] rounded-sm px-3 py-1.5",
 		clean: "p-0",
+		disabled: "",
 	} as const,
 
 	size: {

@@ -55,6 +55,8 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	const isDifferentSenderNext =
 		nextMessage && nextMessage.userId !== message.userId
 
+	console.log({ message })
+
 	return (
 		<div className="w-full flex justify-between items-end">
 			<ContextMenuTrigger

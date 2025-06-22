@@ -1,6 +1,7 @@
 "use client"
 
 import { ModalAccountInfo } from "@/widgets/ModalAccountInfo"
+import { ModalAddFile } from "@/widgets/ModalAddFile/ui"
 import { ModalChangeName } from "@/widgets/ModalChangeName"
 import { ModalChangePhone } from "@/widgets/ModalChangePhone"
 import { ModalChangeUserName } from "@/widgets/ModalChangeUsername"
@@ -81,6 +82,9 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 			)}
 			{isModalOpen && currentModal.type === EnumModel.DELETE_CHAT && (
 				<ModalDeleteChat key={"modal-delete-chat"} />
+			)}
+			{isModalOpen && currentModal.type === EnumModel.ADD_FILES && (
+				<ModalAddFile key={"modal-chat-add-file"} />
 			)}
 		</AnimatePresence>
 	)

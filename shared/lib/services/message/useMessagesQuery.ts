@@ -1,7 +1,7 @@
 "use client"
 
 import {
-	MediaType,
+	MediaTypeEnum,
 	MessageEnum,
 	MessageStatus,
 	MessageType,
@@ -53,13 +53,13 @@ export const useMessagesWSQuery = (chatId: string) => {
 }
 
 export interface CreateMessageDto {
-	content: string
+	content?: string
 	mediaId?: string
 	url?: string
 	duration?: number
 	size?: number
 	messageType: MessageEnum
-	mediaType?: MediaType
+	mediaType?: MediaTypeEnum
 }
 
 export const useSendMessage = (
