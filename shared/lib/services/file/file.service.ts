@@ -7,6 +7,8 @@ export const fileService = {
 				url: string
 				size: number
 				duration?: number
+				name?: string
+				type?: string
 			}[]
 		>(`/files`, formDate, {
 			params: { folder: `${folderName}` },

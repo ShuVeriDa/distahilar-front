@@ -3,7 +3,9 @@ import { fileService } from "./file.service"
 
 export const useFileQuery = (
 	folderName?: string,
-	setUrl?: (files: { url: string; size?: number }[]) => void
+	setUrl?: (
+		files: { url: string; size?: number; name?: string; type?: string }[]
+	) => void
 ) => {
 	const uploadFileQuery = useMutation({
 		mutationFn: (data: FormData) => fileService.uploadFile(data, folderName),

@@ -1,12 +1,8 @@
-import {
-	MediaTypeEnum,
-	MessageEnum,
-	MessageStatus,
-	MessageType,
-} from "@/prisma/models"
+import { MessageEnum, MessageStatus, MessageType } from "@/prisma/models"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import { useSendMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { generateTemporaryId } from "@/shared/lib/utils/generateTemporaryId"
+import { getTypeOfMedia } from "@/shared/lib/utils/getTypeOfMedia"
 import { $Enums } from "@prisma/client"
 import { useQueryClient } from "@tanstack/react-query"
 import { ChangeEvent, useRef, useState } from "react"
@@ -87,6 +83,7 @@ export const useModelFileManager = (
 			}
 		)
 	}
+	console.log({ files })
 
 	const onMessageRecorderHandlers = async () => {
 		if (!files.length) return
@@ -102,6 +99,8 @@ export const useModelFileManager = (
 		for (const uploadedFile of files) {
 			const tempId = generateTemporaryId()
 
+			const mediasType = getTypeOfMedia(uploadedFile.type)
+
 			const optimisticMessage = {
 				id: tempId,
 				messageType: MessageEnum.FILE,
@@ -109,8 +108,13 @@ export const useModelFileManager = (
 				userId,
 				chatType,
 				createdAt: new Date().toISOString(),
-				size: uploadedFile.size,
-				mediaType: MediaTypeEnum.FILE,
+				media: [
+					{
+						name: uploadedFile.name,
+						size: uploadedFile.size,
+						type: mediasType,
+					},
+				],
 			}
 
 			addToCache(optimisticMessage as unknown as MessageType, tempId)
@@ -127,12 +131,15 @@ export const useModelFileManager = (
 			}
 
 			for (const uploadedFile of uploadedFiles) {
+				const mediasType = getTypeOfMedia(uploadedFile?.type ?? "file")
+
 				await sendMessage({
 					messageType: MessageEnum.FILE,
-					mediaType: MediaTypeEnum.FILE,
+					mediaType: mediasType,
 					url: uploadedFile?.url,
 					size: uploadedFile?.size,
 					duration: uploadedFile?.duration,
+					name: uploadedFile?.name,
 				})
 			}
 		} catch (error) {

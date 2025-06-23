@@ -112,7 +112,7 @@ export enum EnumLanguage {
 export enum MediaTypeEnum {
 	IMAGE = "IMAGE",
 	VIDEO = "VIDEO",
-	VOICE = "VOICE",
+	AUDIO = "AUDIO",
 	FILE = "FILE",
 }
 

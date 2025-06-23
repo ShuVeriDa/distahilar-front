@@ -58,6 +58,7 @@ export interface CreateMessageDto {
 	url?: string
 	duration?: number
 	size?: number
+	name?: string
 	messageType: MessageEnum
 	mediaType?: MediaTypeEnum
 }

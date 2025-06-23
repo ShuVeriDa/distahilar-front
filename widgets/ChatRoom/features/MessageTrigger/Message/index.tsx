@@ -11,6 +11,7 @@ import {
 	getMessageSpacingClasses,
 	getMessageTailClasses,
 } from "@/shared/lib/utils/classesForMessage"
+import { FileItem } from "@/widgets/ModalAddFile/features/Fileitem"
 import { FC, RefObject } from "react"
 import { MessageVoice } from "../../MessageVoice"
 import { VideoMessage } from "../../VideoMessage"
@@ -19,6 +20,7 @@ import { MessageInfo } from "./shared/ui/MessageInfo"
 interface IMessageProps {
 	message: MessageType
 	nextMessage: MessageType
+	isFile: boolean
 	isCircleVideo: boolean
 	isVoice: boolean
 	isMyMessage: boolean
@@ -36,6 +38,7 @@ interface IMessageProps {
 export const Message: FC<IMessageProps> = ({
 	message,
 	nextMessage,
+	isFile,
 	isCircleVideo,
 	isVoice,
 	isMoreTwoLine,
@@ -65,6 +68,7 @@ export const Message: FC<IMessageProps> = ({
 			"flex-col gap-2 pb-0": isHasReactions,
 			"pb-2 w-full max-w-[280px]": isVoice,
 			"bg-transparent after:hidden": isCircleVideo,
+			"min-w-[270px] pb-2": isFile,
 		}
 	)
 
@@ -82,7 +86,7 @@ export const Message: FC<IMessageProps> = ({
 		<>
 			<div ref={ref} className={messageClasses}>
 				<div>
-					{message.content && !isVoice && !isCircleVideo && (
+					{message.content && !isVoice && !isCircleVideo && !isFile && (
 						<Typography tag="p" className="text-[14px] leading-5">
 							{message.content}
 						</Typography>
@@ -94,6 +98,13 @@ export const Message: FC<IMessageProps> = ({
 						/>
 					)}
 					{isCircleVideo && <VideoMessage video={message.videoMessages} />}
+					{isFile && (
+						<FileItem
+							name={message.media[0].name ?? "название файла"}
+							size={message.media[0].size ?? 0}
+							variant="message"
+						/>
+					)}
 				</div>
 
 				{isSameMessage && <div className={highlightClasses} />}

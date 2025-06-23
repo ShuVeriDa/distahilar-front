@@ -50,6 +50,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	const isMoreTwoLine = height && height > 36
 	const isVoice = message.messageType === MessageEnum.VOICE
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
+	const isFile = message.messageType === MessageEnum.FILE
 	// const isHasReactions = true
 	const isHasReactions = message.reactions?.length > 0
 	const isDifferentSenderNext =
@@ -72,6 +73,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 					nextMessage={nextMessage}
 					userId={userId}
 					isNextMessageMine={isNextMessageMine}
+					isFile={isFile}
 					isVoice={isVoice}
 					isCircleVideo={isCircleVideo}
 					isMoreTwoLine={isMoreTwoLine}
