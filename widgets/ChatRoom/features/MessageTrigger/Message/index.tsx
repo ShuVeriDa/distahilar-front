@@ -1,6 +1,6 @@
 "use client"
 
-import { MessageType } from "@/prisma/models"
+import { MediaType, MediaTypeEnum, MessageType } from "@/prisma/models"
 import { Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 
@@ -11,8 +11,8 @@ import {
 	getMessageSpacingClasses,
 	getMessageTailClasses,
 } from "@/shared/lib/utils/classesForMessage"
-import { FileItem } from "@/widgets/ModalAddFile/features/Fileitem"
 import { FC, RefObject } from "react"
+import { MessageFile } from "../../MessageFile"
 import { MessageVoice } from "../../MessageVoice"
 import { VideoMessage } from "../../VideoMessage"
 import { MessageInfo } from "./shared/ui/MessageInfo"
@@ -52,6 +52,10 @@ export const Message: FC<IMessageProps> = ({
 	isDifferentSenderPrevious,
 	isFirstMessage,
 }) => {
+	const media = message.media[0]
+	const isImageFile = isFile && media.type === MediaTypeEnum.IMAGE
+	const isFileFile = isFile && media.type === MediaTypeEnum.FILE
+
 	const messageClasses = cn(
 		"relative min-w-[80px] w-fit px-3 py-2 flex max-w-[70%] gap-3",
 		getMessageBackgroundClasses(isMyMessage, isCircleVideo),
@@ -67,8 +71,10 @@ export const Message: FC<IMessageProps> = ({
 			"flex-col gap-0 pb-5": isMoreTwoLine,
 			"flex-col gap-2 pb-0": isHasReactions,
 			"pb-2 w-full max-w-[280px]": isVoice,
-			"bg-transparent after:hidden": isCircleVideo,
-			"min-w-[270px] pb-2": isFile,
+			"bg-transparent after:hidden": isCircleVideo || isImageFile,
+			"min-w-[270px] pb-2": isFile && isFileFile,
+			"w-auto h-auto max-w-sm max-h-sm p-0":
+				isFile && media.type === MediaTypeEnum.IMAGE,
 		}
 	)
 
@@ -98,13 +104,7 @@ export const Message: FC<IMessageProps> = ({
 						/>
 					)}
 					{isCircleVideo && <VideoMessage video={message.videoMessages} />}
-					{isFile && (
-						<FileItem
-							name={message.media[0].name ?? "название файла"}
-							size={message.media[0].size ?? 0}
-							variant="message"
-						/>
-					)}
+					{isFile && <MessageFile message={message} />}
 				</div>
 
 				{isSameMessage && <div className={highlightClasses} />}
@@ -117,6 +117,8 @@ export const Message: FC<IMessageProps> = ({
 					isHasReactions={isHasReactions}
 					isVoice={isVoice}
 					userId={userId}
+					media={media as MediaType}
+					isFile={isFile}
 				/>
 			</div>
 		</>

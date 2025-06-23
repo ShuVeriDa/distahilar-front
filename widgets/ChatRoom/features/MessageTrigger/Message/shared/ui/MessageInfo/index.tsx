@@ -1,5 +1,7 @@
 import {
 	ChatRole,
+	MediaType,
+	MediaTypeEnum,
 	MessageStatus,
 	MessageType,
 	ReactionTypeFromMessage,
@@ -15,12 +17,14 @@ import { TiPin } from "react-icons/ti"
 
 interface IMessageInfoProps {
 	message: MessageType
+	isFile: boolean
 	isCircleVideo: boolean
 	isMoreTwoLine: boolean | 0 | null
 	isMyMessage: boolean
 	isVoice: boolean
 	isHasReactions: boolean
 	userId: string | undefined
+	media: MediaType
 }
 
 export const MessageInfo: FC<IMessageInfoProps> = ({
@@ -31,10 +35,13 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 	isVoice,
 	isHasReactions,
 	userId,
+	isFile,
+	media,
 }) => {
-	const date = formatTime(message.createdAt, "hh:mm")
+	const duration = formatTime(message.createdAt, "hh:mm")
 	const isPinned = message.isPinned
 	const isDialog = message.chat?.type === ChatRole.DIALOG
+	const isImageFile = isFile && media.type === MediaTypeEnum.IMAGE
 
 	const { mutateAsync: addReaction } = useAddReaction()
 
@@ -46,7 +53,9 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 				isMyMessage && !isMoreTwoLine && " -right-2 z-[20]",
 				isVoice && "absolute bottom-2",
 				isHasReactions &&
-					"justify-between relative bottom-2 right-[12px] z-[20] pl-2 gap-5"
+					"justify-between relative bottom-2 right-[12px] z-[20] pl-2 gap-5",
+				isImageFile && "absolute bottom-3 right-[8px]",
+				isImageFile && isMoreTwoLine && ""
 			)}
 		>
 			<div className="w-full flex gap-1 ">
@@ -66,11 +75,13 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 			<div
 				className={cn(
 					" flex gap-1.5 items-center relative top-1.5 ",
-					isCircleVideo &&
+					(isCircleVideo || isImageFile) &&
 						// "bg-green-900/30 py-0.5 px-1.5 rounded-md absolute top-[230px]",
 						"bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
+
 					isCircleVideo && !isHasReactions && "top-[230px]",
-					isHasReactions && "-right-5"
+					isHasReactions && "absolute",
+					isImageFile && "top-[calc(100%-20px)] right-0"
 				)}
 			>
 				{isPinned && (
@@ -91,10 +102,11 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 						isMyMessage
 							? "text-[#6DB566] dark:text-[#488DD3]"
 							: "text-[#A0ACB6] dark:text-[#6D7F8F]",
-						isCircleVideo && "text-white"
+						isCircleVideo && "text-white",
+						isImageFile && "text-white"
 					)}
 				>
-					{date}
+					{duration}
 				</Typography>
 
 				{isMyMessage && (
@@ -102,6 +114,7 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 						<IsRead
 							status={message.status as MessageStatus}
 							isCircleVideo={isCircleVideo}
+							isImageFile={isImageFile}
 						/>
 					</div>
 				)}
