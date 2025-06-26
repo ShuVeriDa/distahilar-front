@@ -1,17 +1,19 @@
+import { IImageSlide, LightboxWrapper } from "@/features/LightBox/ui/LightBox"
 import { MediaTypeEnum, MessageStatus, MessageType } from "@/prisma/models"
 import { Skeleton } from "@/shared"
 import { FileItem } from "@/widgets/ModalAddFile/features/Fileitem"
-import Image from "next/image"
+
 import { FC } from "react"
 
 interface IMessageFileProps {
 	message: MessageType
+	allImages: IImageSlide[]
 }
 
-export const MessageFile: FC<IMessageFileProps> = ({ message }) => {
+export const MessageFile: FC<IMessageFileProps> = ({ message, allImages }) => {
 	const media = message.media[0]
 
-	const isPending = message.status === MessageStatus.PENDING
+	const isPending: boolean = message.status === MessageStatus.PENDING
 
 	return (
 		<>
@@ -26,15 +28,7 @@ export const MessageFile: FC<IMessageFileProps> = ({ message }) => {
 				</>
 			) : media.type === MediaTypeEnum.IMAGE ? (
 				!isPending ? (
-					<Image
-						src={media.url}
-						alt={media.name ?? ""}
-						width={0}
-						height={0}
-						sizes="100vw"
-						className="w-auto h-auto max-w-full max-h-full object-contain rounded-2xl"
-						unoptimized={true}
-					/>
+					<LightboxWrapper allImages={allImages} media={media} />
 				) : (
 					<Skeleton className="w-[300px] h-[200px] bg-[#F1F1F1] dark:bg-[#202B38]" />
 				)
@@ -46,6 +40,19 @@ export const MessageFile: FC<IMessageFileProps> = ({ message }) => {
 					variant="message"
 				/>
 			)}
+
+			{/* {message.content && (
+				<div
+					className={cn(
+						"px-3 py-1 flex flex-col w-fit",
+						media.type === MediaTypeEnum.FILE && "px-0"
+					)}
+				>
+					<Typography tag="p" className="text-[14px] leading-5">
+						{message.content}
+					</Typography>{" "}
+				</div>
+			)} */}
 		</>
 	)
 }

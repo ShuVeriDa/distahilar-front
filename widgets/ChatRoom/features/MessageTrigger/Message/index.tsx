@@ -33,6 +33,7 @@ interface IMessageProps {
 	isDifferentSenderNext: boolean
 	isDifferentSenderPrevious: boolean
 	isFirstMessage: boolean
+	allImages: { src: string }[]
 }
 
 export const Message: FC<IMessageProps> = ({
@@ -51,10 +52,13 @@ export const Message: FC<IMessageProps> = ({
 	isDifferentSenderNext,
 	isDifferentSenderPrevious,
 	isFirstMessage,
+	allImages,
 }) => {
-	const media = message.media[0]
-	const isImageFile = isFile && media.type === MediaTypeEnum.IMAGE
-	const isFileFile = isFile && media.type === MediaTypeEnum.FILE
+	const media = message.media?.length ? message.media[0] : null
+	const isMessageContent = !!message.content
+	const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
+	// const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
+	const isFileFile = isFile && media?.type === MediaTypeEnum.FILE
 
 	const messageClasses = cn(
 		"relative min-w-[80px] w-fit px-3 py-2 flex max-w-[70%] gap-3",
@@ -71,10 +75,14 @@ export const Message: FC<IMessageProps> = ({
 			"flex-col gap-0 pb-5": isMoreTwoLine,
 			"flex-col gap-2 pb-0": isHasReactions,
 			"pb-2 w-full max-w-[280px]": isVoice,
-			"bg-transparent after:hidden": isCircleVideo || isImageFile,
+			"bg-transparent after:hidden":
+				isCircleVideo || (isImageFile && !isMessageContent),
 			"min-w-[270px] pb-2": isFile && isFileFile,
+			// "min-w-[270px] pb-2": isFile && isFileFile && isMessageContent,
 			"w-auto h-auto max-w-sm max-h-sm p-0":
-				isFile && media.type === MediaTypeEnum.IMAGE,
+				isFile && media?.type === MediaTypeEnum.IMAGE && !isMessageContent,
+			"w-auto h-auto max-w-sm max-h-sm pt-0 pb-2 px-0":
+				isFile && media?.type === MediaTypeEnum.IMAGE && isMessageContent,
 		}
 	)
 
@@ -88,12 +96,21 @@ export const Message: FC<IMessageProps> = ({
 		)
 	)
 
+	console.log({ isMoreTwoLine })
+
 	return (
 		<>
 			<div ref={ref} className={messageClasses}>
-				<div>
-					{message.content && !isVoice && !isCircleVideo && !isFile && (
-						<Typography tag="p" className="text-[14px] leading-5">
+				<div
+					className={cn(
+						isMessageContent && isFile && "flex flex-col-reverse gap-2 "
+					)}
+				>
+					{isMessageContent && !isVoice && !isCircleVideo && (
+						<Typography
+							tag="p"
+							className="text-[14px] leading-5 flex justify-self-end"
+						>
 							{message.content}
 						</Typography>
 					)}
@@ -104,7 +121,7 @@ export const Message: FC<IMessageProps> = ({
 						/>
 					)}
 					{isCircleVideo && <VideoMessage video={message.videoMessages} />}
-					{isFile && <MessageFile message={message} />}
+					{isFile && <MessageFile message={message} allImages={allImages} />}
 				</div>
 
 				{isSameMessage && <div className={highlightClasses} />}
@@ -117,8 +134,9 @@ export const Message: FC<IMessageProps> = ({
 					isHasReactions={isHasReactions}
 					isVoice={isVoice}
 					userId={userId}
-					media={media as MediaType}
+					media={media as MediaType | null}
 					isFile={isFile}
+					isMessageContent={isMessageContent}
 				/>
 			</div>
 		</>

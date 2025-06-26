@@ -123,12 +123,12 @@ export const useModelFileManager = (
 		try {
 			const uploadedFiles = await filesUpload(formData)
 
-			if (currentComment) {
-				await sendMessage({
-					content: currentComment,
-					messageType: MessageEnum.TEXT,
-				})
-			}
+			// if (currentComment) {
+			// 	await sendMessage({
+			// 		content: currentComment,
+			// 		messageType: MessageEnum.TEXT,
+			// 	})
+			// }
 
 			for (const uploadedFile of uploadedFiles) {
 				const mediasType = getTypeOfMedia(uploadedFile?.type ?? "file")
@@ -136,6 +136,7 @@ export const useModelFileManager = (
 				await sendMessage({
 					messageType: MessageEnum.FILE,
 					mediaType: mediasType,
+					content: currentComment ?? undefined,
 					url: uploadedFile?.url,
 					size: uploadedFile?.size,
 					duration: uploadedFile?.duration,

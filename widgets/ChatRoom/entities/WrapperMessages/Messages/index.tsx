@@ -1,7 +1,12 @@
 import { Typography } from "@/shared"
 import { Dispatch, FC, SetStateAction } from "react"
 
-import { ChatMemberType, ChatType, MessageType } from "@/prisma/models"
+import {
+	ChatMemberType,
+	ChatType,
+	MediaTypeEnum,
+	MessageType,
+} from "@/prisma/models"
 import { formatTime } from "@/shared/lib/utils/formatTime"
 import { ContextMenu } from "@/shared/ui/ContenxtMenu/context-menu"
 import { MessageMenu } from "@/widgets/ChatRoom/features/MessageMenu"
@@ -50,6 +55,27 @@ export const Messages: FC<IMessagesProps> = ({
 			new Date(previousMessage.createdAt).toDateString()
 
 	const formattedDate = formatTime(message.createdAt, "Month number", locale)
+	const allImages = messages
+		.filter(
+			msg =>
+				msg.media &&
+				msg.media[0]?.url &&
+				msg.media[0].type === MediaTypeEnum.IMAGE
+		)
+		.map(msg => {
+			return { src: msg.media[0].url }
+		})
+
+	const allVideos = messages
+		.filter(
+			msg =>
+				msg.media &&
+				msg.media[0]?.url &&
+				msg.media[0].type === MediaTypeEnum.VIDEO
+		)
+		.map(msg => {
+			return { src: msg.media[0].url }
+		})
 
 	const onSelectMessage = () => {
 		setSelectedMessages(prev => {
@@ -93,6 +119,7 @@ export const Messages: FC<IMessagesProps> = ({
 					isSameMessage={isSameMessage}
 					isFirstMessage={isFirstMessage}
 					isLastMessage={isLastMessage}
+					allImages={allImages}
 				/>
 				<MessageMenu
 					isMyMessage={isMyMessage}

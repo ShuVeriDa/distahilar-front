@@ -22,6 +22,7 @@ interface IMessageTriggerProps {
 	isSameMessage: boolean
 	isFirstMessage: boolean
 	isLastMessage: boolean
+	allImages: { src: string }[]
 }
 
 export const MessageTrigger: FC<IMessageTriggerProps> = ({
@@ -33,6 +34,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	isSameMessage,
 	isFirstMessage,
 	isLastMessage,
+	allImages,
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [height, setHeight] = useState<number | null>(null)
@@ -55,8 +57,6 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	const isHasReactions = message.reactions?.length > 0
 	const isDifferentSenderNext =
 		nextMessage && nextMessage.userId !== message.userId
-
-	console.log({ message })
 
 	return (
 		<div className="w-full flex justify-between items-end">
@@ -83,6 +83,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 					isDifferentSenderNext={isDifferentSenderNext}
 					isDifferentSenderPrevious={isDifferentSenderPrevious}
 					isFirstMessage={isFirstMessage}
+					allImages={allImages}
 					// hasSelectedMessages={hasSelectedMessages}
 				/>
 			</ContextMenuTrigger>

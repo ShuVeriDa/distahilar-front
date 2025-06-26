@@ -24,7 +24,8 @@ interface IMessageInfoProps {
 	isVoice: boolean
 	isHasReactions: boolean
 	userId: string | undefined
-	media: MediaType
+	media: MediaType | null
+	isMessageContent: boolean
 }
 
 export const MessageInfo: FC<IMessageInfoProps> = ({
@@ -37,11 +38,12 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 	userId,
 	isFile,
 	media,
+	isMessageContent,
 }) => {
 	const duration = formatTime(message.createdAt, "hh:mm")
 	const isPinned = message.isPinned
 	const isDialog = message.chat?.type === ChatRole.DIALOG
-	const isImageFile = isFile && media.type === MediaTypeEnum.IMAGE
+	const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
 
 	const { mutateAsync: addReaction } = useAddReaction()
 
@@ -54,8 +56,8 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 				isVoice && "absolute bottom-2",
 				isHasReactions &&
 					"justify-between relative bottom-2 right-[12px] z-[20] pl-2 gap-5",
-				isImageFile && "absolute bottom-3 right-[8px]",
-				isImageFile && isMoreTwoLine && ""
+				isImageFile && !isMessageContent && "absolute bottom-3 right-[8px]",
+				isImageFile && isMessageContent && "absolute bottom-2 right-[12px]"
 			)}
 		>
 			<div className="w-full flex gap-1 ">
@@ -75,13 +77,12 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 			<div
 				className={cn(
 					" flex gap-1.5 items-center relative top-1.5 ",
-					(isCircleVideo || isImageFile) &&
-						// "bg-green-900/30 py-0.5 px-1.5 rounded-md absolute top-[230px]",
+					(isCircleVideo || (isImageFile && !isMessageContent)) &&
 						"bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
 
 					isCircleVideo && !isHasReactions && "top-[230px]",
 					isHasReactions && "absolute",
-					isImageFile && "top-[calc(100%-20px)] right-0"
+					isImageFile && !isMessageContent && "top-[calc(100%-20px)] right-0"
 				)}
 			>
 				{isPinned && (
@@ -103,7 +104,7 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 							? "text-[#6DB566] dark:text-[#488DD3]"
 							: "text-[#A0ACB6] dark:text-[#6D7F8F]",
 						isCircleVideo && "text-white",
-						isImageFile && "text-white"
+						isImageFile && !isMessageContent && "text-white"
 					)}
 				>
 					{duration}
@@ -115,6 +116,7 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 							status={message.status as MessageStatus}
 							isCircleVideo={isCircleVideo}
 							isImageFile={isImageFile}
+							isMessageContent={isMessageContent}
 						/>
 					</div>
 				)}
