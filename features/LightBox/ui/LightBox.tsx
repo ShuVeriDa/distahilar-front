@@ -7,6 +7,7 @@ import NextJsImage from "@/features/LightBox/ui/NextJsImage"
 
 import { Media } from "@prisma/client"
 
+import { cn } from "@/shared/lib/utils/cn"
 import "yet-another-react-lightbox/plugins/thumbnails.css"
 import "yet-another-react-lightbox/styles.css"
 
@@ -23,11 +24,13 @@ export interface IImageSlide {
 interface ILightboxWrapperProps {
 	allImages: IImageSlide[]
 	media: Media
+	isMessageContent: boolean
 }
 
 export const LightboxWrapper: FC<ILightboxWrapperProps> = ({
 	allImages,
 	media,
+	isMessageContent,
 }) => {
 	const thumbnailsRef = useRef<IThumbnailsRef>(null)
 	const [open, setOpen] = useState<boolean>(false)
@@ -51,7 +54,10 @@ export const LightboxWrapper: FC<ILightboxWrapperProps> = ({
 				width={0}
 				height={0}
 				sizes="100vw"
-				className="w-auto h-auto max-w-full max-h-full object-contain rounded-2xl"
+				className={cn(
+					"w-auto h-auto max-w-full max-h-full object-contain rounded-2xl hover:cursor-pointer",
+					isMessageContent && "rounded-b-none"
+				)}
 				onClick={onOpen}
 			/>
 

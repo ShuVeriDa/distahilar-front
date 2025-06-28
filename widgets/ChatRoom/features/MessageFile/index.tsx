@@ -8,9 +8,14 @@ import { FC } from "react"
 interface IMessageFileProps {
 	message: MessageType
 	allImages: IImageSlide[]
+	isMessageContent: boolean
 }
 
-export const MessageFile: FC<IMessageFileProps> = ({ message, allImages }) => {
+export const MessageFile: FC<IMessageFileProps> = ({
+	message,
+	allImages,
+	isMessageContent,
+}) => {
 	const media = message.media[0]
 
 	const isPending: boolean = message.status === MessageStatus.PENDING
@@ -28,7 +33,11 @@ export const MessageFile: FC<IMessageFileProps> = ({ message, allImages }) => {
 				</>
 			) : media.type === MediaTypeEnum.IMAGE ? (
 				!isPending ? (
-					<LightboxWrapper allImages={allImages} media={media} />
+					<LightboxWrapper
+						allImages={allImages}
+						media={media}
+						isMessageContent={isMessageContent}
+					/>
 				) : (
 					<Skeleton className="w-[300px] h-[200px] bg-[#F1F1F1] dark:bg-[#202B38]" />
 				)

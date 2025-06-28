@@ -96,8 +96,6 @@ export const Message: FC<IMessageProps> = ({
 		)
 	)
 
-	console.log({ isMoreTwoLine })
-
 	return (
 		<>
 			<div ref={ref} className={messageClasses}>
@@ -109,7 +107,10 @@ export const Message: FC<IMessageProps> = ({
 					{isMessageContent && !isVoice && !isCircleVideo && (
 						<Typography
 							tag="p"
-							className="text-[14px] leading-5 flex justify-self-end"
+							className={cn(
+								"text-[14px] leading-5 flex justify-self-end",
+								isImageFile && isMessageContent && "px-3"
+							)}
 						>
 							{message.content}
 						</Typography>
@@ -121,7 +122,13 @@ export const Message: FC<IMessageProps> = ({
 						/>
 					)}
 					{isCircleVideo && <VideoMessage video={message.videoMessages} />}
-					{isFile && <MessageFile message={message} allImages={allImages} />}
+					{isFile && (
+						<MessageFile
+							message={message}
+							allImages={allImages}
+							isMessageContent={isMessageContent}
+						/>
+					)}
 				</div>
 
 				{isSameMessage && <div className={highlightClasses} />}
