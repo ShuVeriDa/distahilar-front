@@ -1,5 +1,7 @@
 "use client"
 
+import { ISlideImage } from "@/features/LightBox/ui/LightBox"
+import { IVideoLightBox } from "@/features/VideoPlayer/ui"
 import { MessageEnum, MessageType } from "@/prisma/models"
 import { cn } from "@/shared/lib/utils/cn"
 import { ContextMenuTrigger } from "@/shared/ui/ContenxtMenu/context-menu"
@@ -22,7 +24,8 @@ interface IMessageTriggerProps {
 	isSameMessage: boolean
 	isFirstMessage: boolean
 	isLastMessage: boolean
-	allImages: { src: string }[]
+	allImages: ISlideImage[]
+	allVideos: IVideoLightBox[]
 }
 
 export const MessageTrigger: FC<IMessageTriggerProps> = ({
@@ -35,6 +38,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	isFirstMessage,
 	isLastMessage,
 	allImages,
+	allVideos,
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [height, setHeight] = useState<number | null>(null)
@@ -84,6 +88,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 					isDifferentSenderPrevious={isDifferentSenderPrevious}
 					isFirstMessage={isFirstMessage}
 					allImages={allImages}
+					allVideos={allVideos}
 					// hasSelectedMessages={hasSelectedMessages}
 				/>
 			</ContextMenuTrigger>

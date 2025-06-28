@@ -44,6 +44,7 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 	const isPinned = message.isPinned
 	const isDialog = message.chat?.type === ChatRole.DIALOG
 	const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
+	const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
 
 	const { mutateAsync: addReaction } = useAddReaction()
 
@@ -56,8 +57,12 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 				isVoice && "absolute bottom-2",
 				isHasReactions &&
 					"justify-between relative bottom-2 right-[12px] z-[20] pl-2 gap-5",
-				isImageFile && !isMessageContent && "absolute bottom-3 right-[8px]",
-				isImageFile && isMessageContent && "absolute bottom-2 right-[12px]"
+				(isImageFile || isVideoFile) &&
+					!isMessageContent &&
+					"absolute bottom-3 right-[8px]",
+				(isImageFile || isVideoFile) &&
+					isMessageContent &&
+					"absolute bottom-2 right-[12px]"
 			)}
 		>
 			<div className="w-full flex gap-1 ">
@@ -77,12 +82,15 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 			<div
 				className={cn(
 					" flex gap-1.5 items-center relative top-1.5 ",
-					(isCircleVideo || (isImageFile && !isMessageContent)) &&
+					(isCircleVideo ||
+						((isImageFile || isVideoFile) && !isMessageContent)) &&
 						"bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
 
 					isCircleVideo && !isHasReactions && "top-[230px]",
 					isHasReactions && "absolute",
-					isImageFile && !isMessageContent && "top-[calc(100%-20px)] right-0"
+					(isImageFile || isVideoFile) &&
+						!isMessageContent &&
+						"top-[calc(100%-20px)] right-0"
 				)}
 			>
 				{isPinned && (
@@ -104,7 +112,7 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 							? "text-[#6DB566] dark:text-[#488DD3]"
 							: "text-[#A0ACB6] dark:text-[#6D7F8F]",
 						isCircleVideo && "text-white",
-						isImageFile && !isMessageContent && "text-white"
+						(isImageFile || isVideoFile) && !isMessageContent && "text-white"
 					)}
 				>
 					{duration}
@@ -116,6 +124,7 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 							status={message.status as MessageStatus}
 							isCircleVideo={isCircleVideo}
 							isImageFile={isImageFile}
+							isVideoFile={isVideoFile}
 							isMessageContent={isMessageContent}
 						/>
 					</div>

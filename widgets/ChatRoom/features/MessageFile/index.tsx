@@ -1,4 +1,5 @@
-import { IImageSlide, LightboxWrapper } from "@/features/LightBox/ui/LightBox"
+import { ISlideImage, LightboxWrapper } from "@/features/LightBox/ui/LightBox"
+import { IVideoLightBox, VideoPlayer } from "@/features/VideoPlayer/ui"
 import { MediaTypeEnum, MessageStatus, MessageType } from "@/prisma/models"
 import { Skeleton } from "@/shared"
 import { FileItem } from "@/widgets/ModalAddFile/features/Fileitem"
@@ -7,13 +8,15 @@ import { FC } from "react"
 
 interface IMessageFileProps {
 	message: MessageType
-	allImages: IImageSlide[]
+	allImages: ISlideImage[]
+	allVideos: IVideoLightBox[]
 	isMessageContent: boolean
 }
 
 export const MessageFile: FC<IMessageFileProps> = ({
 	message,
 	allImages,
+	allVideos,
 	isMessageContent,
 }) => {
 	const media = message.media[0]
@@ -41,6 +44,12 @@ export const MessageFile: FC<IMessageFileProps> = ({
 				) : (
 					<Skeleton className="w-[300px] h-[200px] bg-[#F1F1F1] dark:bg-[#202B38]" />
 				)
+			) : media.type === MediaTypeEnum.VIDEO ? (
+				<VideoPlayer
+					allVideos={allVideos}
+					media={media}
+					isMessageContent={isMessageContent}
+				/>
 			) : (
 				<FileItem
 					name={media.name ?? "название файла"}

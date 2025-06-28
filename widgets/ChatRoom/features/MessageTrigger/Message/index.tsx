@@ -4,6 +4,8 @@ import { MediaType, MediaTypeEnum, MessageType } from "@/prisma/models"
 import { Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 
+import { ISlideImage } from "@/features/LightBox/ui/LightBox"
+import { IVideoLightBox } from "@/features/VideoPlayer/ui"
 import {
 	getHighlightBorderRadiusClasses,
 	getMessageBackgroundClasses,
@@ -33,7 +35,8 @@ interface IMessageProps {
 	isDifferentSenderNext: boolean
 	isDifferentSenderPrevious: boolean
 	isFirstMessage: boolean
-	allImages: { src: string }[]
+	allImages: ISlideImage[]
+	allVideos: IVideoLightBox[]
 }
 
 export const Message: FC<IMessageProps> = ({
@@ -53,11 +56,12 @@ export const Message: FC<IMessageProps> = ({
 	isDifferentSenderPrevious,
 	isFirstMessage,
 	allImages,
+	allVideos,
 }) => {
 	const media = message.media?.length ? message.media[0] : null
 	const isMessageContent = !!message.content
 	const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
-	// const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
+	const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
 	const isFileFile = isFile && media?.type === MediaTypeEnum.FILE
 
 	const messageClasses = cn(
@@ -76,13 +80,19 @@ export const Message: FC<IMessageProps> = ({
 			"flex-col gap-2 pb-0": isHasReactions,
 			"pb-2 w-full max-w-[280px]": isVoice,
 			"bg-transparent after:hidden":
-				isCircleVideo || (isImageFile && !isMessageContent),
+				isCircleVideo || ((isImageFile || isVideoFile) && !isMessageContent),
 			"min-w-[270px] pb-2": isFile && isFileFile,
 			// "min-w-[270px] pb-2": isFile && isFileFile && isMessageContent,
 			"w-auto h-auto max-w-sm max-h-sm p-0":
-				isFile && media?.type === MediaTypeEnum.IMAGE && !isMessageContent,
+				isFile &&
+				(media?.type === MediaTypeEnum.IMAGE ||
+					media?.type === MediaTypeEnum.VIDEO) &&
+				!isMessageContent,
 			"w-auto h-auto max-w-sm max-h-sm pt-0 pb-2 px-0":
-				isFile && media?.type === MediaTypeEnum.IMAGE && isMessageContent,
+				isFile &&
+				(media?.type === MediaTypeEnum.IMAGE ||
+					media?.type === MediaTypeEnum.VIDEO) &&
+				isMessageContent,
 		}
 	)
 
@@ -109,7 +119,7 @@ export const Message: FC<IMessageProps> = ({
 							tag="p"
 							className={cn(
 								"text-[14px] leading-5 flex justify-self-end",
-								isImageFile && isMessageContent && "px-3"
+								(isImageFile || isVideoFile) && isMessageContent && "px-3"
 							)}
 						>
 							{message.content}
@@ -124,9 +134,10 @@ export const Message: FC<IMessageProps> = ({
 					{isCircleVideo && <VideoMessage video={message.videoMessages} />}
 					{isFile && (
 						<MessageFile
+							isMessageContent={isMessageContent}
 							message={message}
 							allImages={allImages}
-							isMessageContent={isMessageContent}
+							allVideos={allVideos}
 						/>
 					)}
 				</div>

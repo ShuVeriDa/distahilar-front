@@ -8,7 +8,7 @@ import {
 } from "yet-another-react-lightbox"
 
 // Типы для слайда
-interface Slide {
+export interface Slide {
 	src: string
 	alt?: string
 	width?: number

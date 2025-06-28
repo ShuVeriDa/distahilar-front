@@ -74,7 +74,10 @@ export const Messages: FC<IMessagesProps> = ({
 				msg.media[0].type === MediaTypeEnum.VIDEO
 		)
 		.map(msg => {
-			return { src: msg.media[0].url }
+			const fileName = msg.media[0].name
+			const fileExtension = fileName?.split(".").pop() || ""
+
+			return { src: msg.media[0].url, type: fileExtension }
 		})
 
 	const onSelectMessage = () => {
@@ -120,6 +123,7 @@ export const Messages: FC<IMessagesProps> = ({
 					isFirstMessage={isFirstMessage}
 					isLastMessage={isLastMessage}
 					allImages={allImages}
+					allVideos={allVideos}
 				/>
 				<MessageMenu
 					isMyMessage={isMyMessage}

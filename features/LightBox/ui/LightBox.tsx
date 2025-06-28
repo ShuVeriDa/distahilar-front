@@ -11,18 +11,18 @@ import { cn } from "@/shared/lib/utils/cn"
 import "yet-another-react-lightbox/plugins/thumbnails.css"
 import "yet-another-react-lightbox/styles.css"
 
-interface IThumbnailsRef {
+export interface IThumbnailsRef {
 	visible: boolean
 	show: () => void
 	hide: () => void
 }
 
-export interface IImageSlide {
+export interface ISlideImage {
 	src: string
 }
 
 interface ILightboxWrapperProps {
-	allImages: IImageSlide[]
+	allImages: ISlideImage[]
 	media: Media
 	isMessageContent: boolean
 }
@@ -41,7 +41,7 @@ export const LightboxWrapper: FC<ILightboxWrapperProps> = ({
 	const onOpen = (): void => {
 		// Находим индекс текущего изображения в массиве allImages
 		const currentImageIndex: number = allImages.findIndex(
-			(img: IImageSlide) => img.src === media.url
+			(img: ISlideImage) => img.src === media.url
 		)
 		setIndex(currentImageIndex !== -1 ? currentImageIndex : 0)
 		setOpen(true)
@@ -66,7 +66,20 @@ export const LightboxWrapper: FC<ILightboxWrapperProps> = ({
 				close={onClose}
 				slides={allImages}
 				index={index}
-				render={{ slide: NextJsImage }}
+				render={{
+					slide: props => {
+						if ("src" in props.slide) {
+							return (
+								<NextJsImage
+									slide={props.slide}
+									offset={props.offset}
+									rect={props.rect}
+								/>
+							)
+						}
+						return null
+					},
+				}}
 				plugins={[Thumbnails]}
 				thumbnails={{ ref: thumbnailsRef, border: 0 }}
 				on={{

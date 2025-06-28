@@ -12,6 +12,7 @@ interface IIsReadProps {
 	isCircleVideo?: boolean
 	isReadType?: IsReadType
 	isImageFile?: boolean
+	isVideoFile?: boolean
 	isMessageContent?: boolean
 }
 
@@ -20,6 +21,7 @@ export const IsRead: FC<IIsReadProps> = ({
 	isCircleVideo,
 	isReadType,
 	isImageFile,
+	isVideoFile,
 	isMessageContent,
 }) => {
 	const { theme } = useTheme()
@@ -29,9 +31,10 @@ export const IsRead: FC<IIsReadProps> = ({
 				? "#000000"
 				: "#ffffff"
 			: theme === "light" &&
-			  (!isCircleVideo || (!isImageFile && !isMessageContent))
+			  (!isCircleVideo ||
+					((!isImageFile || !isVideoFile) && !isMessageContent))
 			? "#57B84C"
-			: isCircleVideo || isImageFile
+			: isCircleVideo || isImageFile || isVideoFile
 			? "#ffffff"
 			: "#71BBFC"
 	return (
