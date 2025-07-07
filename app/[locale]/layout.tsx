@@ -34,7 +34,7 @@ export default async function RootLayout({
 	const messages = await getMessages()
 
 	return (
-		<html lang={locale}>
+		<html lang={locale} className="light" style={{ colorScheme: "light" }}>
 			<head>
 				<ReactScan />
 			</head>
