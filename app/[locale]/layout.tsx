@@ -1,5 +1,6 @@
 import { routing } from "@/i18n/routing"
 import { Providers } from "@/shared/providers/providers"
+import { ReactScan } from "@/widgets/ReactScan"
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
@@ -34,6 +35,9 @@ export default async function RootLayout({
 
 	return (
 		<html lang={locale}>
+			<head>
+				<ReactScan />
+			</head>
 			<body className={`${robotoMono.className} antialiased`}>
 				<NextIntlClientProvider messages={messages}>
 					<Providers>{children}</Providers>

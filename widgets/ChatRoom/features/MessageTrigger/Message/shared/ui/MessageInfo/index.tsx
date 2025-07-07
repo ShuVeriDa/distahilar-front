@@ -56,7 +56,8 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 				isMyMessage && !isMoreTwoLine && " -right-2 z-[20]",
 				isVoice && "absolute bottom-2",
 				isHasReactions &&
-					"justify-between relative bottom-2 right-[12px] z-[20] pl-2 gap-5",
+					"justify-between relative bottom-3 right-[12px] z-[20] pl-2 gap-5 w-[calc(100%+20px)]",
+				isHasReactions && !isMyMessage && "w-[calc(100%+14px)]",
 				(isImageFile || isVideoFile) &&
 					!isMessageContent &&
 					"absolute bottom-3 right-[8px]",
@@ -87,7 +88,7 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 						"bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
 
 					isCircleVideo && !isHasReactions && "top-[230px]",
-					isHasReactions && "absolute",
+					isHasReactions && "absolute right-0 -bottom-[17px]",
 					(isImageFile || isVideoFile) &&
 						!isMessageContent &&
 						"top-[calc(100%-20px)] right-0"
