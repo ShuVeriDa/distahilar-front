@@ -25,12 +25,14 @@ interface ILightboxWrapperProps {
 	allImages: ISlideImage[]
 	media: Media
 	isMessageContent: boolean
+	isHasReactions: boolean
 }
 
 export const LightboxWrapper: FC<ILightboxWrapperProps> = ({
 	allImages,
 	media,
 	isMessageContent,
+	isHasReactions,
 }) => {
 	const thumbnailsRef = useRef<IThumbnailsRef>(null)
 	const [open, setOpen] = useState<boolean>(false)
@@ -56,7 +58,7 @@ export const LightboxWrapper: FC<ILightboxWrapperProps> = ({
 				sizes="100vw"
 				className={cn(
 					"w-auto h-auto max-w-full max-h-full object-contain rounded-2xl hover:cursor-pointer",
-					isMessageContent && "rounded-b-none"
+					(isMessageContent || isHasReactions) && "rounded-b-none"
 				)}
 				onClick={onOpen}
 			/>

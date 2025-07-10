@@ -11,6 +11,7 @@ interface IMessageFileProps {
 	allImages: ISlideImage[]
 	allVideos: IVideoLightBox[]
 	isMessageContent: boolean
+	isHasReactions: boolean
 }
 
 export const MessageFile: FC<IMessageFileProps> = ({
@@ -18,6 +19,7 @@ export const MessageFile: FC<IMessageFileProps> = ({
 	allImages,
 	allVideos,
 	isMessageContent,
+	isHasReactions,
 }) => {
 	const media = message.media[0]
 
@@ -40,6 +42,7 @@ export const MessageFile: FC<IMessageFileProps> = ({
 						allImages={allImages}
 						media={media}
 						isMessageContent={isMessageContent}
+						isHasReactions={isHasReactions}
 					/>
 				) : (
 					<Skeleton className="w-[300px] h-[200px] bg-[#F1F1F1] dark:bg-[#202B38]" />

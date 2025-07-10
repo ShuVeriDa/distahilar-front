@@ -77,10 +77,12 @@ export const Message: FC<IMessageProps> = ({
 		getMessageSpacingClasses(nextMessage, message, userId),
 		{
 			"flex-col gap-0 pb-5": isMoreTwoLine,
-			"flex-col gap-2 pb-0": isHasReactions,
+			"flex-col gap-2 pb-0": isHasReactions && !isFile,
+			"flex-col gap-0 pb-0": isHasReactions && isFile,
 			"pb-2 w-full max-w-[280px]": isVoice,
 			"bg-transparent after:hidden":
-				isCircleVideo || ((isImageFile || isVideoFile) && !isMessageContent),
+				isCircleVideo ||
+				((isImageFile || isVideoFile) && !isMessageContent && !isHasReactions),
 			"min-w-[270px] pb-2": isFile && isFileFile,
 			// "min-w-[270px] pb-2": isFile && isFileFile && isMessageContent,
 			"w-auto h-auto max-w-sm max-h-sm p-0":
@@ -93,6 +95,7 @@ export const Message: FC<IMessageProps> = ({
 				(media?.type === MediaTypeEnum.IMAGE ||
 					media?.type === MediaTypeEnum.VIDEO) &&
 				isMessageContent,
+			"pb-2": isFile && isHasReactions,
 		}
 	)
 
@@ -135,6 +138,7 @@ export const Message: FC<IMessageProps> = ({
 					{isFile && (
 						<MessageFile
 							isMessageContent={isMessageContent}
+							isHasReactions={isHasReactions}
 							message={message}
 							allImages={allImages}
 							allVideos={allVideos}
