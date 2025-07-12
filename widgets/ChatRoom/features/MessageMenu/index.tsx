@@ -17,8 +17,9 @@ import {
 	ContextMenuItem,
 } from "@/shared/ui/ContenxtMenu/context-menu"
 import { IsRead, IsReadType } from "@/shared/ui/isRead"
+import { EmojiClickData } from "emoji-picker-react"
 import dynamic from "next/dynamic"
-import { FC, useMemo } from "react"
+import { FC, useCallback } from "react"
 import { AiOutlineDelete, AiOutlinePushpin } from "react-icons/ai"
 import { BsReply } from "react-icons/bs"
 import { IoCheckmarkCircleOutline } from "react-icons/io5"
@@ -56,114 +57,123 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	const { mutateAsync: addReaction } = useAddReaction()
 	const { onOpenModal } = useModal()
 
-	const options = useMemo(
-		() => [
-			{
-				icon: <BsReply size={20} />,
-				title: "Reply",
-				function: () => {},
+	// Оставляем только действительно нужные useCallback
+	const handleEmojiClick = useCallback(
+		(emoji: EmojiClickData) => {
+			addReaction({
+				emoji: emoji.emoji,
+				messageId: message.id,
+				chatId: message.chatId,
+			})
+		},
+		[addReaction, message.id, message.chatId]
+	)
+
+	// Упрощаем обработчики - убираем избыточные useCallback
+	const handleEdit = () => {
+		if (isMyMessage) {
+			handleEditMessage(message)
+		}
+	}
+
+	const handlePin = () => {
+		pinMessage({ messageId: message.id, chatId: message.chatId })
+	}
+
+	const handleCopy = () => {
+		if (message.content) {
+			writeClipboardText(message.content)
+		}
+	}
+
+	const handleDelete = () => {
+		onOpenModal(EnumModel.DELETE_MESSAGES, {
+			deleteMessages: {
+				messageIds: [message.id],
+				chatId: message.chatId,
+				interlocutorsName:
+					message.chat.type === ChatRole.DIALOG ? interlocutorsName : undefined,
+				chatType: message.chat.type as ChatRole,
+				clearSelectedMessages: () => {},
 			},
-			{
-				icon: <PiPencilSimple size={20} />,
-				title: "Edit",
-				function: () => {
-					if (!isMyMessage) return
-					handleEditMessage(message)
-				},
-			},
-			{
-				icon: message.isPinned ? (
-					<RiUnpinLine size={20} />
-				) : (
-					<AiOutlinePushpin size={20} />
-				),
-				title: message.isPinned ? "Unpin" : "Pin",
-				function: () =>
-					pinMessage({ messageId: message.id, chatId: message.chatId }),
-			},
-			{
-				icon: <TbCopy size={20} />,
-				title: "Copy text",
-				function: () => {
-					if (message.content) {
-						writeClipboardText(message.content)
-					}
-				},
-			},
-			{
-				icon: <TiArrowForwardOutline size={20} />,
-				title: "Forward",
-				function: () => {},
-			},
-			{
-				icon: <AiOutlineDelete size={20} />,
-				title: "Delete",
-				function: () => {
-					onOpenModal(EnumModel.DELETE_MESSAGES, {
-						deleteMessages: {
-							messageIds: [message.id],
-							chatId: message.chatId,
-							interlocutorsName:
-								message.chat.type === ChatRole.DIALOG
-									? interlocutorsName
-									: undefined,
-							chatType: message.chat.type as ChatRole,
-							clearSelectedMessages: () => {},
-						},
-					})
-				},
-			},
-			{
-				icon: <IoCheckmarkCircleOutline size={20} />,
-				title: "Select",
-				function: () => onSelectMessage(),
-			},
-		],
-		[
-			message,
-			isMyMessage,
-			interlocutorsName,
-			handleEditMessage,
-			pinMessage,
-			onOpenModal,
-			onSelectMessage,
-		]
+		})
+	}
+
+	// Упрощаем options - создаем каждый раз заново (быстрая операция)
+	const pinIcon = message.isPinned ? (
+		<RiUnpinLine size={20} />
+	) : (
+		<AiOutlinePushpin size={20} />
+	)
+	const pinTitle = message.isPinned ? "Unpin" : "Pin"
+
+	const options = [
+		{
+			icon: <BsReply size={20} />,
+			title: "Reply",
+			function: () => {},
+		},
+		{
+			icon: <PiPencilSimple size={20} />,
+			title: "Edit",
+			function: handleEdit,
+		},
+		{
+			icon: pinIcon,
+			title: pinTitle,
+			function: handlePin,
+		},
+		{
+			icon: <TbCopy size={20} />,
+			title: "Copy text",
+			function: handleCopy,
+		},
+		{
+			icon: <TiArrowForwardOutline size={20} />,
+			title: "Forward",
+			function: () => {},
+		},
+		{
+			icon: <AiOutlineDelete size={20} />,
+			title: "Delete",
+			function: handleDelete,
+		},
+		{
+			icon: <IoCheckmarkCircleOutline size={20} />,
+			title: "Select",
+			function: onSelectMessage,
+		},
+	]
+
+	const containerClasses = cn(
+		"!w-[170px] border bg-white dark:bg-[#17212B] dark:border-[#101921] rounded-sm shadow-md",
+		isMyMessage ? "self-end" : "self-start"
 	)
 
 	return (
-		<ContextMenuContent className="flex flex-col justify-center px-0 gap-2 relative bg-transparent border-none shadow-none ">
+		<ContextMenuContent className="flex flex-col justify-center px-0 gap-2 relative bg-transparent border-none shadow-none">
 			<ContextMenuItem
-				key={"emoji-picker"}
+				key="emoji-picker"
 				className="focus:bg-white-0 custom-emoji-picker p-0"
 			>
 				<Picker
 					reactionsDefaultOpen={true}
 					className="!bg-white dark:!bg-[#17212B] dark:border-[#17212B]"
 					lazyLoadEmojis
-					onEmojiClick={emoji => {
-						addReaction({
-							emoji: emoji.emoji,
-							messageId: message.id,
-							chatId: message.chatId,
-						})
-					}}
+					onEmojiClick={handleEmojiClick}
 				/>
 			</ContextMenuItem>
 
-			<div
-				className={cn(
-					"!w-[170px] border bg-white dark:bg-[#17212B] dark:border-[#101921] rounded-sm shadow-md ",
-					isMyMessage ? "self-end" : "self-start"
-				)}
-			>
+			<div className={containerClasses}>
 				<div className="py-1">
 					{options.map((option, i) => {
-						if (
+						const shouldHideOption =
 							(message.messageType !== MessageEnum.TEXT &&
 								(i === 1 || i === 3)) ||
 							(!isMyMessage && i === 1)
-						)
-							return null
+
+						if (shouldHideOption) return null
+
 						return (
 							<ContextMenuItem
 								key={option.title}
@@ -183,7 +193,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 					<>
 						<div className="h-[10px] w-full bg-[#F1F1F1] dark:bg-[#202B38]" />
 						<div className="flex px-4 py-2 items-center gap-2">
-							<div className={cn("flex")}>
+							<div className="flex">
 								<IsRead
 									status={message.status as MessageStatus}
 									isCircleVideo={isCircleVideo}

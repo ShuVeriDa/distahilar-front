@@ -164,3 +164,5 @@ export const Message: FC<IMessageProps> = ({
 		</>
 	)
 }
+
+Message.displayName = "Message"

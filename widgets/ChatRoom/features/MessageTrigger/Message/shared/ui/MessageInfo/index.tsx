@@ -12,8 +12,13 @@ import { cn } from "@/shared/lib/utils/cn"
 import { formatTime } from "@/shared/lib/utils/formatTime"
 import { IsRead } from "@/shared/ui/isRead"
 import { ManageReaction } from "@/widgets/ChatRoom/features/ManageReaction/ui"
-import { FC } from "react"
+import { FC, useMemo } from "react"
 import { TiPin } from "react-icons/ti"
+import {
+	getMainContainerClasses,
+	getTimeContainerClasses,
+	getTimeTextClasses,
+} from "../../libs/classes"
 
 interface IMessageInfoProps {
 	message: MessageType
@@ -40,61 +45,88 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 	media,
 	isMessageContent,
 }) => {
-	const duration = formatTime(message.createdAt, "hh:mm")
-	const isPinned = message.isPinned
-	const isDialog = message.chat?.type === ChatRole.DIALOG
-	const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
-	const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
-
 	const { mutateAsync: addReaction } = useAddReaction()
 
+	const computedValues = useMemo(() => {
+		const duration = formatTime(message.createdAt, "hh:mm")
+		const isPinned = message.isPinned
+		const isDialog = message.chat?.type === ChatRole.DIALOG
+		const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
+		const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
+
+		// Вычисляем классы один раз
+		const mainContainerClasses = getMainContainerClasses({
+			isMoreTwoLine,
+			isFile,
+			isHasReactions,
+			isMessageContent,
+			isMyMessage,
+			isVoice,
+			isImageFile,
+			isVideoFile,
+		})
+
+		const timeContainerClasses = getTimeContainerClasses({
+			isCircleVideo,
+			isImageFile,
+			isVideoFile,
+			isMessageContent,
+			isHasReactions,
+			isFile,
+		})
+
+		const timeTextClasses = getTimeTextClasses({
+			isMyMessage,
+			isCircleVideo,
+			isImageFile,
+			isVideoFile,
+			isMessageContent,
+			isHasReactions,
+		})
+
+		return {
+			duration,
+			isPinned,
+			isDialog,
+			isImageFile,
+			isVideoFile,
+			mainContainerClasses,
+			timeContainerClasses,
+			timeTextClasses,
+		}
+	}, [
+		message.createdAt,
+		message.isPinned,
+		message.chat?.type,
+		isFile,
+		media?.type,
+		isMoreTwoLine,
+		isHasReactions,
+		isMessageContent,
+		isMyMessage,
+		isVoice,
+		isCircleVideo,
+	])
+
+	const {
+		duration,
+		isPinned,
+		isDialog,
+		mainContainerClasses,
+		timeContainerClasses,
+		timeTextClasses,
+		isImageFile,
+		isVideoFile,
+	} = computedValues
+
+	const pinIconClasses = cn(
+		isMyMessage
+			? "text-[#6DB566] dark:text-[#488DD3]"
+			: "text-[#A0ACB6] dark:text-[#6D7F8F]"
+	)
+
 	return (
-		<div
-			className={cn(
-				"h-full flex items-end relative",
-				isMoreTwoLine &&
-					!isFile &&
-					"justify-end absolute bottom-2 right-[12px]",
-				isMoreTwoLine &&
-					isFile &&
-					!isHasReactions &&
-					isMessageContent &&
-					"justify-end absolute bottom-2 right-0",
-				isFile &&
-					isHasReactions &&
-					!isMessageContent &&
-					"justify-end relative bottom-0 right-0",
-				// isFile &&
-				// 	!isMessageContent &&
-				// 	(isImageFile || isVideoFile) &&
-				// 	"justify-end relative bottom-10 right-0",
-				isFile &&
-					isHasReactions &&
-					!isMessageContent &&
-					(isImageFile || isVideoFile) &&
-					"justify-end bottom-0.5 px-3",
-				isFile &&
-					!isHasReactions &&
-					!isMessageContent &&
-					"justify-end absolute bottom-2 right-[12px]",
-				isMyMessage && !isMoreTwoLine && !isFile && " -right-2 z-[20]",
-				isVoice && "absolute bottom-2",
-				isHasReactions &&
-					!isFile &&
-					"justify-between relative bottom-3 right-[12px] z-[20] pl-2 gap-5 w-[calc(100%+20px)]",
-				isHasReactions && isFile && "justify-between z-[20] w-full",
-				(isImageFile || isVideoFile) && isMessageContent && "px-3",
-				isHasReactions && !isMyMessage && !isFile && "w-[calc(100%+14px)]",
-				(isImageFile || isVideoFile) &&
-					!isMessageContent &&
-					!isFile &&
-					"absolute bottom-3 right-[8px]",
-				(isImageFile || isVideoFile) &&
-					isMessageContent &&
-					!isFile &&
-					"absolute bottom-2 right-[12px]"
-			)}
-		>
+		<div className={mainContainerClasses}>
 			<div className="w-full flex gap-1 ">
 				{isHasReactions &&
 					message.reactions.map((r, i) => (
@@ -109,48 +141,9 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 						/>
 					))}
 			</div>
-			<div
-				className={cn(
-					" flex gap-1.5 items-center relative top-1.5 ",
-					(isCircleVideo ||
-						((isImageFile || isVideoFile) &&
-							!isMessageContent &&
-							!isHasReactions)) &&
-						"bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
-
-					isCircleVideo && !isHasReactions && !isFile && "top-[230px]",
-					isHasReactions && !isFile && "absolute right-0 -bottom-[17px]",
-					(isImageFile || isVideoFile) &&
-						!isMessageContent &&
-						!isHasReactions &&
-						"top-[calc(100%-20px)] right-0"
-				)}
-			>
-				{isPinned && (
-					<TiPin
-						size={20}
-						className={cn(
-							"",
-							isMyMessage
-								? "text-[#6DB566] dark:text-[#488DD3]"
-								: "text-[#A0ACB6] dark:text-[#6D7F8F]"
-						)}
-					/>
-				)}
-				<Typography
-					tag="p"
-					className={cn(
-						"text-[12px] leading-5",
-						isMyMessage
-							? "text-[#6DB566] dark:text-[#488DD3]"
-							: "text-[#A0ACB6] dark:text-[#6D7F8F]",
-						isCircleVideo && "text-white",
-						(isImageFile || isVideoFile) &&
-							!isMessageContent &&
-							!isHasReactions &&
-							"text-white"
-					)}
-				>
+			<div className={timeContainerClasses}>
+				{isPinned && <TiPin size={20} className={pinIconClasses} />}
+				<Typography tag="p" className={timeTextClasses}>
 					{duration}
 				</Typography>
 
@@ -169,3 +162,5 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 		</div>
 	)
 }
+
+MessageInfo.displayName = "MessageInfo"

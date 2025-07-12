@@ -1,5 +1,5 @@
 import { Typography } from "@/shared"
-import { Dispatch, FC, SetStateAction } from "react"
+import { Dispatch, FC, SetStateAction, useMemo } from "react"
 
 import {
 	ChatMemberType,
@@ -37,61 +37,56 @@ export const Messages: FC<IMessagesProps> = ({
 	setSelectedMessages,
 	handleEditMessage,
 }) => {
-	const isSameMessage = selectedMessages.some(item => item.id === message.id)
-
-	const interlocutorsName = chat?.members.find(
-		(m: ChatMemberType) => m.userId !== userId
-	)?.user.name
-
-	const isMyMessage = message.userId === userId
-	const createdDate = formatTime(message.createdAt, "forMessage", locale)
-	const previousMessage = messages[index - 1]
-	const nextMessage = messages[index + 1]
 	const isFirstMessage = index === 0
 	const isLastMessage = index === messages.length - 1
+	const isSameMessage = selectedMessages.some(item => item.id === message.id)
+	const isMyMessage = message.userId === userId
+	const previousMessage = messages[index - 1]
+	const nextMessage = messages[index + 1]
+	const formattedDate = formatTime(message.createdAt, "Month number", locale)
+	const createdDate = formatTime(message.createdAt, "forMessage", locale)
+
+	const { allImages, allVideos, interlocutorsName } = useMemo(() => {
+		const images = messages
+			.filter(
+				msg => msg.media?.[0]?.url && msg.media[0].type === MediaTypeEnum.IMAGE
+			)
+			.map(msg => ({ src: msg.media[0].url }))
+
+		const videos = messages
+			.filter(
+				msg => msg.media?.[0]?.url && msg.media[0].type === MediaTypeEnum.VIDEO
+			)
+			.map(msg => {
+				const fileName = msg.media[0].name
+				const fileExtension = fileName?.split(".").pop() || ""
+				return { src: msg.media[0].url, type: fileExtension }
+			})
+
+		const name = chat?.members.find((m: ChatMemberType) => m.userId !== userId)
+			?.user.name
+
+		return { allImages: images, allVideos: videos, interlocutorsName: name }
+	}, [messages, chat?.members, userId])
+
 	const isFirstMessageOfDay =
 		!previousMessage ||
 		new Date(message.createdAt).toDateString() !==
 			new Date(previousMessage.createdAt).toDateString()
 
-	const formattedDate = formatTime(message.createdAt, "Month number", locale)
-	const allImages = messages
-		.filter(
-			msg =>
-				msg.media &&
-				msg.media[0]?.url &&
-				msg.media[0].type === MediaTypeEnum.IMAGE
-		)
-		.map(msg => {
-			return { src: msg.media[0].url }
-		})
-
-	const allVideos = messages
-		.filter(
-			msg =>
-				msg.media &&
-				msg.media[0]?.url &&
-				msg.media[0].type === MediaTypeEnum.VIDEO
-		)
-		.map(msg => {
-			const fileName = msg.media[0].name
-			const fileExtension = fileName?.split(".").pop() || ""
-
-			return { src: msg.media[0].url, type: fileExtension }
-		})
-
 	const onSelectMessage = () => {
 		setSelectedMessages(prev => {
 			const isMessageSelected = prev.some(item => item.id === message.id)
-
-			if (!isMessageSelected) return [...prev, message]
-			else return prev.filter(item => item.id !== message.id)
+			return isMessageSelected
+				? prev.filter(item => item.id !== message.id)
+				: [...prev, message]
 		})
 	}
 
 	const onSelectMessageForMainDiv = () => {
-		if (!hasSelectedMessages) return
-		onSelectMessage()
+		if (hasSelectedMessages) {
+			onSelectMessage()
+		}
 	}
 
 	return (
@@ -137,3 +132,5 @@ export const Messages: FC<IMessagesProps> = ({
 		</div>
 	)
 }
+
+Messages.displayName = "Messages"

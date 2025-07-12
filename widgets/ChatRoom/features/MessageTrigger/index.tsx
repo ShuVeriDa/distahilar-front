@@ -47,30 +47,33 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 		if (ref.current) {
 			setHeight(ref.current.offsetHeight)
 		}
-	}, [message])
+	}, [message.id])
 
 	const isMyMessage = message.userId === userId
-	const isNextMessageMine = nextMessage && nextMessage.userId === userId
-	const isDifferentSenderPrevious =
-		previousMessage && previousMessage.userId !== message.userId
-	const isMoreTwoLine = height && height > 36
+	const isNextMessageMine = nextMessage?.userId === userId
+	const isDifferentSenderPrevious = previousMessage?.userId !== message.userId
+	const isMoreTwoLine = height ? height > 36 : false
 	const isVoice = message.messageType === MessageEnum.VOICE
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const isFile = message.messageType === MessageEnum.FILE
-	// const isHasReactions = true
 	const isHasReactions = message.reactions?.length > 0
-	const isDifferentSenderNext =
-		nextMessage && nextMessage.userId !== message.userId
+	const isDifferentSenderNext = nextMessage?.userId !== message.userId
+
+	const containerClasses = cn(
+		"flex w-full",
+		isMyMessage && "justify-end",
+		!isMyMessage && "justify-start"
+	)
+
+	const indicatorClasses = cn(
+		"flex justify-center items-center bg-[#8EA97A] w-full max-w-[22px] h-[22px] rounded-full ml-[6px] mb-2 border-[2px] border-white",
+		(isDifferentSenderNext || isLastMessage) && "mb-4",
+		isSameMessage && "bg-[#4AB44A] pt-0.5"
+	)
 
 	return (
 		<div className="w-full flex justify-between items-end">
-			<ContextMenuTrigger
-				className={cn(
-					"flex w-full",
-					isMyMessage && "justify-end",
-					!isMyMessage && "justify-start"
-				)}
-			>
+			<ContextMenuTrigger className={containerClasses}>
 				<Message
 					ref={ref}
 					message={message}
@@ -89,7 +92,6 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 					isFirstMessage={isFirstMessage}
 					allImages={allImages}
 					allVideos={allVideos}
-					// hasSelectedMessages={hasSelectedMessages}
 				/>
 			</ContextMenuTrigger>
 			<AnimatePresence>
@@ -100,11 +102,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 						animate={{ opacity: 1, x: 0 }}
 						exit={{ opacity: 0, x: 20 }}
 						transition={{ duration: 0.2, ease: "easeOut" }}
-						className={cn(
-							"flex justify-center items-center bg-[#8EA97A] w-full max-w-[22px] h-[22px] rounded-full ml-[6px] mb-2 border-[2px] border-white",
-							(isDifferentSenderNext || isLastMessage) && "mb-4",
-							isSameMessage && "bg-[#4AB44A] pt-0.5"
-						)}
+						className={indicatorClasses}
 					>
 						{isSameMessage && <FaCheck color="white" size={14} />}
 					</MotionDiv>
@@ -113,3 +111,5 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 		</div>
 	)
 }
+
+MessageTrigger.displayName = "MessageTrigger"
