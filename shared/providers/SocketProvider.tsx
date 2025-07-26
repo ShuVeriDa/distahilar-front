@@ -39,6 +39,9 @@ export const SocketProvider: FC<ISocketProviderProps> = ({ children }) => {
 		const socketInstance = io(process.env.NEXT_PUBLIC_WS_BACKEND_URL, {
 			withCredentials: true,
 			transports: ["websocket"],
+			auth: {
+				token: token,
+			},
 			extraHeaders: {
 				Authorization: `Bearer ${token}`,
 			}, // Обеспечивает использование только WebSocket
@@ -47,11 +50,17 @@ export const SocketProvider: FC<ISocketProviderProps> = ({ children }) => {
 		setSocket(socketInstance)
 
 		socketInstance.on("connect", () => {
+			console.log("Socket connected:", socketInstance.id)
 			setIsConnected(true)
 		})
 
-		socketInstance.on("disconnect", () => {
+		socketInstance.on("disconnect", reason => {
+			console.log("Socket disconnected:", reason)
 			setIsConnected(false)
+		})
+
+		socketInstance.on("connect_error", error => {
+			console.error("Socket connection error:", error)
 		})
 
 		setIsConnected(!!socketInstance)

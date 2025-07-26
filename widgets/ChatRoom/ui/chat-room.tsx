@@ -7,6 +7,11 @@ import { FC, useState } from "react"
 import { MessageType } from "@/prisma/models"
 import { useUser } from "@/shared"
 import { useSelectedMessages } from "@/shared/hooks/useSelectedMessages"
+
+import { useCall } from "@/shared/hooks/useCall"
+import { CallRoom } from "@/widgets/CallRoom"
+import { ModalCallInitiate } from "@/widgets/CallRoom/ui/modal-call-initiate"
+import { ModalIncomingCall } from "@/widgets/CallRoom/ui/modal-incoming-call"
 import { WrapperMessages } from "../entities"
 import { Header } from "../entities/Header"
 import { SideBar } from "../entities/Sidebar"
@@ -23,13 +28,37 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const [openSideBar, setOpenSideBar] = useState(false)
 	const [editedMessage, setEditedMessage] = useState<MessageType | null>(null)
 
+	const {
+		isCallModalOpen,
+		isIncomingCallModalOpen,
+		isCallActive,
+		closeCallModal,
+		openCallModal,
+		startCall,
+		isConnecting,
+		callError,
+		answerCall,
+		incomingCall,
+		callType,
+		callToken,
+		roomName,
+		endCall,
+	} = useCall()
+
 	const handleEditMessage = (message: MessageType | null) =>
 		setEditedMessage(message)
 
 	const { data: chat } = useFetchChatByIdQuery(chatId)
 
 	const onToggleSideBar = () => setOpenSideBar(!openSideBar)
-	const actionsForButtons = [() => {}, () => {}, onToggleSideBar]
+
+	const handleCallClick = () => {
+		if (chatId) {
+			openCallModal(chatId)
+		}
+	}
+
+	const actionsForButtons = [() => {}, handleCallClick, onToggleSideBar]
 
 	const {
 		hasSelectedMessages,
@@ -37,7 +66,6 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		setSelectedMessages,
 		clearSelectedMessages,
 	} = useSelectedMessages()
-
 	const {
 		data: messages,
 		isSuccess: isSuccessMessages,
@@ -79,6 +107,34 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 				user={user}
 				chat={chat}
 				onToggleSideBar={onToggleSideBar}
+			/>
+
+			<ModalCallInitiate
+				isOpen={isCallModalOpen}
+				isConnecting={isConnecting}
+				callError={callError}
+				startCall={startCall}
+				chat={chat}
+				user={user}
+				onClose={closeCallModal}
+			/>
+
+			<ModalIncomingCall
+				isOpen={isIncomingCallModalOpen}
+				answerCall={answerCall}
+				incomingCall={incomingCall}
+				isConnecting={isConnecting}
+				chat={chat}
+				user={user}
+			/>
+
+			<CallRoom
+				isOpen={isCallActive}
+				callType={callType}
+				callToken={callToken || ""}
+				roomName={roomName || ""}
+				isCallActive={isCallActive}
+				endCall={endCall}
 			/>
 		</div>
 	)

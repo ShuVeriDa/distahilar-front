@@ -40,7 +40,9 @@ export const useFolderManager = (type: "create" | "edit") => {
 	const isFetching = data?.folderManage?.isFetching
 
 	const onAddChatsIds = (chats: ICutChat[], ids: string[]) => {
-		const updatedDeletedChatIds = deletedChatIds.filter(id => !ids.includes(id))
+		const updatedDeletedChatIds = deletedChatIds.filter(
+			(id: string) => !ids.includes(id)
+		)
 
 		const updatedAddChatIds = Array.from(new Set([...addedChatsIds, ...ids]))
 
@@ -53,14 +55,16 @@ export const useFolderManager = (type: "create" | "edit") => {
 
 	const onRemoveChatsIds = (ids: string[]) => {
 		const updatedChatsLocale = chatsLocale.filter(
-			chat => !ids.includes(chat.chatId)
+			(chat: ICutChat) => !ids.includes(chat.chatId)
 		)
 
 		const updatedDeletedChatIds = Array.from(
 			new Set([...deletedChatIds, ...ids])
 		)
 
-		const updatedAddedChatIds = addedChatsIds.filter(id => !ids.includes(id))
+		const updatedAddedChatIds = addedChatsIds.filter(
+			(id: string) => !ids.includes(id)
+		)
 
 		onChatsLocale(updatedChatsLocale)
 		onAddedChatsIds(updatedAddedChatIds)
@@ -69,7 +73,7 @@ export const useFolderManager = (type: "create" | "edit") => {
 
 	useEffect(() => {
 		if (isFetching && folder && type === "edit") {
-			const mutatedChats = folder.chats.map(obj =>
+			const mutatedChats = folder.chats.map((obj: ChatType) =>
 				mapToCutChat(obj as ChatType)
 			)
 			onChatsLocale(mutatedChats)
@@ -77,7 +81,15 @@ export const useFolderManager = (type: "create" | "edit") => {
 			onIconValue(folder?.imageUrl as string)
 			onSetIsFetchModal(false)
 		}
-	}, [isFetching, folder, type])
+	}, [
+		isFetching,
+		folder,
+		type,
+		onChatsLocale,
+		onFolderNameValue,
+		onIconValue,
+		onSetIsFetchModal,
+	])
 
 	const { mutateAsync: createFolderMutate } = useCreateFolder()
 	const { mutateAsync: removeChatMutate } = useDeleteChatFromFolder()
@@ -93,7 +105,7 @@ export const useFolderManager = (type: "create" | "edit") => {
 	}
 
 	const onDeleteChatLocale = (id: string) => {
-		onChatsLocale(chatsLocale.filter(chat => chat.chatId !== id))
+		onChatsLocale(chatsLocale.filter((chat: ICutChat) => chat.chatId !== id))
 		onDeletedChatsIds([...deletedChatIds, id])
 	}
 
