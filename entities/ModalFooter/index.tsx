@@ -27,7 +27,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 }) => {
 	const CLASSNAME_UPPERDERLINE =
 		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:top-0 after:bg-[#E0E0E0] after:dark:bg-[#101921]"
-	// for checking
+
 	return (
 		<div
 			className={cn(
