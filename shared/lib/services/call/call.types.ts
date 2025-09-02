@@ -65,3 +65,38 @@ export interface JoinVoiceChatResponse {
 	token: string
 	roomName: string
 }
+
+// WebRTC signaling types (to align with backend DTOs)
+export enum CallTypeEnum {
+	OFFER = "offer",
+	ANSWER = "answer",
+}
+
+export interface WebRtcOfferDto {
+	callId: string
+	toUserId: string
+	sdp: string
+	type: CallTypeEnum.OFFER
+}
+
+export interface WebRtcAnswerDto {
+	callId: string
+	toUserId: string
+	sdp: string
+	type: CallTypeEnum.ANSWER
+}
+
+export interface WebRtcIceCandidateDto {
+	callId: string
+	toUserId: string
+	candidate: RTCIceCandidateInit
+}
+
+export enum CallPhaseEnum {
+	IDLE = "idle",
+	INCOMING = "incoming",
+	CALLING = "calling",
+	CONNECTING = "connecting",
+	ACTIVE = "active",
+	ENDED = "ended",
+}

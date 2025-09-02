@@ -4,6 +4,7 @@ import { useModal } from "./useModal"
 import { useSearchContact } from "./useSearchContact"
 import { useUploadPhoto } from "./useUploadPhoto"
 import { useUser } from "./useUser"
+import { useWebRTCCall } from "./useWebRTCCall"
 
 export {
 	useChangeAccountInfo,
@@ -12,4 +13,5 @@ export {
 	useModal,
 	useSearchContact,
 	useUser,
+	useWebRTCCall,
 }

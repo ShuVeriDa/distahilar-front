@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
 			{
 				hostname: "res.cloudinary.com",
 			},
+			{
+				hostname: "cdn.jsdelivr.net",
+			},
 		],
 	},
 }

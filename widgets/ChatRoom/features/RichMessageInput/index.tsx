@@ -122,14 +122,19 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 
 	const manageVideoRecording = () => {
 		if (cameraRecording && typeMessage === MessageEnum.VIDEO) {
+			console.log("if:true")
+
 			cameraStopRecording()
 			setTypeMessage(MessageEnum.TEXT)
 		}
 
 		if (!cameraRecording) {
+			console.log("if:false")
+
 			cameraStartRecording()
 			setTypeMessage(MessageEnum.VIDEO)
 		}
+		console.log({ cameraRecording })
 	}
 
 	const onAddEmoji = (icon: string) => {

@@ -5,18 +5,16 @@ import { useMessagesWSQuery } from "@/shared/lib/services/message/useMessagesQue
 import { FC, useState } from "react"
 
 import { MessageType } from "@/prisma/models"
-import { useUser } from "@/shared"
+import { useUser, useWebRTCCall } from "@/shared"
 import { useSelectedMessages } from "@/shared/hooks/useSelectedMessages"
 
-import { useCall } from "@/shared/hooks/useCall"
-import { CallRoom } from "@/widgets/CallRoom"
-import { ModalCallInitiate } from "@/widgets/CallRoom/ui/modal-call-initiate"
-import { ModalIncomingCall } from "@/widgets/CallRoom/ui/modal-incoming-call"
+import { CallPhaseEnum } from "@/shared/lib/services/call/call.types"
 import { WrapperMessages } from "../entities"
 import { Header } from "../entities/Header"
 import { SideBar } from "../entities/Sidebar"
 import { RichMessageInput } from "../features"
 import { PinnedMessage } from "../shared/ui/PinnedMessage"
+import { CallOverlay } from "./call-overlay"
 
 interface IChatRoomProps {
 	chatId: string
@@ -27,38 +25,22 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const { user } = useUser()
 	const [openSideBar, setOpenSideBar] = useState(false)
 	const [editedMessage, setEditedMessage] = useState<MessageType | null>(null)
+	const [callVisible, setCallVisible] = useState(false)
+	const { data: chat } = useFetchChatByIdQuery(chatId)
+	const [callState, callApi] = useWebRTCCall()
 
-	const {
-		isCallModalOpen,
-		isIncomingCallModalOpen,
-		isCallActive,
-		closeCallModal,
-		openCallModal,
-		startCall,
-		isConnecting,
-		callError,
-		answerCall,
-		incomingCall,
-		callType,
-		callToken,
-		roomName,
-		endCall,
-	} = useCall()
+	const peerUserId =
+		chat?.members?.find(m => m.userId !== user?.id)?.userId || null
+
+	const onToggleSideBar = () => setOpenSideBar(!openSideBar)
 
 	const handleEditMessage = (message: MessageType | null) =>
 		setEditedMessage(message)
 
-	const { data: chat } = useFetchChatByIdQuery(chatId)
+	const startDialogCall = () => setCallVisible(true)
+	const endDialogCall = () => setCallVisible(false)
 
-	const onToggleSideBar = () => setOpenSideBar(!openSideBar)
-
-	const handleCallClick = () => {
-		if (chatId) {
-			openCallModal(chatId)
-		}
-	}
-
-	const actionsForButtons = [() => {}, handleCallClick, onToggleSideBar]
+	const actionsForButtons = [() => {}, startDialogCall, onToggleSideBar]
 
 	const {
 		hasSelectedMessages,
@@ -101,40 +83,21 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					editedMessage={editedMessage}
 					handleEditMessage={handleEditMessage}
 				/>
+				<CallOverlay
+					callState={callState}
+					callApi={callApi}
+					visible={callVisible || callState.phase !== CallPhaseEnum.IDLE}
+					peerUserId={peerUserId}
+					chatId={chatId}
+					chat={chat}
+					endDialogCall={endDialogCall}
+				/>
 			</div>
 			<SideBar
 				openSideBar={openSideBar}
 				user={user}
 				chat={chat}
 				onToggleSideBar={onToggleSideBar}
-			/>
-
-			<ModalCallInitiate
-				isOpen={isCallModalOpen}
-				isConnecting={isConnecting}
-				callError={callError}
-				startCall={startCall}
-				chat={chat}
-				user={user}
-				onClose={closeCallModal}
-			/>
-
-			<ModalIncomingCall
-				isOpen={isIncomingCallModalOpen}
-				answerCall={answerCall}
-				incomingCall={incomingCall}
-				isConnecting={isConnecting}
-				chat={chat}
-				user={user}
-			/>
-
-			<CallRoom
-				isOpen={isCallActive}
-				callType={callType}
-				callToken={callToken || ""}
-				roomName={roomName || ""}
-				isCallActive={isCallActive}
-				endCall={endCall}
 			/>
 		</div>
 	)
