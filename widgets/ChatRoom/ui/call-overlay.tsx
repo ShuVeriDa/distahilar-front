@@ -12,14 +12,8 @@ import Image from "next/image"
 import { FC, useEffect, useMemo, useState } from "react"
 import { FaVideo } from "react-icons/fa"
 import { IoMdCall, IoMdClose } from "react-icons/io"
-import {
-	LuMic,
-	LuMicOff,
-	LuPhoneCall,
-	LuPhoneOff,
-	LuVideo,
-	LuVideoOff,
-} from "react-icons/lu"
+import { LuMic, LuMicOff, LuVideo, LuVideoOff } from "react-icons/lu"
+import { MdCallEnd } from "react-icons/md"
 
 type Props = {
 	visible: boolean
@@ -40,7 +34,13 @@ export const CallOverlay: FC<Props> = ({
 	callState,
 	endDialogCall,
 }) => {
-	const { localStream, remoteStream, isVideoCall: isVideo, phase } = callState
+	const {
+		localStream,
+		remoteStream,
+		isVideoCall: isVideo,
+		phase,
+		isRemoteVideoOn,
+	} = callState
 
 	const peerAvatarUrl =
 		chat?.members.find((m: ChatMemberType) => m.userId === peerUserId)?.user
@@ -110,14 +110,53 @@ export const CallOverlay: FC<Props> = ({
 
 	if (!visible) return null
 
+	console.log({ remoteStream, isRemoteVideoOn, isVideo, isCamOff })
+
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
 			{/* <div className="relative w-full max-w-[860px] h-[70vh] max-h-[640px] rounded-2xl overflow-hidden bg-[#0B141A]"> */}
-			<div className="flex flex-col justify-end  w-full max-w-[720px] h-full max-h-[540px] rounded-lg overflow-hidden bg-[#1B1F23]">
-				<div className="w-full h-auto flex items-center justify-center">
+			<div
+				className={cn(
+					"flex flex-col justify-between w-full max-w-[720px] h-full max-h-[540px] rounded-lg overflow-hidden bg-[#1B1F23]"
+					// isVideo && "justify-around"
+				)}
+			>
+				<div
+					className={cn(
+						"w-full h-auto flex flex-col items-center justify-center pt-[14.5%] relative",
+						!isCamOff && "pt-0 h-full"
+					)}
+				>
+					<div className="flex flex-col items-center justify-center ">
+						<Avatar
+							src={peerAvatarUrl}
+							name={peerName}
+							size={isVideo && !isCamOff ? 100 : 160}
+						/>
+						<div
+							className={cn(
+								"max-w-[450px] flex flex-col justify-center items-center gap-1 mt-10 mb-[90px]",
+								!isCamOff && "mb-5 mt-5"
+							)}
+						>
+							<Typography
+								tag="p"
+								className="text-white text-[17px] font-medium"
+							>
+								{peerName}
+							</Typography>
+							<Typography
+								tag="span"
+								className="text-[#AAABAC] text-[15px] font-normal text-center leading-5"
+							>
+								{statusText}
+							</Typography>
+						</div>
+					</div>
+
 					{/* Remote video or audio backdrop */}
-					{isVideo && remoteStream ? (
-						<div className="">
+					{isVideo && remoteStream && isRemoteVideoOn && (
+						<div className="w-[60%] aspect-video rounded-lg overflow-hidden border border-white/20 shadow-lg ">
 							<video
 								ref={node => {
 									if (node && remoteStream) {
@@ -130,24 +169,6 @@ export const CallOverlay: FC<Props> = ({
 								className="w-full h-full object-cover"
 							/>
 							<div className="bg-gradient-to-t from-black/50 via-black/20 to-black/30" />
-						</div>
-					) : (
-						<div className="flex flex-col items-center justify-center ">
-							<Avatar src={peerAvatarUrl} name={peerName} size={160} />
-							<div className="max-w-[250px] flex flex-col justify-center items-center gap-1 mt-10 mb-[90px]">
-								<Typography
-									tag="p"
-									className="text-white text-[17px] font-medium"
-								>
-									{peerName}
-								</Typography>
-								<Typography
-									tag="span"
-									className="text-[#AAABAC] text-[15px] font-normal text-center leading-5"
-								>
-									{statusText}
-								</Typography>
-							</div>
 						</div>
 					)}
 
@@ -166,8 +187,15 @@ export const CallOverlay: FC<Props> = ({
 					) : null}
 
 					{/* Local PiP */}
-					{isVideo && localStream ? (
-						<div className="w-40 aspect-video rounded-lg overflow-hidden border border-white/20 shadow-lg bg-yellow-200">
+					{isVideo && localStream && !isCamOff ? (
+						<div
+							className={cn(
+								"w-[60%] aspect-video rounded-lg overflow-hidden border border-white/20 shadow-lg bg-yellow-200",
+								remoteStream &&
+									isRemoteVideoOn &&
+									"w-[20%] absolute bottom-5 right-5 "
+							)}
+						>
 							<video
 								ref={node => {
 									if (node && localStream) {
@@ -224,46 +252,71 @@ export const CallOverlay: FC<Props> = ({
 						</div>
 					) : phase === CallPhaseEnum.INCOMING ? (
 						<div className="flex items-center gap-6">
-							<CircleButton
+							<Button
+								variant="clean"
 								aria-label="Reject"
-								className="bg-red-500 hover:bg-red-600"
+								className="flex flex-col gap-1.5"
 								onClick={rejectIncomingCall}
 							>
-								<LuPhoneOff size={22} />
-							</CircleButton>
-							<CircleButton
-								aria-label="Accept"
-								className="bg-green-500 hover:bg-green-600"
+								<div className="flex items-center justify-center bg-[#D75A5A] hover:bg-[#c44a4a] p-3 rounded-full">
+									<MdCallEnd size={22} className="text-white" />
+								</div>
+								<span className="text-white text-[13px]">Reject</span>
+							</Button>
+
+							<Button
+								variant="clean"
 								onClick={acceptIncomingCall}
+								aria-label="Accept"
+								className="flex flex-col gap-1.5"
 							>
-								<LuPhoneCall size={22} />
-							</CircleButton>
+								<div className="flex items-center justify-center bg-[#66C95B] hover:bg-[#56b14a] p-3 rounded-full">
+									<IoMdCall size={22} className="text-white" />
+								</div>
+								<span className="text-white text-[13px]">Accept</span>
+							</Button>
 						</div>
 					) : (
 						<div className="flex items-center gap-6">
-							<CircleButton
+							<Button
+								variant="clean"
 								aria-label={isMuted ? "Unmute" : "Mute"}
-								className="bg-white/10 hover:bg-white/20 text-white"
+								className="flex flex-col gap-1.5"
 								onClick={toggleMute}
 							>
-								{isMuted ? <LuMicOff size={20} /> : <LuMic size={20} />}
-							</CircleButton>
+								<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-3 rounded-full">
+									{isMuted ? <LuMicOff size={20} /> : <LuMic size={20} />}
+								</div>
+								<span className="text-white text-[13px]">Mute</span>
+							</Button>
 							{isVideo ? (
-								<CircleButton
-									aria-label={isCamOff ? "Turn camera on" : "Turn camera off"}
-									className="bg-white/10 hover:bg-white/20 text-white"
+								<Button
+									variant="clean"
+									aria-label={!isCamOff ? "Turn camera on" : "Turn camera off"}
+									className="flex flex-col gap-1.5"
 									onClick={toggleCamera}
 								>
-									{isCamOff ? <LuVideoOff size={20} /> : <LuVideo size={20} />}
-								</CircleButton>
+									<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-3 rounded-full">
+										{!isCamOff ? (
+											<LuVideoOff size={20} />
+										) : (
+											<LuVideo size={20} />
+										)}
+									</div>
+									<span className="text-white text-[13px]">Camera</span>
+								</Button>
 							) : null}
-							<CircleButton
+							<Button
+								variant="clean"
 								aria-label="End call"
-								className="bg-red-500 hover:bg-red-600"
+								className="flex flex-col gap-1.5"
 								onClick={endCall}
 							>
-								<LuPhoneOff size={22} />
-							</CircleButton>
+								<div className="flex items-center justify-center bg-red-500 hover:bg-red-600 p-3 rounded-full">
+									<MdCallEnd size={22} className="text-white" />
+								</div>
+								<span className="text-white text-[13px]">End call</span>
+							</Button>
 						</div>
 					)}
 				</div>
@@ -296,25 +349,5 @@ const Avatar: FC<{ src?: string; name?: string; size?: number }> = ({
 		<div className="rounded-full bg-white/10 text-white flex items-center justify-center text-sm font-medium border border-white/20">
 			{initials}
 		</div>
-	)
-}
-
-const CircleButton: FC<{
-	children: React.ReactNode
-	onClick?: () => void
-	className?: string
-	"aria-label"?: string
-}> = ({ children, onClick, className = "", ...rest }) => {
-	return (
-		<button
-			onClick={onClick}
-			className={cn(
-				`w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors `,
-				className
-			)}
-			{...rest}
-		>
-			{children}
-		</button>
 	)
 }

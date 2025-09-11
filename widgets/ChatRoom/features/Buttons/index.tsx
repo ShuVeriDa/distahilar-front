@@ -6,6 +6,7 @@ import { cn } from "@/shared/lib/utils/cn"
 import { FC, useMemo } from "react"
 import { FiSidebar } from "react-icons/fi"
 import { IoIosCall, IoIosSearch } from "react-icons/io"
+import { MdLiveTv } from "react-icons/md"
 
 interface IButtonsProps {
 	openSideBar: boolean
@@ -45,6 +46,21 @@ export const Buttons: FC<IButtonsProps> = ({
 						<IoIosCall
 							size={22}
 							className={cn("text-[#999999] group-hover:text-[#737373] ")}
+						/>
+					</Button>
+				),
+			},
+			{
+				component: (
+					<Button
+						variant="clean"
+						key="live"
+						onClick={actionsForButtons[3]}
+						className="h-full w-[30px] rounded-full hover:cursor-pointer group"
+					>
+						<MdLiveTv
+							size={22}
+							className={cn("text-[#999999] group-hover:text-[#737373]")}
 						/>
 					</Button>
 				),

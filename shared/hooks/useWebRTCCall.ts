@@ -21,6 +21,7 @@ export interface UseWebRTCCallState {
 	isVideoCall: boolean
 	localStream: MediaStream | null
 	remoteStream: MediaStream | null
+	isRemoteVideoOn: boolean
 	peerUserId: string | null
 }
 
@@ -47,13 +48,33 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 		isVideoCall: false,
 		localStream: null,
 		remoteStream: null,
+		isRemoteVideoOn: false,
 		peerUserId: null,
 	})
 
 	const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
 	const pendingRemoteIceRef = useRef<RTCIceCandidateInit[]>([])
+	const remoteVideoTrackRef = useRef<MediaStreamTrack | null>(null)
+	const remoteTrackCleanupRef = useRef<(() => void) | null>(null)
 	const acceptedRef = useRef(false)
 	const answeredRef = useRef(false)
+
+	const cleanup = useCallback(() => {
+		acceptedRef.current = false
+		answeredRef.current = false
+		remoteTrackCleanupRef.current?.()
+		remoteTrackCleanupRef.current = null
+		remoteVideoTrackRef.current = null
+		peerConnectionRef.current?.getSenders().forEach(sender => {
+			try {
+				sender.track?.stop()
+			} catch {}
+		})
+		peerConnectionRef.current?.close()
+		peerConnectionRef.current = null
+		state.localStream?.getTracks().forEach(t => t.stop())
+		setState(prev => ({ ...prev, isRemoteVideoOn: false }))
+	}, [state.localStream])
 
 	const createPeerConnection = useCallback(() => {
 		const pc = new RTCPeerConnection({ iceServers })
@@ -72,6 +93,34 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 		pc.ontrack = event => {
 			const [remoteStream] = event.streams
 			setState(prev => ({ ...prev, remoteStream }))
+
+			if (event.track.kind === "video") {
+				// Cleanup previous listeners if any
+				remoteTrackCleanupRef.current?.()
+				remoteTrackCleanupRef.current = null
+
+				remoteVideoTrackRef.current = event.track
+				const handleMute = () =>
+					setState(prev => ({ ...prev, isRemoteVideoOn: false }))
+				const handleUnmute = () =>
+					setState(prev => ({ ...prev, isRemoteVideoOn: true }))
+				const handleEnded = () =>
+					setState(prev => ({ ...prev, isRemoteVideoOn: false }))
+
+				event.track.addEventListener("mute", handleMute)
+				event.track.addEventListener("unmute", handleUnmute)
+				event.track.addEventListener("ended", handleEnded)
+
+				// Initial status
+				const isOn = event.track.readyState === "live" && !event.track.muted
+				setState(prev => ({ ...prev, isRemoteVideoOn: isOn }))
+
+				remoteTrackCleanupRef.current = () => {
+					event.track.removeEventListener("mute", handleMute)
+					event.track.removeEventListener("unmute", handleUnmute)
+					event.track.removeEventListener("ended", handleEnded)
+				}
+			}
 		}
 
 		pc.onconnectionstatechange = () => {
@@ -86,7 +135,7 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 
 		peerConnectionRef.current = pc
 		return pc
-	}, [socket, state.callId, state.peerUserId])
+	}, [cleanup, socket, state.callId, state.peerUserId])
 
 	const getLocalStream = useCallback(async (isVideo: boolean) => {
 		let devices: MediaDeviceInfo[] = []
@@ -117,7 +166,7 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 			})
 			setState(prev => ({ ...prev, localStream: stream }))
 			return stream
-		} catch (err: any) {
+		} catch (err: unknown) {
 			// Fallbacks
 			if (wantVideo && hasMic) {
 				try {
@@ -146,7 +195,11 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 				} catch {}
 			}
 
-			const name = (err && (err.name || err.code)) || "Error"
+			let name = "Error"
+			if (typeof err === "object" && err !== null) {
+				const e = err as { name?: string; code?: string }
+				name = e.name || e.code || "Error"
+			}
 			if (name === "NotFoundError" || name === "OverconstrainedError") {
 				toast({
 					description: "Устройства не найдены: проверьте микрофон/камеру.",
@@ -290,7 +343,15 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 				await pc.addIceCandidate(candidate)
 			} catch {}
 		}
-	}, [socket, state.callId, state.isVideoCall, state.peerUserId])
+	}, [
+		socket,
+		state.callId,
+		state.isVideoCall,
+		state.peerUserId,
+		createPeerConnection,
+		getLocalStream,
+		maybeCreateAndSendAnswer,
+	])
 
 	const rejectIncomingCall = useCallback(() => {
 		if (!socket || !state.callId) return
@@ -304,11 +365,12 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 			phase: CallPhaseEnum.IDLE,
 			callId: null,
 			isVideoCall: false,
+			isRemoteVideoOn: false,
 			peerUserId: null,
 			localStream: null,
 			remoteStream: null,
 		}))
-	}, [socket, state.callId])
+	}, [socket, state.callId, cleanup])
 
 	const endCall = useCallback(() => {
 		if (socket && state.callId) {
@@ -322,12 +384,13 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 				phase: CallPhaseEnum.IDLE,
 				callId: null,
 				isVideoCall: false,
+				isRemoteVideoOn: false,
 				peerUserId: null,
 				localStream: null,
 				remoteStream: null,
 			}))
 		}, 300)
-	}, [socket, state.callId])
+	}, [socket, state.callId, cleanup])
 
 	const toggleMute = useCallback(() => {
 		state.localStream?.getAudioTracks().forEach(t => (t.enabled = !t.enabled))
@@ -340,18 +403,7 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 		setState(prev => ({ ...prev }))
 	}, [state.localStream])
 
-	const cleanup = useCallback(() => {
-		acceptedRef.current = false
-		answeredRef.current = false
-		peerConnectionRef.current?.getSenders().forEach(sender => {
-			try {
-				sender.track?.stop()
-			} catch {}
-		})
-		peerConnectionRef.current?.close()
-		peerConnectionRef.current = null
-		state.localStream?.getTracks().forEach(t => t.stop())
-	}, [state.localStream])
+	// (moved cleanup earlier)
 
 	// Socket signaling handlers
 	useEffect(() => {
@@ -383,6 +435,7 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 					callId: null,
 					localStream: null,
 					remoteStream: null,
+					isRemoteVideoOn: false,
 					peerUserId: null,
 					isVideoCall: false,
 				}))
@@ -401,6 +454,7 @@ export const useWebRTCCall = (): [UseWebRTCCallState, UseWebRTCCallApi] => {
 					phase: CallPhaseEnum.IDLE,
 					callId: null,
 					isVideoCall: false,
+					isRemoteVideoOn: false,
 					peerUserId: null,
 					localStream: null,
 					remoteStream: null,
