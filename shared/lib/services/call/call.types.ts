@@ -100,3 +100,11 @@ export enum CallPhaseEnum {
 	ACTIVE = "active",
 	ENDED = "ended",
 }
+
+export type LiveParticipantType = {
+	userId: string
+	name?: string
+	imageUrl?: string
+	role: string
+	micOn: boolean
+}

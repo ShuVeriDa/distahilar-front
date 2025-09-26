@@ -98,10 +98,10 @@ export type ContactType = Prisma.ContactGetPayload<{
 }>
 
 export enum MemberRole {
-	OWNER,
-	ADMIN,
-	MODERATOR,
-	GUEST,
+	OWNER = "OWNER",
+	ADMIN = "ADMIN",
+	MODERATOR = "MODERATOR",
+	GUEST = "GUEST",
 }
 export enum EnumLanguage {
 	EN = "EN",

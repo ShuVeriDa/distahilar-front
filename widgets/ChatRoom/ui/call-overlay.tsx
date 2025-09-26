@@ -110,8 +110,6 @@ export const CallOverlay: FC<Props> = ({
 
 	if (!visible) return null
 
-	console.log({ remoteStream, isRemoteVideoOn, isVideo, isCamOff })
-
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
 			{/* <div className="relative w-full max-w-[860px] h-[70vh] max-h-[640px] rounded-2xl overflow-hidden bg-[#0B141A]"> */}

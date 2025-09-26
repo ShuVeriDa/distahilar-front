@@ -2,12 +2,15 @@
 
 import { useFetchChatByIdQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { useMessagesWSQuery } from "@/shared/lib/services/message/useMessagesQuery"
-import { FC, useState } from "react"
+import { FC, useMemo, useState } from "react"
 
-import { MessageType } from "@/prisma/models"
+import { ChatRole, ChatType, MemberRole, MessageType } from "@/prisma/models"
 import { useUser, useWebRTCCall } from "@/shared"
+import { useLiveStatus } from "@/shared/hooks/useLiveStatus"
 import { useSelectedMessages } from "@/shared/hooks/useSelectedMessages"
+import { useLiveGlobal } from "@/shared/providers/LiveProvider"
 
+import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { CallPhaseEnum } from "@/shared/lib/services/call/call.types"
 import { WrapperMessages } from "../entities"
 import { Header } from "../entities/Header"
@@ -15,6 +18,9 @@ import { SideBar } from "../entities/Sidebar"
 import { RichMessageInput } from "../features"
 import { PinnedMessage } from "../shared/ui/PinnedMessage"
 import { CallOverlay } from "./call-overlay"
+import { LiveBannerJoin } from "./live-banner-join"
+import { LiveBannerJoined } from "./live-banner-joined"
+// LiveOverlay moved to global LiveProvider
 
 interface IChatRoomProps {
 	chatId: string
@@ -23,11 +29,18 @@ interface IChatRoomProps {
 
 export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const { user } = useUser()
+	const { data: chat } = useFetchChatByIdQuery(chatId)
+	const { isLive: isRoomLive } = useLiveStatus(chatId)
 	const [openSideBar, setOpenSideBar] = useState(false)
 	const [editedMessage, setEditedMessage] = useState<MessageType | null>(null)
 	const [callVisible, setCallVisible] = useState(false)
-	const { data: chat } = useFetchChatByIdQuery(chatId)
 	const [callState, callApi] = useWebRTCCall()
+	const live = useLiveGlobal()
+	const { state: liveState, participants } = live
+	const { room, isSelfMuted } = liveState
+
+	const { onlineOrFollowers, nameOfChat, isOwner, isAdmin, isModerator } =
+		useChatInfo(chat, user)
 
 	const peerUserId =
 		chat?.members?.find(m => m.userId !== user?.id)?.userId || null
@@ -39,8 +52,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 
 	const startDialogCall = () => setCallVisible(true)
 	const endDialogCall = () => setCallVisible(false)
-
-	const actionsForButtons = [() => {}, startDialogCall, onToggleSideBar]
+	const maximizeWindowsLive = () => live.maximize()
 
 	const {
 		hasSelectedMessages,
@@ -53,27 +65,121 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		isSuccess: isSuccessMessages,
 		// isLoading,
 	} = useMessagesWSQuery(chatId)
+
 	const pinnedMessages = messages?.messages.find(msg => msg.isPinned)
 
+	const headerSubtitle =
+		(chat?.type === ChatRole.GROUP || chat?.type === ChatRole.CHANNEL) &&
+		isRoomLive
+			? `${onlineOrFollowers} • LIVE`
+			: onlineOrFollowers
+
+	// Is current user a participant of the ongoing live stream in this chat
+	const isParticipantLive = (() => {
+		const uId = user?.id
+		if (!uId || !room?.isLive) return false
+		if (room.hostId === uId) return true
+		if (room.speakers.includes(uId)) return true
+		if (room.listeners.includes(uId)) return true
+		return false
+	})()
+
+	const isPrivilegedMember = useMemo(() => {
+		if (!chat || !user?.id) return false
+		const me = chat.members.find(m => m.userId === user.id)
+		if (!me) return false
+		return me.role !== MemberRole.GUEST
+	}, [chat, user?.id])
+
+	const leaveLive = () => {
+		live.leaveLive()
+	}
+
+	const joinLive = () => {
+		live.joinLive(chatId, {
+			nameOfChat,
+			chat: chat as ChatType,
+			isPrivilegedMember,
+		})
+	}
+
+	const startLive = () => {
+		if (isRoomLive && isParticipantLive) {
+			maximizeWindowsLive()
+			return
+		}
+		if (isRoomLive && !isParticipantLive) {
+			joinLive()
+			return
+		}
+		if (isOwner || isAdmin || isModerator) {
+			live.startLive(chatId, {
+				nameOfChat,
+				chat: chat as ChatType,
+				isPrivilegedMember,
+			})
+		}
+	}
+
+	const handleLeaveClick = () => {
+		live.openOverlay(chatId, {
+			nameOfChat,
+			chat: chat as ChatType,
+			isPrivilegedMember,
+		})
+		if (isPrivilegedMember) {
+			// Global overlay manages confirmation dialog
+			live.setConfirmLeaveOpen(true)
+			return
+		}
+		leaveLive()
+	}
+
+	const actionsForButtons = [
+		() => {},
+		startDialogCall,
+		onToggleSideBar,
+		startLive,
+	]
+
+	// console.log({ isParticipantLive, isRoomLive })
+
 	return (
-		<div className="w-full h-full flex ">
+		<div className="w-full h-full flex">
 			<div className="w-full h-full flex flex-col justify-between overflow-hidden dark:bg-[#0E1621] bg-slate-100 bg-[url('/images/bg-wallpaper.jpg')] bg-no-repeat bg-cover bg-center dark:bg-[url('/')] border-r border-r-[#E7E7E7] dark:border-r-[#101921] relative">
+				{isRoomLive && isParticipantLive && (
+					<LiveBannerJoined
+						isSelfMuted={isSelfMuted}
+						participants={participants}
+						nameOfChat={nameOfChat}
+						handleLeaveClick={handleLeaveClick}
+						maximizeWindowsLive={maximizeWindowsLive}
+					/>
+				)}
 				<Header
-					chat={chat}
-					user={user}
-					hasSelectedMessages={hasSelectedMessages}
+					nameOfChat={nameOfChat}
+					openSideBar={openSideBar}
+					chatType={chat?.type as ChatRole}
+					onlineOrFollowers={headerSubtitle}
 					selectedMessages={selectedMessages}
 					actionsForButtons={actionsForButtons}
+					hasSelectedMessages={hasSelectedMessages}
+					memberRole={
+						chat?.members.find(m => m.userId === user?.id)?.role as MemberRole
+					}
 					clearSelectedMessages={clearSelectedMessages}
-					openSideBar={openSideBar}
 				/>
 				{pinnedMessages && <PinnedMessage pinnedMessages={pinnedMessages} />}
+				{isRoomLive && !isParticipantLive && (
+					<LiveBannerJoin participants={participants} joinLive={joinLive} />
+				)}
+
 				<WrapperMessages
 					chat={chat}
 					locale={locale}
-					messages={isSuccessMessages ? messages?.messages : []}
-					hasSelectedMessages={hasSelectedMessages}
 					selectedMessages={selectedMessages}
+					hasSelectedMessages={hasSelectedMessages}
+					messages={isSuccessMessages ? messages?.messages : []}
 					setSelectedMessages={setSelectedMessages}
 					handleEditMessage={handleEditMessage}
 				/>
@@ -84,19 +190,20 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					handleEditMessage={handleEditMessage}
 				/>
 				<CallOverlay
-					callState={callState}
-					callApi={callApi}
-					visible={callVisible || callState.phase !== CallPhaseEnum.IDLE}
-					peerUserId={peerUserId}
-					chatId={chatId}
 					chat={chat}
+					chatId={chatId}
+					callApi={callApi}
+					callState={callState}
+					peerUserId={peerUserId}
+					visible={callVisible || callState.phase !== CallPhaseEnum.IDLE}
 					endDialogCall={endDialogCall}
 				/>
+				{/* LiveOverlay is rendered globally by LiveGlobalProvider */}
 			</div>
 			<SideBar
-				openSideBar={openSideBar}
 				user={user}
 				chat={chat}
+				openSideBar={openSideBar}
 				onToggleSideBar={onToggleSideBar}
 			/>
 		</div>

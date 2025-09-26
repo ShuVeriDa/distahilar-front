@@ -107,6 +107,29 @@ h6 {
 	}
 }
 
+.live-gradient-animated {
+	background: linear-gradient(120deg, #0992ef, #15c6f9, #0992ef);
+	background-size: 200% 200%;
+	animation: tgGradientShift 8s ease-in-out infinite;
+}
+
+.dark .live-gradient-animated {
+	background: linear-gradient(120deg, #0b84df, #10b8eb, #0b84df);
+	background-size: 200% 200%;
+}
+
+@keyframes tgGradientShift {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
 .custom-emoji-picker .EmojiPickerReact {
 	height: 40px;
 	--epr-emoji-size: 23px;

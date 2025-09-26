@@ -1,5 +1,4 @@
-import { ChatType, MessageType, UserType } from "@/prisma/models"
-import { useChatInfo } from "@/shared/hooks/useChatInfo"
+import { ChatRole, MemberRole, MessageType } from "@/prisma/models"
 import { AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { FC } from "react"
@@ -12,26 +11,28 @@ const MotionDiv = dynamic(() =>
 )
 
 interface IHeaderProps {
-	chat: ChatType | undefined
-	user: UserType | null
+	nameOfChat: string | undefined
+	onlineOrFollowers: string
 	hasSelectedMessages: boolean
 	selectedMessages: MessageType[]
 	openSideBar: boolean
 	clearSelectedMessages: () => void
 	actionsForButtons: (() => void)[]
+	memberRole: MemberRole
+	chatType: ChatRole
 }
 
 export const Header: FC<IHeaderProps> = ({
-	chat,
-	user,
+	nameOfChat,
+	onlineOrFollowers,
 	hasSelectedMessages,
 	selectedMessages,
 	openSideBar,
 	clearSelectedMessages,
 	actionsForButtons,
+	memberRole,
+	chatType,
 }) => {
-	const { onlineOrFollowers, nameOfChat } = useChatInfo(chat, user)
-
 	return (
 		<div className="w-full flex flex-col items-center dark:bg-[#17212B] bg-white min-h-[50px] py-2 px-3 border-b border-b-[#E7E7E7] dark:border-b-[#101921]">
 			<AnimatePresence mode="wait">
@@ -48,6 +49,8 @@ export const Header: FC<IHeaderProps> = ({
 						<Buttons
 							actionsForButtons={actionsForButtons}
 							openSideBar={openSideBar}
+							memberRole={memberRole}
+							chatType={chatType}
 						/>
 					</MotionDiv>
 				) : (

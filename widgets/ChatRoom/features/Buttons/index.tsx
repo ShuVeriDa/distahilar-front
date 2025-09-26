@@ -1,22 +1,28 @@
 "use client"
 
+import { ChatRole, MemberRole } from "@/prisma/models"
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 
 import { FC, useMemo } from "react"
+import { BsChatSquareText } from "react-icons/bs"
 import { FiSidebar } from "react-icons/fi"
 import { IoIosCall, IoIosSearch } from "react-icons/io"
-import { MdLiveTv } from "react-icons/md"
 
 interface IButtonsProps {
 	openSideBar: boolean
+	memberRole: MemberRole
+	chatType: ChatRole
 	actionsForButtons: (() => void)[]
 }
 
 export const Buttons: FC<IButtonsProps> = ({
 	openSideBar,
 	actionsForButtons,
+	chatType,
+	memberRole,
 }) => {
+	console.log({ memberRole, chatType, is: chatType })
 	const btns = useMemo(
 		() => [
 			{
@@ -41,7 +47,10 @@ export const Buttons: FC<IButtonsProps> = ({
 						variant="clean"
 						key="call"
 						onClick={actionsForButtons[1]}
-						className="h-full w-[30px] rounded-full hover:cursor-pointer group"
+						className={cn(
+							"h-full w-[30px] rounded-full hover:cursor-pointer group",
+							chatType !== ChatRole.DIALOG && "!hidden"
+						)}
 					>
 						<IoIosCall
 							size={22}
@@ -56,9 +65,14 @@ export const Buttons: FC<IButtonsProps> = ({
 						variant="clean"
 						key="live"
 						onClick={actionsForButtons[3]}
-						className="h-full w-[30px] rounded-full hover:cursor-pointer group"
+						className={cn(
+							"h-full w-[30px] rounded-full hover:cursor-pointer group",
+							(chatType === ChatRole.DIALOG ||
+								memberRole === MemberRole.GUEST) &&
+								"!hidden"
+						)}
 					>
-						<MdLiveTv
+						<BsChatSquareText
 							size={22}
 							className={cn("text-[#999999] group-hover:text-[#737373]")}
 						/>
@@ -84,7 +98,7 @@ export const Buttons: FC<IButtonsProps> = ({
 				),
 			},
 		],
-		[actionsForButtons, openSideBar]
+		[actionsForButtons, chatType, memberRole, openSideBar]
 	)
 
 	return (

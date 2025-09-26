@@ -1,4 +1,10 @@
-import { ChatMemberType, ChatRole, ChatType, UserType } from "@/prisma/models"
+import {
+	ChatMemberType,
+	ChatRole,
+	ChatType,
+	MemberRole,
+	UserType,
+} from "@/prisma/models"
 import { useFormatLastSeen } from "../lib/utils/formatLastSeen"
 
 export const useChatInfo = (
@@ -11,6 +17,15 @@ export const useChatInfo = (
 
 	const isDialog = chat?.type === ChatRole.DIALOG
 	const isGroup = chat?.type === ChatRole.GROUP
+	const isGuest =
+		chat?.members.find(m => m.userId === user?.id)?.role === MemberRole.GUEST
+	const isOwner =
+		chat?.members.find(m => m.userId === user?.id)?.role === MemberRole.OWNER
+	const isAdmin =
+		chat?.members.find(m => m.userId === user?.id)?.role === MemberRole.ADMIN
+	const isModerator =
+		chat?.members.find(m => m.userId === user?.id)?.role ===
+		MemberRole.MODERATOR
 
 	const nameOfChat = isDialog
 		? `${interlocutor?.name} ${interlocutor?.surname}`
@@ -32,5 +47,9 @@ export const useChatInfo = (
 		nameOfChat,
 		onlineOrFollowers,
 		interlocutor,
+		isGuest,
+		isOwner,
+		isAdmin,
+		isModerator,
 	}
 }

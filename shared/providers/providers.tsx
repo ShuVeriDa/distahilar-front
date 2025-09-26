@@ -1,3 +1,4 @@
+import { LiveGlobalProvider } from "@/shared/providers/LiveProvider"
 import { FC, ReactNode } from "react"
 import { MainLayout } from "../layout/MainLayout"
 import { Toaster } from "../ui/Toast/toaster"
@@ -22,7 +23,9 @@ export const Providers: FC<IProvidersProps> = ({ children }) => {
 				<SocketProvider>
 					<StoreProvider>
 						<ModalProvider />
-						<MainLayout>{children}</MainLayout>
+						<LiveGlobalProvider>
+							<MainLayout>{children}</MainLayout>
+						</LiveGlobalProvider>
 						<Toaster />
 					</StoreProvider>
 				</SocketProvider>
