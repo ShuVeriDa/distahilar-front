@@ -192,7 +192,23 @@ export const useLiveRoom = ({
 	const attachLocalTracks = useCallback(
 		async (pc: RTCPeerConnection) => {
 			const stream = state.localStream || (await getLocalStream())
-			stream.getTracks().forEach(t => pc.addTrack(t, stream))
+			const senders = pc.getSenders()
+			stream.getTracks().forEach(track => {
+				// If this exact track is already sent, do nothing
+				const sameIdSender = senders.find(
+					s => s.track && s.track.id === track.id
+				)
+				if (sameIdSender) return
+				// If a sender for the same kind exists, replace it to avoid duplicates
+				const sameKindSender = senders.find(
+					s => s.track && s.track.kind === track.kind
+				)
+				if (sameKindSender) {
+					sameKindSender.replaceTrack(track)
+				} else {
+					pc.addTrack(track, stream)
+				}
+			})
 		},
 		[getLocalStream, state.localStream]
 	)

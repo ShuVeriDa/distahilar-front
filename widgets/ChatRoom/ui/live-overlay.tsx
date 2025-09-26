@@ -571,6 +571,7 @@ export const LiveOverlay: FC<Props> = ({
 									onClick={() => {
 										setConfirmLeaveOpen(false)
 										liveApi.leaveLive(chatId)
+										onClose()
 									}}
 								>
 									Leave
