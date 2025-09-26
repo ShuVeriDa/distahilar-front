@@ -158,6 +158,7 @@ export const LiveGlobalProvider: FC<{ children: ReactNode }> = ({
 			{children}
 			<LiveOverlay
 				room={state.room}
+				phase={state.phase}
 				chatId={(currentChatId || state.chatId || "") as string}
 				liveApi={api}
 				visible={visible}

@@ -108,7 +108,7 @@ h6 {
 }
 
 .live-gradient-animated {
-	background: linear-gradient(120deg, #0992ef, #15c6f9, #0992ef);
+	background: linear-gradient(120deg, #0b84df, #10b8eb, #0b84df);
 	background-size: 200% 200%;
 	animation: tgGradientShift 8s ease-in-out infinite;
 }
@@ -116,6 +116,58 @@ h6 {
 .dark .live-gradient-animated {
 	background: linear-gradient(120deg, #0b84df, #10b8eb, #0b84df);
 	background-size: 200% 200%;
+}
+
+.live-gradient-animated_blue {
+	/* Light bottom-left -> Dark top-right; keep edges original */
+	background: linear-gradient(
+		to top right,
+		#15c6f9 0%,
+		#15c6f9 25%,
+		#0992ef 50%,
+		#0b84df 82%,
+		#0b84df 100%
+	);
+	background-size: 200% 200%;
+	animation: tgGradientShift_MIC 8s ease-in-out infinite;
+}
+
+.dark .live-gradient-animated_blue {
+	background: linear-gradient(
+		to top right,
+		#15c6f9 0%,
+		#15c6f9 25%,
+		#0992ef 50%,
+		#0b84df 82%,
+		#0b84df 100%
+	);
+	background-size: 200% 200%;
+}
+
+.live-gradient-animated_green {
+	/* Keep original teal at edges; blend lime toward center */
+	background: linear-gradient(
+		to top right,
+		#0bb7ba 0%,
+		#0bb7ba 25%,
+		#11c64a 50%,
+		#11c64a 82%,
+		#11c64a 100%
+	);
+	background-size: 200% 200%;
+	animation: tgGradientShift_MIC 8s ease-in-out infinite;
+}
+
+.dark .live-gradient-animated_green {
+	background: linear-gradient(
+		to top right,
+		#0bb7ba 0%,
+		#0bb7ba 25%,
+		#11c64a 50%,
+		#11c64a 82%,
+		#11c64a 100%
+	);
+	background-size: 100% 100%;
 }
 
 @keyframes tgGradientShift {
@@ -127,6 +179,18 @@ h6 {
 	}
 	100% {
 		background-position: 0% 50%;
+	}
+}
+
+@keyframes tgGradientShift_MIC {
+	0% {
+		background-position: 30% 50%;
+	}
+	50% {
+		background-position: 70% 50%;
+	}
+	100% {
+		background-position: 30% 50%;
 	}
 }
 

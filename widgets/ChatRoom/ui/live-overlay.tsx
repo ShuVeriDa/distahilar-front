@@ -1,6 +1,7 @@
 "use client"
 
 import { Button, Typography, useUser } from "@/shared"
+import type { LivePhase } from "@/shared/hooks/useLiveRoom"
 import { UseLiveRoomApi } from "@/shared/hooks/useLiveRoom"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { LiveRoomState } from "@/shared/lib/services/live/live.types"
@@ -15,22 +16,17 @@ import {
 import Image from "next/image"
 import type { PointerEvent as ReactPointerEvent } from "react"
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { BiSolidMicrophoneOff } from "react-icons/bi"
-import {
-	LuMaximize2,
-	LuMic,
-	LuMicOff,
-	LuMinimize2,
-	LuVideo,
-	LuVideoOff,
-} from "react-icons/lu"
-import { MdCallEnd, MdOutlineGroupAdd } from "react-icons/md"
+import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi"
+import { IoVideocam, IoVideocamOff } from "react-icons/io5"
+import { LuMaximize2, LuMic, LuMicOff, LuMinimize2 } from "react-icons/lu"
+import { MdCallEnd } from "react-icons/md"
 
 type Props = {
 	chatId: string
 	// chat?: ChatType
 	isPrivilegedMember: boolean
 	room: LiveRoomState | null
+	phase: LivePhase
 	visible: boolean
 	nameOfChat: string | undefined
 	liveApi: UseLiveRoomApi
@@ -51,6 +47,7 @@ export const LiveOverlay: FC<Props> = ({
 	chatId,
 	isPrivilegedMember,
 	room,
+	phase,
 	visible,
 	nameOfChat,
 	liveApi,
@@ -123,6 +120,13 @@ export const LiveOverlay: FC<Props> = ({
 	}, [isMinimized])
 
 	const description = `${participants.length} participant`
+
+	const statusText = useMemo(() => {
+		if (phase === "connecting") return "Connecting…"
+		if (phase === "live") return isSelfMuted ? "Muted" : "Unmuted"
+		if (phase === "ended") return "Ended"
+		return ""
+	}, [phase, isSelfMuted])
 
 	// Margins inside ChatRoom container
 	const MARGIN_TOP = 103
@@ -280,6 +284,7 @@ export const LiveOverlay: FC<Props> = ({
 							</Typography>
 							<Typography tag="span" className="text-white/60 text-[12px]">
 								{description}
+								{statusText ? ` • ${statusText}` : ""}
 							</Typography>
 						</div>
 						<div className="flex items-center gap-2">
@@ -353,6 +358,7 @@ export const LiveOverlay: FC<Props> = ({
 								className="text-white/60 text-[13px] font-normal text-center"
 							>
 								{description}
+								{statusText ? ` • ${statusText}` : ""}
 							</Typography>
 						</div>
 
@@ -462,84 +468,69 @@ export const LiveOverlay: FC<Props> = ({
 						</div>
 
 						<div className="w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-around gap-4">
-							{!isLive ? (
-								<>
-									<Button
-										variant="clean"
-										onClick={() => liveApi.startLive(chatId)}
-										className="flex items-center gap-2 bg-[#66C95B] hover:bg-[#56b14a] text-white px-4 py-2 rounded-full"
-									>
-										<MdOutlineGroupAdd size={18} />
-										Start live
-									</Button>
-									<Button
-										variant="clean"
-										onClick={() => liveApi.joinLive(chatId)}
-										className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full"
-									>
-										Join as listener
-									</Button>
-									<Button
-										variant="clean"
-										onClick={onClose}
-										className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full"
-									>
-										Close
-									</Button>
-								</>
-							) : (
-								<>
-									<Button
-										variant="clean"
-										aria-label={
-											isSelfVideoOff ? "Turn camera on" : "Turn camera off"
-										}
-										className="flex flex-col gap-1.5 font-normal"
-										onClick={liveApi.toggleSelfVideo}
-									>
-										<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-3 rounded-full">
-											{isSelfVideoOff ? (
-												<LuVideo size={22} />
-											) : (
-												<LuVideoOff size={22} />
-											)}
-										</div>
-										<span className="text-white text-[11px]">Video</span>
-									</Button>
+							<Button
+								variant="clean"
+								aria-label={
+									isSelfVideoOff ? "Turn camera on" : "Turn camera off"
+								}
+								className="flex flex-col gap-1.5 font-normal"
+								onClick={liveApi.toggleSelfVideo}
+							>
+								<div
+									className={cn(
+										"flex items-center justify-center  text-white p-3 rounded-full",
+										isSelfMuted
+											? "bg-[#154262] hover:bg-[#163449]"
+											: "bg-[#16532C] hover:bg-[#174026]"
+									)}
+								>
+									{isSelfVideoOff ? (
+										<IoVideocam size={22} />
+									) : (
+										<IoVideocamOff size={22} />
+									)}
+								</div>
+								<span className="text-white text-[11px]">Video</span>
+							</Button>
 
-									<Button
-										variant="clean"
-										aria-label={isSelfMuted ? "Unmute" : "Mute"}
-										className="flex flex-col gap-1.5 font-normal"
-										onClick={liveApi.toggleSelfMute}
-									>
-										<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-[26px] rounded-full">
-											{isSelfMuted ? (
-												<BiSolidMicrophoneOff size={35} />
-											) : (
-												<LuMic size={35} />
-											)}
-										</div>
-										<span className="text-white text-[15px]">
-											{isSelfMuted ? "Unmute" : "Mute"}
-										</span>
-									</Button>
+							<Button
+								variant="clean"
+								aria-label={isSelfMuted ? "Unmute" : "Mute"}
+								className="flex flex-col gap-1.5 font-normal"
+								onClick={liveApi.toggleSelfMute}
+							>
+								<div
+									className={cn(
+										"relative flex items-center justify-center text-white p-[26px] rounded-full overflow-hidden",
+										isSelfMuted
+											? "live-gradient-animated_blue"
+											: "live-gradient-animated_green"
+									)}
+								>
+									{isSelfMuted ? (
+										<BiSolidMicrophoneOff size={35} />
+									) : (
+										<BiSolidMicrophone size={35} />
+									)}
+								</div>
+								<span className="text-white text-[15px]">
+									{isSelfMuted ? "Unmute" : "Mute"}
+								</span>
+							</Button>
 
-									<Button
-										variant="clean"
-										aria-label="Leave"
-										className="flex flex-col gap-1.5"
-										onClick={handleLeaveClick}
-									>
-										<div className="flex items-center justify-center bg-[#883E41] hover:bg-[#8b383b] p-3 rounded-full">
-											<MdCallEnd size={22} className="text-white" />
-										</div>
-										<span className="text-white text-[11px] !font-normal">
-											Leave
-										</span>
-									</Button>
-								</>
-							)}
+							<Button
+								variant="clean"
+								aria-label="Leave"
+								className="flex flex-col gap-1.5"
+								onClick={handleLeaveClick}
+							>
+								<div className="flex items-center justify-center bg-[#883E41] hover:bg-[#8b383b] p-3 rounded-full">
+									<MdCallEnd size={22} className="text-white" />
+								</div>
+								<span className="text-white text-[11px] !font-normal">
+									Leave
+								</span>
+							</Button>
 						</div>
 						<Button
 							variant="clean"
