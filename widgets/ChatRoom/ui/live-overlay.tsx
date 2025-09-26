@@ -1,34 +1,20 @@
 "use client"
 
-import { Button, Typography, useUser } from "@/shared"
+import { Button, Typography } from "@/shared"
 import type { LivePhase } from "@/shared/hooks/useLiveRoom"
 import { UseLiveRoomApi } from "@/shared/hooks/useLiveRoom"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { LiveRoomState } from "@/shared/lib/services/live/live.types"
 import { cn } from "@/shared/lib/utils/cn"
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/shared/ui/Dialog/dialog"
-import dynamic from "next/dynamic"
-import Image from "next/image"
-import type { PointerEvent as ReactPointerEvent } from "react"
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi"
-import { IoVideocam, IoVideocamOff } from "react-icons/io5"
-import { LuMaximize2, LuMic, LuMicOff, LuMinimize2 } from "react-icons/lu"
-import { MdCallEnd } from "react-icons/md"
+import { FC, useEffect, useMemo, useRef } from "react"
+import { LuMinimize2 } from "react-icons/lu"
+import { LiveMiniPlayer } from "../entities/LiveMiniPlayer"
+import { LocalPreview } from "../entities/LocalPreview"
+import { ParticipantsList } from "../entities/ParticipantsList"
+import { ConfirmLeaveDialog } from "../features/ConfirmLeaveDialog"
+import { LiveControls } from "../features/LiveControls"
 
-const MotionDiv = dynamic(() =>
-	import("framer-motion").then(mod => mod.motion.div)
-)
-
-const AnimatePresence = dynamic(() =>
-	import("framer-motion").then(mod => mod.AnimatePresence)
-)
+//
 
 type Props = {
 	chatId: string
@@ -72,20 +58,7 @@ export const LiveOverlay: FC<Props> = ({
 	closeWindowsLive,
 	setConfirmLeaveOpen,
 }) => {
-	const { user } = useUser()
-
-	const [dockPosition, setDockPosition] = useState<"bl" | "br" | "tr" | "tl">(
-		"br"
-	)
-	const [miniAppeared, setMiniAppeared] = useState(false)
-	const miniCardRef = useRef<HTMLDivElement | null>(null)
-	const miniWrapperRef = useRef<HTMLDivElement | null>(null)
-	const [miniPos, setMiniPos] = useState<{ top: number; left: number } | null>(
-		null
-	)
-	const [isDragging, setIsDragging] = useState(false)
-	const dragStart = useRef<{ x: number; y: number } | null>(null)
-	const miniStart = useRef<{ top: number; left: number } | null>(null)
+	//
 
 	const isVideoOff = isSelfVideoOff
 
@@ -118,16 +91,6 @@ export const LiveOverlay: FC<Props> = ({
 		prevIsLiveRef.current = isLive
 	}, [closeWindowsLive, isLive, setIsMinimized])
 
-	// Animate mini-player appearance
-	useEffect(() => {
-		if (isMinimized) {
-			setMiniAppeared(false)
-			const id = requestAnimationFrame(() => setMiniAppeared(true))
-			return () => cancelAnimationFrame(id)
-		}
-		setMiniAppeared(false)
-	}, [isMinimized])
-
 	const description = `${participants.length} participant`
 
 	const statusText = useMemo(() => {
@@ -136,109 +99,6 @@ export const LiveOverlay: FC<Props> = ({
 		if (phase === "ended") return "Ended"
 		return ""
 	}, [phase, isSelfMuted])
-
-	// Margins inside ChatRoom container
-	const MARGIN_TOP = 103
-	const MARGIN_RIGHT = 20
-	const MARGIN_BOTTOM = 52
-	const MARGIN_LEFT = 4
-
-	const getContainerRect = () => {
-		const parent = miniWrapperRef.current?.offsetParent as HTMLElement | null
-		return parent?.getBoundingClientRect() || null
-	}
-
-	const computeMiniPos = useCallback((dock: "bl" | "br" | "tr" | "tl") => {
-		const containerRect = getContainerRect()
-		if (!containerRect) return { top: MARGIN_TOP, left: MARGIN_LEFT }
-		const el = miniCardRef.current
-		const w = el?.offsetWidth || 260
-		const h = el?.offsetHeight || 56
-		const top =
-			dock === "tr" || dock === "tl"
-				? MARGIN_TOP
-				: containerRect.height - MARGIN_BOTTOM - h
-		const left =
-			dock === "tr" || dock === "br"
-				? containerRect.width - MARGIN_RIGHT - w
-				: MARGIN_LEFT
-		return { top, left }
-	}, [])
-
-	// Initialize mini position on minimize and when dockPosition changes
-	useEffect(() => {
-		if (!isMinimized) return
-		const setPos = () => setMiniPos(computeMiniPos(dockPosition))
-		const raf = requestAnimationFrame(setPos)
-		return () => cancelAnimationFrame(raf)
-	}, [isMinimized, dockPosition, computeMiniPos])
-
-	// Adjust on container resize (fallback to window resize)
-	useEffect(() => {
-		if (!isMinimized) return
-		const onResize = () => setMiniPos(computeMiniPos(dockPosition))
-		window.addEventListener("resize", onResize)
-		return () => window.removeEventListener("resize", onResize)
-	}, [isMinimized, dockPosition, computeMiniPos])
-
-	const clamp = (val: number, min: number, max: number) =>
-		Math.max(min, Math.min(max, val))
-
-	const handleMiniPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-		const target = e.target as HTMLElement
-		if (target?.closest("button")) return
-
-		const containerRect = getContainerRect()
-		if (!containerRect) return
-
-		// Ensure we have a concrete position to start dragging from
-		const pos = miniPos ?? computeMiniPos(dockPosition)
-		setMiniPos(pos)
-		miniStart.current = pos
-		dragStart.current = { x: e.clientX, y: e.clientY }
-		setIsDragging(true)
-
-		const handleMove = (ev: PointerEvent) => {
-			if (!dragStart.current || !miniStart.current) return
-			const el = miniCardRef.current
-			const w = el?.offsetWidth || 260
-			const h = el?.offsetHeight || 56
-			const dx = ev.clientX - dragStart.current.x
-			const dy = ev.clientY - dragStart.current.y
-			const nextTop = clamp(
-				miniStart.current.top + dy,
-				MARGIN_TOP,
-				containerRect.height - MARGIN_BOTTOM - h
-			)
-			const nextLeft = clamp(
-				miniStart.current.left + dx,
-				MARGIN_LEFT,
-				containerRect.width - MARGIN_RIGHT - w
-			)
-			setMiniPos({ top: nextTop, left: nextLeft })
-		}
-
-		const handleUp = (ev: PointerEvent) => {
-			setIsDragging(false)
-			window.removeEventListener("pointermove", handleMove)
-			window.removeEventListener("pointerup", handleUp)
-			// Snap to nearest corner using container center
-			const x = ev.clientX
-			const y = ev.clientY
-			const centerX = containerRect.left + containerRect.width / 2
-			const centerY = containerRect.top + containerRect.height / 2
-			const isRight = x > centerX
-			const isBottom = y > centerY
-			const next = isBottom ? (isRight ? "br" : "bl") : isRight ? "tr" : "tl"
-			setDockPosition(next)
-			setMiniPos(computeMiniPos(next))
-			dragStart.current = null
-			miniStart.current = null
-		}
-
-		window.addEventListener("pointermove", handleMove)
-		window.addEventListener("pointerup", handleUp, { once: true })
-	}
 
 	const handleMinimize = () => {
 		setIsMinimized(true)
@@ -251,95 +111,18 @@ export const LiveOverlay: FC<Props> = ({
 	return (
 		<>
 			{/* Mini-player when minimized */}
-			{isMinimized && isLive ? (
-				<div
-					ref={miniWrapperRef}
-					className={cn(
-						"absolute z-50 transition-all duration-200 ease-out",
-						!miniPos && dockPosition === "br" && "bottom-[52px] right-5",
-						!miniPos && dockPosition === "bl" && "bottom-[52px] left-1",
-						!miniPos && dockPosition === "tr" && "top-[103px] right-5",
-						!miniPos && dockPosition === "tl" && "top-[103px] left-1"
-					)}
-					style={
-						miniPos
-							? {
-									top: miniPos.top,
-									left: miniPos.left,
-									transition: isDragging ? "none" : undefined,
-							  }
-							: undefined
-					}
-					onPointerDown={handleMiniPointerDown}
-				>
-					<div
-						ref={miniCardRef}
-						className={cn(
-							"flex items-center gap-3 px-3 py-2 rounded-lg bg-[#1A2026] border border-white/10 shadow-lg cursor-grab select-none transition-all duration-150",
-							miniAppeared
-								? "opacity-100 translate-y-0"
-								: "opacity-0 translate-y-1",
-							isDragging
-								? "scale-[0.97] shadow-2xl active:cursor-grabbing"
-								: "hover:shadow-xl"
-						)}
-					>
-						<div className="flex flex-col">
-							<Typography
-								tag="p"
-								className="text-white text-[13px] font-medium truncate max-w-[180px]"
-							>
-								{title}
-							</Typography>
-							<Typography tag="span" className="text-white/60 text-[12px]">
-								{description}
-								{statusText ? ` • ${statusText}` : ""}
-							</Typography>
-						</div>
-						<div className="flex items-center gap-2">
-							<Button
-								variant="clean"
-								aria-label="Restore"
-								className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
-								onClick={handleMaximize}
-							>
-								<LuMaximize2 size={18} />
-							</Button>
-							<Button
-								variant="clean"
-								aria-label={isSelfMuted ? "Unmute" : "Mute"}
-								className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
-								onClick={liveApi.toggleSelfMute}
-							>
-								{isSelfMuted ? <LuMicOff size={18} /> : <LuMic size={18} />}
-							</Button>
-							<Button
-								variant="clean"
-								aria-label="Leave"
-								className="bg-[#883E41] hover:bg-[#8b383b] p-2 rounded-full"
-								onClick={handleLeaveClick}
-							>
-								<MdCallEnd size={18} className="text-white" />
-							</Button>
-						</div>
-					</div>
-					{/* Keep remote audio playing while minimized */}
-					<div className="hidden">
-						{Array.from(remoteStreams.values()).map((stream, idx) => (
-							<audio
-								key={idx}
-								ref={node => {
-									if (node && stream) {
-										;(node as HTMLAudioElement).srcObject = stream
-										node.autoplay = true
-										node.muted = false
-									}
-								}}
-							/>
-						))}
-					</div>
-				</div>
-			) : null}
+			<LiveMiniPlayer
+				title={title}
+				descriptionBase={`${participants.length} participant`}
+				statusText={statusText}
+				isSelfMuted={isSelfMuted}
+				isLive={isLive}
+				isMinimized={isMinimized}
+				onMaximize={handleMaximize}
+				onLeave={handleLeaveClick}
+				onToggleMute={liveApi.toggleSelfMute}
+				remoteStreams={remoteStreams}
+			/>
 
 			{/* Full overlay when not minimized */}
 			{visible && !isMinimized ? (
@@ -372,32 +155,11 @@ export const LiveOverlay: FC<Props> = ({
 						</div>
 
 						{/* Local video preview */}
-						{isLive &&
-						localStream &&
-						!isSelfVideoOff &&
-						localStream.getVideoTracks().length > 0 ? (
-							<div className="w-full mb-2 px-3.5 py-0.5">
-								<div className="w-full aspect-video rounded-md overflow-hidden border border-white/10 bg-black">
-									<video
-										ref={node => {
-											if (node && localStream) {
-												;(node as HTMLVideoElement).srcObject = localStream
-												node.muted = true
-												node.autoplay = true
-												node.playsInline = true
-											}
-										}}
-										className="w-full h-full object-cover"
-									/>
-								</div>
-								<Typography
-									tag="span"
-									className="text-white/60 text-[12px] mt-1 block text-center"
-								>
-									You
-								</Typography>
-							</div>
-						) : null}
+						<LocalPreview
+							isLive={isLive}
+							isSelfVideoOff={isSelfVideoOff}
+							localStream={localStream}
+						/>
 
 						<div
 							className={cn(
@@ -407,65 +169,11 @@ export const LiveOverlay: FC<Props> = ({
 						>
 							{isLive ? (
 								<div className="flex flex-col gap-1">
-									{participants.map(p => {
-										const stream = remoteStreams.get(p.userId)
-										return (
-											<div
-												key={p.userId}
-												className="rounded-md overflow-hidden border border-white/10 p-2.5 flex items-center gap-3 bg-[#2C333D]"
-											>
-												{p.imageUrl ? (
-													<Image
-														src={p.imageUrl}
-														alt={p.name || p.userId}
-														width={40}
-														height={40}
-														className="rounded-full object-cover"
-													/>
-												) : (
-													<div className="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center text-sm font-medium border border-white/20">
-														{(p.name || p.userId).slice(0, 2).toUpperCase()}
-													</div>
-												)}
-												<div className="flex-1 min-w-0">
-													<div className="flex items-center gap-2">
-														<Typography
-															tag="p"
-															className="text-white text-[14px] font-medium truncate"
-														>
-															{p.name || p.userId}
-														</Typography>
-														<span className="text-white/60 text-[12px] capitalize">
-															{p.role}
-														</span>
-													</div>
-												</div>
-												<div className="flex items-center gap-2">
-													{(
-														p.userId === (user?.id || "")
-															? !isSelfMuted
-															: p.micOn
-													) ? (
-														<LuMic size={18} className="text-white" />
-													) : (
-														<LuMicOff size={18} className="text-white/60" />
-													)}
-												</div>
-												{stream ? (
-													<audio
-														ref={node => {
-															if (node && stream) {
-																;(node as HTMLAudioElement).srcObject = stream
-																node.autoplay = true
-																node.muted = false
-															}
-														}}
-														className="hidden"
-													/>
-												) : null}
-											</div>
-										)
-									})}
+									<ParticipantsList
+										participants={participants}
+										remoteStreams={remoteStreams}
+										isSelfMuted={isSelfMuted}
+									/>
 								</div>
 							) : (
 								<div className="w-full h-full flex items-center justify-center">
@@ -476,115 +184,13 @@ export const LiveOverlay: FC<Props> = ({
 							)}
 						</div>
 
-						<div className="w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-around gap-4">
-							<Button
-								variant="clean"
-								aria-label={
-									isSelfVideoOff ? "Turn camera on" : "Turn camera off"
-								}
-								className="flex flex-col gap-1.5 font-normal"
-								onClick={liveApi.toggleSelfVideo}
-							>
-								<div
-									className={cn(
-										"flex items-center justify-center  text-white p-3 rounded-full",
-										isSelfMuted
-											? "bg-[#154262] hover:bg-[#163449]"
-											: "bg-[#16532C] hover:bg-[#174026]"
-									)}
-								>
-									{isSelfVideoOff ? (
-										<IoVideocam size={22} />
-									) : (
-										<IoVideocamOff size={22} />
-									)}
-								</div>
-								<span className="text-white text-[11px]">Video</span>
-							</Button>
-
-							<Button
-								variant="clean"
-								aria-label={isSelfMuted ? "Unmute" : "You are live"}
-								className="flex flex-col gap-1.5 font-normal"
-								onClick={liveApi.toggleSelfMute}
-							>
-								<div
-									className={cn(
-										"relative flex items-center justify-center text-white p-[26px] rounded-full overflow-hidden",
-										isSelfMuted
-											? "live-gradient-animated_blue"
-											: "live-gradient-animated_green"
-									)}
-								>
-									<div className="h-[35px] w-[35px] flex items-center justify-center overflow-hidden">
-										<AnimatePresence mode="wait" initial={false}>
-											{isSelfMuted ? (
-												<MotionDiv
-													key="muted-icon"
-													initial={{ scale: 0.9 }}
-													animate={{ scale: 1 }}
-													exit={{ scale: 0.9 }}
-													transition={{ duration: 0.12, ease: "easeOut" }}
-												>
-													<BiSolidMicrophoneOff size={35} />
-												</MotionDiv>
-											) : (
-												<MotionDiv
-													key="live-icon"
-													initial={{ scale: 0.9 }}
-													animate={{ scale: 1 }}
-													exit={{ scale: 0.9 }}
-													transition={{ duration: 0.12, ease: "easeOut" }}
-												>
-													<BiSolidMicrophone size={35} />
-												</MotionDiv>
-											)}
-										</AnimatePresence>
-									</div>
-								</div>
-								<div className="h-[20px] w-full overflow-hidden">
-									<AnimatePresence mode="wait" initial={false}>
-										{isSelfMuted ? (
-											<MotionDiv
-												key="muted"
-												className="w-full text-center text-white text-[15px]"
-												initial={{ opacity: 0, y: -4 }}
-												animate={{ opacity: 1, y: 0 }}
-												exit={{ opacity: 0, y: 4 }}
-												transition={{ duration: 0.1, ease: "easeOut" }}
-											>
-												Unmute
-											</MotionDiv>
-										) : (
-											<MotionDiv
-												key="live"
-												className="w-full text-center text-white text-[15px]"
-												initial={{ opacity: 0, y: -4 }}
-												animate={{ opacity: 1, y: 0 }}
-												exit={{ opacity: 0, y: 4 }}
-												transition={{ duration: 0.1, ease: "easeOut" }}
-											>
-												You are live
-											</MotionDiv>
-										)}
-									</AnimatePresence>
-								</div>
-							</Button>
-
-							<Button
-								variant="clean"
-								aria-label="Leave"
-								className="flex flex-col gap-1.5"
-								onClick={handleLeaveClick}
-							>
-								<div className="flex items-center justify-center bg-[#883E41] hover:bg-[#8b383b] p-3 rounded-full">
-									<MdCallEnd size={22} className="text-white" />
-								</div>
-								<span className="text-white text-[11px] !font-normal">
-									Leave
-								</span>
-							</Button>
-						</div>
+						<LiveControls
+							isSelfVideoOff={isSelfVideoOff}
+							isSelfMuted={isSelfMuted}
+							onToggleVideo={liveApi.toggleSelfVideo}
+							onToggleMute={liveApi.toggleSelfMute}
+							onLeave={handleLeaveClick}
+						/>
 						<Button
 							variant="clean"
 							aria-label="Minimize"
@@ -601,40 +207,13 @@ export const LiveOverlay: FC<Props> = ({
 
 			{/* Leave/Stop live confirmation for privileged members */}
 			{isPrivilegedMember && (
-				<Dialog open={confirmLeaveOpen} onOpenChange={setConfirmLeaveOpen}>
-					<DialogContent className="bg-[#1A2026] border-white/10 text-white w-[300px]">
-						<DialogHeader>
-							<DialogTitle>Leave or stop live?</DialogTitle>
-						</DialogHeader>
-						<DialogFooter className="">
-							<div className="w-full flex items-center justify-end gap-2">
-								<Button
-									variant="clean"
-									aria-label="Leave"
-									className=" text-white px-4 py-2 rounded-md"
-									onClick={() => {
-										setConfirmLeaveOpen(false)
-										liveApi.leaveLive(chatId)
-										onClose()
-									}}
-								>
-									Leave
-								</Button>
-								<Button
-									aria-label="Stop live"
-									variant="clean"
-									className=" text-white px-4 py-2 rounded-md hover:text-blue-600"
-									onClick={() => {
-										setConfirmLeaveOpen(false)
-										liveApi.stopLive(chatId)
-									}}
-								>
-									Stop live
-								</Button>
-							</div>
-						</DialogFooter>
-					</DialogContent>
-				</Dialog>
+				<ConfirmLeaveDialog
+					open={confirmLeaveOpen}
+					onOpenChange={setConfirmLeaveOpen}
+					chatId={chatId}
+					liveApi={liveApi}
+					onCloseOverlay={onClose}
+				/>
 			)}
 		</>
 	)
