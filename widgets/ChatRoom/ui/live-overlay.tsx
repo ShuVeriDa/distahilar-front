@@ -13,6 +13,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/shared/ui/Dialog/dialog"
+import dynamic from "next/dynamic"
 import Image from "next/image"
 import type { PointerEvent as ReactPointerEvent } from "react"
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -20,6 +21,14 @@ import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi"
 import { IoVideocam, IoVideocamOff } from "react-icons/io5"
 import { LuMaximize2, LuMic, LuMicOff, LuMinimize2 } from "react-icons/lu"
 import { MdCallEnd } from "react-icons/md"
+
+const MotionDiv = dynamic(() =>
+	import("framer-motion").then(mod => mod.motion.div)
+)
+
+const AnimatePresence = dynamic(() =>
+	import("framer-motion").then(mod => mod.AnimatePresence)
+)
 
 type Props = {
 	chatId: string
@@ -495,7 +504,7 @@ export const LiveOverlay: FC<Props> = ({
 
 							<Button
 								variant="clean"
-								aria-label={isSelfMuted ? "Unmute" : "Mute"}
+								aria-label={isSelfMuted ? "Unmute" : "You are live"}
 								className="flex flex-col gap-1.5 font-normal"
 								onClick={liveApi.toggleSelfMute}
 							>
@@ -507,15 +516,59 @@ export const LiveOverlay: FC<Props> = ({
 											: "live-gradient-animated_green"
 									)}
 								>
-									{isSelfMuted ? (
-										<BiSolidMicrophoneOff size={35} />
-									) : (
-										<BiSolidMicrophone size={35} />
-									)}
+									<div className="h-[35px] w-[35px] flex items-center justify-center overflow-hidden">
+										<AnimatePresence mode="wait" initial={false}>
+											{isSelfMuted ? (
+												<MotionDiv
+													key="muted-icon"
+													initial={{ scale: 0.9 }}
+													animate={{ scale: 1 }}
+													exit={{ scale: 0.9 }}
+													transition={{ duration: 0.12, ease: "easeOut" }}
+												>
+													<BiSolidMicrophoneOff size={35} />
+												</MotionDiv>
+											) : (
+												<MotionDiv
+													key="live-icon"
+													initial={{ scale: 0.9 }}
+													animate={{ scale: 1 }}
+													exit={{ scale: 0.9 }}
+													transition={{ duration: 0.12, ease: "easeOut" }}
+												>
+													<BiSolidMicrophone size={35} />
+												</MotionDiv>
+											)}
+										</AnimatePresence>
+									</div>
 								</div>
-								<span className="text-white text-[15px]">
-									{isSelfMuted ? "Unmute" : "Mute"}
-								</span>
+								<div className="h-[20px] w-full overflow-hidden">
+									<AnimatePresence mode="wait" initial={false}>
+										{isSelfMuted ? (
+											<MotionDiv
+												key="muted"
+												className="w-full text-center text-white text-[15px]"
+												initial={{ opacity: 0, y: -4 }}
+												animate={{ opacity: 1, y: 0 }}
+												exit={{ opacity: 0, y: 4 }}
+												transition={{ duration: 0.1, ease: "easeOut" }}
+											>
+												Unmute
+											</MotionDiv>
+										) : (
+											<MotionDiv
+												key="live"
+												className="w-full text-center text-white text-[15px]"
+												initial={{ opacity: 0, y: -4 }}
+												animate={{ opacity: 1, y: 0 }}
+												exit={{ opacity: 0, y: 4 }}
+												transition={{ duration: 0.1, ease: "easeOut" }}
+											>
+												You are live
+											</MotionDiv>
+										)}
+									</AnimatePresence>
+								</div>
 							</Button>
 
 							<Button
