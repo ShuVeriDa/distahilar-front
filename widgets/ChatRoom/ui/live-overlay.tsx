@@ -31,6 +31,7 @@ type Props = {
 	isSelfMuted: boolean
 	isSelfVideoOff: boolean | undefined
 	localStream: MediaStream | null
+	isScreenSharing?: boolean
 	isMinimized: boolean
 	onClose: () => void
 	closeWindowsLive: () => void
@@ -52,6 +53,7 @@ export const LiveOverlay: FC<Props> = ({
 	isSelfVideoOff,
 	localStream,
 	confirmLeaveOpen,
+	isScreenSharing,
 	isMinimized,
 	setIsMinimized,
 	onClose,
@@ -95,10 +97,13 @@ export const LiveOverlay: FC<Props> = ({
 
 	const statusText = useMemo(() => {
 		if (phase === "connecting") return "Connecting…"
-		if (phase === "live") return isSelfMuted ? "Muted" : "Unmuted"
+		if (phase === "live") {
+			const base = isSelfMuted ? "Muted" : "Unmuted"
+			return isScreenSharing ? `${base} • Sharing screen` : base
+		}
 		if (phase === "ended") return "Ended"
 		return ""
-	}, [phase, isSelfMuted])
+	}, [phase, isSelfMuted, isScreenSharing])
 
 	const handleMinimize = () => {
 		setIsMinimized(true)
@@ -106,6 +111,47 @@ export const LiveOverlay: FC<Props> = ({
 	const handleMaximize = () => {
 		setIsMinimized(false)
 	}
+
+	// Pick first remote stream that has an active, unmuted video track
+	const remoteVideoStream = useMemo(() => {
+		for (const stream of remoteStreams.values()) {
+			const tracks = stream.getVideoTracks ? stream.getVideoTracks() : []
+			if (
+				tracks.some(
+					t => t.readyState === "live" && !t.muted && (t.enabled ?? true)
+				)
+			) {
+				return stream
+			}
+		}
+		return null
+	}, [remoteStreams])
+
+	// Force <video> remount when underlying track state changes to clear black frames
+	const remoteVideoKey = useMemo(() => {
+		if (!remoteVideoStream) return "none"
+		const tracks = remoteVideoStream.getVideoTracks
+			? remoteVideoStream.getVideoTracks()
+			: []
+		return tracks
+			.map(
+				t =>
+					`${t.id}:${t.readyState}:${t.muted ? 1 : 0}:${
+						t.enabled === false ? 0 : 1
+					}`
+			)
+			.join("|")
+	}, [remoteVideoStream])
+
+	const isRemoteVideoStream = isScreenSharing || !!remoteVideoStream
+
+	console.log({
+		isSelfVideoOff,
+		isScreenSharing,
+		remoteVideoStream,
+		isRemoteVideoStream,
+		localStream,
+	})
 
 	if (!visible && !isMinimized) return null
 	return (
@@ -154,9 +200,34 @@ export const LiveOverlay: FC<Props> = ({
 							</Typography>
 						</div>
 
-						{/* Local video preview */}
+						{/* Remote screen/camera preview (for viewers) */}
+						{isLive && remoteVideoStream ? (
+							<div className="w-full mb-2 px-3.5 py-0.5">
+								<div className="w-full aspect-video rounded-md overflow-hidden border border-white/10 bg-black">
+									<video
+										key={remoteVideoKey}
+										ref={node => {
+											if (node && remoteVideoStream) {
+												;(node as HTMLVideoElement).srcObject =
+													remoteVideoStream
+												node.muted = true
+												node.autoplay = true
+												node.playsInline = true
+												try {
+													void (node as HTMLVideoElement).play?.()
+												} catch {}
+											}
+										}}
+										className="w-full h-full object-cover"
+									/>
+								</div>
+							</div>
+						) : null}
+
+						{/* Local video preview (for sharer or when camera is on) */}
 						<LocalPreview
 							isLive={isLive}
+							isScreenSharing={isScreenSharing}
 							isSelfVideoOff={isSelfVideoOff}
 							localStream={localStream}
 						/>
@@ -190,6 +261,8 @@ export const LiveOverlay: FC<Props> = ({
 							onToggleVideo={liveApi.toggleSelfVideo}
 							onToggleMute={liveApi.toggleSelfMute}
 							onLeave={handleLeaveClick}
+							isScreenSharing={isScreenSharing}
+							onToggleScreenShare={liveApi.toggleScreenShare}
 						/>
 						<Button
 							variant="clean"

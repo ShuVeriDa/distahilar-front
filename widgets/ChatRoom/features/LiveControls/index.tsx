@@ -6,7 +6,7 @@ import dynamic from "next/dynamic"
 import { FC } from "react"
 import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi"
 import { IoVideocam, IoVideocamOff } from "react-icons/io5"
-import { MdCallEnd } from "react-icons/md"
+import { MdCallEnd, MdScreenShare, MdStopScreenShare } from "react-icons/md"
 
 const MotionDiv = dynamic(() =>
 	import("framer-motion").then(mod => mod.motion.div)
@@ -21,6 +21,8 @@ type Props = {
 	onToggleVideo: () => void
 	onToggleMute: () => void
 	onLeave: () => void
+	isScreenSharing?: boolean
+	onToggleScreenShare?: () => void
 }
 
 export const LiveControls: FC<Props> = ({
@@ -29,9 +31,11 @@ export const LiveControls: FC<Props> = ({
 	onToggleVideo,
 	onToggleMute,
 	onLeave,
+	isScreenSharing,
+	onToggleScreenShare,
 }) => {
 	return (
-		<div className="w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-around gap-4">
+		<div className="w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4">
 			<Button
 				variant="clean"
 				aria-label={isSelfVideoOff ? "Turn camera on" : "Turn camera off"}
@@ -53,6 +57,29 @@ export const LiveControls: FC<Props> = ({
 					)}
 				</div>
 				<span className="text-white text-[11px]">Video</span>
+			</Button>
+
+			<Button
+				variant="clean"
+				aria-label={isScreenSharing ? "Stop screen share" : "Share screen"}
+				className="flex flex-col gap-1.5 font-normal"
+				onClick={onToggleScreenShare}
+			>
+				<div
+					className={cn(
+						"flex items-center justify-center text-white p-3 rounded-full",
+						isScreenSharing
+							? "bg-[#534216] hover:bg-[#403617]"
+							: "bg-[#154262] hover:bg-[#163449]"
+					)}
+				>
+					{isScreenSharing ? (
+						<MdStopScreenShare size={22} />
+					) : (
+						<MdScreenShare size={22} />
+					)}
+				</div>
+				<span className="text-white text-[11px]">Share</span>
 			</Button>
 
 			<Button

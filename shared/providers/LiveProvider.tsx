@@ -12,6 +12,7 @@ import {
 	createContext,
 	FC,
 	ReactNode,
+	useCallback,
 	useContext,
 	useMemo,
 	useState,
@@ -70,7 +71,7 @@ export const LiveGlobalProvider: FC<{ children: ReactNode }> = ({
 
 	const [state, api, participants] = useLiveRoom({ chat })
 
-	const openOverlay = (chatId: string, meta?: LiveOverlayMeta) => {
+	const openOverlay = useCallback((chatId: string, meta?: LiveOverlayMeta) => {
 		if (meta?.chat) setChat(meta.chat)
 		if (meta?.nameOfChat !== undefined) setNameOfChat(meta.nameOfChat)
 		if (meta?.isPrivilegedMember !== undefined)
@@ -78,7 +79,7 @@ export const LiveGlobalProvider: FC<{ children: ReactNode }> = ({
 		setCurrentChatId(chatId)
 		setVisible(true)
 		setIsMinimized(false)
-	}
+	}, [])
 
 	const setMeta = (meta: LiveOverlayMeta) => {
 		if (meta.chat) setChat(meta.chat)
@@ -87,36 +88,42 @@ export const LiveGlobalProvider: FC<{ children: ReactNode }> = ({
 			setIsPrivilegedMember(!!meta.isPrivilegedMember)
 	}
 
-	const closeOverlay = () => {
+	const closeOverlay = useCallback(() => {
 		setVisible(false)
 		setIsMinimized(false)
 		setConfirmLeaveOpen(false)
-	}
+	}, [])
 
 	const minimize = () => setIsMinimized(true)
 	const maximize = () => setIsMinimized(false)
 
-	const joinLive = (chatId: string, meta?: LiveOverlayMeta) => {
-		openOverlay(chatId, meta)
-		api.joinLive(chatId)
-	}
+	const joinLive = useCallback(
+		(chatId: string, meta?: LiveOverlayMeta) => {
+			openOverlay(chatId, meta)
+			api.joinLive(chatId)
+		},
+		[api, openOverlay]
+	)
 
-	const startLive = (chatId: string, meta?: LiveOverlayMeta) => {
-		openOverlay(chatId, meta)
-		api.startLive(chatId)
-	}
+	const startLive = useCallback(
+		(chatId: string, meta?: LiveOverlayMeta) => {
+			openOverlay(chatId, meta)
+			api.startLive(chatId)
+		},
+		[api, openOverlay]
+	)
 
-	const leaveLive = () => {
+	const leaveLive = useCallback(() => {
 		const id = currentChatId || state.chatId
 		if (id) api.leaveLive(id)
 		closeOverlay()
-	}
+	}, [api, closeOverlay, currentChatId, state.chatId])
 
-	const stopLive = () => {
+	const stopLive = useCallback(() => {
 		const id = currentChatId || state.chatId
 		if (id) api.stopLive(id)
 		// Do not auto-close; overlay itself will close on state end
-	}
+	}, [api, currentChatId, state.chatId])
 
 	const value: LiveContextValue = useMemo(
 		() => ({
@@ -150,6 +157,12 @@ export const LiveGlobalProvider: FC<{ children: ReactNode }> = ({
 			state,
 			api,
 			participants,
+			joinLive,
+			startLive,
+			leaveLive,
+			stopLive,
+			openOverlay,
+			closeOverlay,
 		]
 	)
 
@@ -168,6 +181,7 @@ export const LiveGlobalProvider: FC<{ children: ReactNode }> = ({
 				participants={participants}
 				remoteStreams={state.remoteStreams}
 				isSelfVideoOff={state.isSelfVideoOff}
+				isScreenSharing={state.isScreenSharing}
 				confirmLeaveOpen={confirmLeaveOpen}
 				isPrivilegedMember={isPrivilegedMember}
 				isMinimized={isMinimized}

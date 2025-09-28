@@ -157,3 +157,4 @@ export function useMiniDock({ isMinimized, margins }: UseMiniDockParams) {
 		handleMiniPointerDown,
 	}
 }
+

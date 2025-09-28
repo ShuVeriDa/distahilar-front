@@ -40,6 +40,8 @@ export interface UseLiveRoomState {
 	isSelfVideoOff?: boolean
 	// Live audio track state per peer for real-time role/mic updates
 	peerAudio: Map<PeerId, { hasAudioTrack: boolean; isTrackMuted: boolean }>
+	// whether we are currently sharing the screen
+	isScreenSharing?: boolean
 }
 
 export interface UseLiveRoomApi {
@@ -53,6 +55,7 @@ export interface UseLiveRoomApi {
 	toggleMuteUser: (chatId: string, userId: string, isMuted: boolean) => void
 	toggleSelfMute: () => void
 	toggleSelfVideo: () => Promise<void>
+	toggleScreenShare: () => Promise<void>
 }
 
 export type IUseLiveRoom = {
@@ -78,12 +81,21 @@ export const useLiveRoom = ({
 		isSelfMuted: true,
 		isSelfVideoOff: true,
 		peerAudio: new Map(),
+		isScreenSharing: false,
 	})
 
 	const pcMapRef = useRef<PeerConnections>(new Map())
 	const pendingIceRef = useRef<Map<PeerId, RTCIceCandidateInit[]>>(new Map())
+	// Cleanup handlers for remote video tracks per peer to avoid leaks
+	const videoTrackCleanupRef = useRef<Map<PeerId, () => void>>(new Map())
 	// Ensure we notify server about initial self mute state only once per session/chat
 	const selfMuteSyncedRef = useRef<string | null>(null)
+	// keep references to switch between camera and screen tracks seamlessly
+	const cameraVideoTrackRef = useRef<MediaStreamTrack | null>(null)
+	const screenVideoTrackRef = useRef<MediaStreamTrack | null>(null)
+	// When switching between camera and screen tracks, some browsers require ICE restart
+	// to propagate new SSRC/codec params. We toggle this flag to request restart on next renegotiation.
+	const needsIceRestartRef = useRef<boolean>(false)
 
 	const cleanupPeer = useCallback((peerId: string) => {
 		const pc = pcMapRef.current.get(peerId)
@@ -94,6 +106,11 @@ export const useLiveRoom = ({
 			pc.close()
 			pcMapRef.current.delete(peerId)
 		}
+		// cleanup remote video track listeners if any
+		try {
+			videoTrackCleanupRef.current.get(peerId)?.()
+		} catch {}
+		videoTrackCleanupRef.current.delete(peerId)
 		setState(prev => {
 			const nextStreams = new Map(prev.remoteStreams)
 			nextStreams.delete(peerId)
@@ -158,6 +175,34 @@ export const useLiveRoom = ({
 					nextStreams.set(peerId, remote)
 					return { ...prev, remoteStreams: nextStreams }
 				})
+
+				// Track remote video state transitions to force re-render on end/mute
+				if (ev.track && ev.track.kind === "video") {
+					// cleanup previous listeners for this peer
+					try {
+						videoTrackCleanupRef.current.get(peerId)?.()
+					} catch {}
+					videoTrackCleanupRef.current.delete(peerId)
+
+					const handleChange = () =>
+						setState(prev => ({
+							...prev,
+							// Clone map to trigger re-computation where track predicates are used
+							remoteStreams: new Map(prev.remoteStreams),
+						}))
+
+					ev.track.addEventListener("mute", handleChange)
+					ev.track.addEventListener("unmute", handleChange)
+					ev.track.addEventListener("ended", handleChange)
+
+					videoTrackCleanupRef.current.set(peerId, () => {
+						try {
+							ev.track.removeEventListener("mute", handleChange)
+							ev.track.removeEventListener("unmute", handleChange)
+							ev.track.removeEventListener("ended", handleChange)
+						} catch {}
+					})
+				}
 
 				// Track live audio state for real-time role/mic updates
 				if (ev.track && ev.track.kind === "audio") {
@@ -269,9 +314,12 @@ export const useLiveRoom = ({
 			if (!socket) return
 			const dto: StopLiveDto = { chatId }
 			socket.emit("stopLive", dto, (room?: LiveRoomState) => {
-				if (room) {
-					setState(prev => ({ ...prev, room }))
-				}
+				setState(prev => ({
+					...prev,
+					room: room ?? prev.room,
+					isSelfVideoOff: true,
+					isScreenSharing: false,
+				}))
 			})
 		},
 		[socket]
@@ -311,6 +359,8 @@ export const useLiveRoom = ({
 					chatId: null,
 					localStream: null,
 					remoteStreams: new Map(),
+					isSelfVideoOff: true,
+					isScreenSharing: false,
 				}))
 			})
 		},
@@ -373,11 +423,11 @@ export const useLiveRoom = ({
 	}, [socket, user?.id])
 
 	const ensureLocalVideoTrack = useCallback(async () => {
-		let stream = state.localStream
-		if (!stream) stream = await getLocalStream()
-		if (!stream) return null
-		const hasVideo = stream.getVideoTracks().length > 0
-		if (hasVideo) return stream.getVideoTracks()[0]
+		let streamLocal = state.localStream
+		if (!streamLocal) streamLocal = await getLocalStream()
+		if (!streamLocal) return null
+		const hasVideo = streamLocal.getVideoTracks().length > 0
+		if (hasVideo) return streamLocal.getVideoTracks()[0]
 		try {
 			const cam = await navigator.mediaDevices.getUserMedia({
 				video: true,
@@ -385,14 +435,14 @@ export const useLiveRoom = ({
 			})
 			const [videoTrack] = cam.getVideoTracks()
 			if (videoTrack) {
-				stream.addTrack(videoTrack)
+				streamLocal.addTrack(videoTrack)
 				// replace/add on all peer connections
 				pcMapRef.current.forEach(pc => {
 					const sender = pc.getSenders().find(s => s.track?.kind === "video")
 					if (sender) sender.replaceTrack(videoTrack)
-					else pc.addTrack(videoTrack, stream as MediaStream)
+					else pc.addTrack(videoTrack, streamLocal as MediaStream)
 				})
-				setState(prev => ({ ...prev, localStream: stream! }))
+				setState(prev => ({ ...prev, localStream: streamLocal! }))
 				return videoTrack
 			}
 		} catch {}
@@ -404,9 +454,17 @@ export const useLiveRoom = ({
 		for (const [peerUserId, pcExisting] of pcMapRef.current.entries()) {
 			const pc = pcExisting || ensurePcForPeer(peerUserId)
 			await attachLocalTracks(pc)
+			const needIceRestart = !!needsIceRestartRef.current
+			try {
+				const pcWithRestart = pc as unknown as { restartIce?: () => void }
+				if (needIceRestart && typeof pcWithRestart.restartIce === "function") {
+					pcWithRestart.restartIce()
+				}
+			} catch {}
 			const offer = await pc.createOffer({
 				offerToReceiveAudio: true,
 				offerToReceiveVideo: true,
+				iceRestart: needIceRestart,
 			})
 			await pc.setLocalDescription(offer)
 			const dto: LiveWebRtcOfferDto = {
@@ -425,6 +483,7 @@ export const useLiveRoom = ({
 			}
 			pendingIceRef.current.delete(peerUserId)
 		}
+		needsIceRestartRef.current = false
 	}, [attachLocalTracks, ensurePcForPeer, socket, state.chatId])
 
 	const toggleSelfVideo = useCallback(async () => {
@@ -442,6 +501,138 @@ export const useLiveRoom = ({
 		videoTrack.enabled = !videoTrack.enabled
 		setState(prev => ({ ...prev, isSelfVideoOff: !videoTrack.enabled }))
 	}, [ensureLocalVideoTrack, renegotiateAllPeers, state.localStream])
+
+	const replaceVideoTrackForAllPeers = useCallback(
+		(track: MediaStreamTrack | null, streamForTrack?: MediaStream | null) => {
+			pcMapRef.current.forEach(pc => {
+				const sender = pc.getSenders().find(s => s.track?.kind === "video")
+				if (sender) {
+					try {
+						void sender.replaceTrack(track)
+					} catch {}
+					// Ensure transceiver direction allows sending when we have a track
+					try {
+						const transceiver = pc
+							.getTransceivers()
+							.find(t => t.sender === sender)
+						if (transceiver) {
+							transceiver.direction = track ? "sendrecv" : "recvonly"
+						}
+					} catch {}
+				} else if (track && streamForTrack) {
+					pc.addTrack(track, streamForTrack)
+				}
+			})
+		},
+		[]
+	)
+
+	const stopScreenShareInternal = useCallback(async () => {
+		const screenTrack = screenVideoTrackRef.current
+		if (screenTrack) {
+			try {
+				screenTrack.stop()
+			} catch {}
+			screenVideoTrackRef.current = null
+		}
+		const stream = state.localStream
+		const cameraTrack = cameraVideoTrackRef.current
+		if (!stream) {
+			setState(prev => ({ ...prev, isScreenSharing: false }))
+			return
+		}
+		// Remove any current video tracks from local stream
+		stream.getVideoTracks().forEach(t => stream!.removeTrack(t))
+		if (cameraTrack) {
+			stream.addTrack(cameraTrack)
+			replaceVideoTrackForAllPeers(cameraTrack, stream)
+			setState(prev => ({
+				...prev,
+				localStream: stream!,
+				isSelfVideoOff: false,
+				isScreenSharing: false,
+			}))
+		} else {
+			// No camera to restore: remove video from peers
+			replaceVideoTrackForAllPeers(null)
+			setState(prev => ({
+				...prev,
+				localStream: stream!,
+				isSelfVideoOff: true,
+				isScreenSharing: false,
+			}))
+		}
+		// Force ICE restart to reliably resume video for remote peers
+		needsIceRestartRef.current = true
+		await renegotiateAllPeers()
+	}, [renegotiateAllPeers, replaceVideoTrackForAllPeers, state.localStream])
+
+	const toggleScreenShare = useCallback(async () => {
+		if (!state.isScreenSharing) {
+			try {
+				// Capture screen
+				// Typesafe access to getDisplayMedia if available
+				const mediaDevices = navigator.mediaDevices as MediaDevices & {
+					getDisplayMedia?: (
+						constraints?: MediaStreamConstraints
+					) => Promise<MediaStream>
+				}
+				const displayStream = await mediaDevices.getDisplayMedia?.({
+					video: {
+						frameRate: { ideal: 30, max: 30 },
+						width: { ideal: 1280 },
+						height: { ideal: 720 },
+					},
+					audio: false,
+				})
+				if (!displayStream) return
+				const screenTrack: MediaStreamTrack | undefined =
+					displayStream.getVideoTracks?.()?.[0]
+				if (!screenTrack) return
+
+				const baseStream = state.localStream || (await getLocalStream())
+				if (!baseStream) return
+				// Save current camera track if present
+				const currentCam = baseStream.getVideoTracks()[0] || null
+				if (currentCam) cameraVideoTrackRef.current = currentCam
+
+				// Replace video track in local stream
+				baseStream.getVideoTracks().forEach(t => baseStream!.removeTrack(t))
+				baseStream.addTrack(screenTrack)
+
+				// Replace on all peers
+				replaceVideoTrackForAllPeers(screenTrack, baseStream)
+
+				// Auto-stop handler from browser UI (when user stops sharing)
+				screenTrack.onended = () => {
+					stopScreenShareInternal()
+				}
+
+				screenVideoTrackRef.current = screenTrack
+				setState(prev => ({
+					...prev,
+					localStream: baseStream!,
+					isSelfVideoOff: false,
+					isScreenSharing: true,
+				}))
+				// Force ICE restart so remote peers update their pipeline
+				needsIceRestartRef.current = true
+				await renegotiateAllPeers()
+			} catch {
+				// ignore
+			}
+			return
+		}
+		// If already sharing – stop and restore
+		await stopScreenShareInternal()
+	}, [
+		getLocalStream,
+		renegotiateAllPeers,
+		state.isScreenSharing,
+		state.localStream,
+		stopScreenShareInternal,
+		replaceVideoTrackForAllPeers,
+	])
 
 	// Socket listeners
 	useEffect(() => {
@@ -716,6 +907,7 @@ export const useLiveRoom = ({
 			toggleMuteUser,
 			toggleSelfMute,
 			toggleSelfVideo,
+			toggleScreenShare,
 		}),
 		[
 			approveSpeaker,
@@ -728,6 +920,7 @@ export const useLiveRoom = ({
 			toggleMuteUser,
 			toggleSelfMute,
 			toggleSelfVideo,
+			toggleScreenShare,
 		]
 	)
 

@@ -19,6 +19,8 @@ export const ParticipantsList: FC<Props> = ({
 }) => {
 	const { user } = useUser()
 
+	console.log("ParticipantsList")
+
 	return (
 		<div className="flex flex-col gap-1">
 			{participants.map(p => {

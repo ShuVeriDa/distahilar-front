@@ -3,18 +3,21 @@
 import { Typography } from "@/shared"
 import { FC } from "react"
 
-type Props = {
+interface ILocalPreview {
 	isLive: boolean | undefined
 	isSelfVideoOff: boolean | undefined
 	localStream: MediaStream | null
+	isScreenSharing: boolean | undefined
 }
 
-export const LocalPreview: FC<Props> = ({
+export const LocalPreview: FC<ILocalPreview> = ({
 	isLive,
 	isSelfVideoOff,
 	localStream,
+	isScreenSharing,
 }) => {
 	if (
+		!isScreenSharing ||
 		!isLive ||
 		!localStream ||
 		isSelfVideoOff ||
