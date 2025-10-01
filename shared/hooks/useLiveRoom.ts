@@ -96,6 +96,37 @@ export const useLiveRoom = ({
 	// When switching between camera and screen tracks, some browsers require ICE restart
 	// to propagate new SSRC/codec params. We toggle this flag to request restart on next renegotiation.
 	const needsIceRestartRef = useRef<boolean>(false)
+	// Track last time we received a live state over socket to avoid unnecessary polling
+	const lastLiveUpdateAtRef = useRef<number>(0)
+
+	// Avoid unnecessary re-renders on polling by comparing snapshots
+	const arraysEqualAsSets = useCallback(
+		(a: string[] = [], b: string[] = []) => {
+			if (a === b) return true
+			if (a.length !== b.length) return false
+			const setA = new Set(a)
+			for (const v of b) if (!setA.has(v)) return false
+			return true
+		},
+		[]
+	)
+
+	const isLiveRoomEqual = useCallback(
+		(a?: LiveRoomState | null, b?: LiveRoomState | null) => {
+			if (a === b) return true
+			if (!a || !b) return false
+			return (
+				a.chatId === b.chatId &&
+				a.isLive === b.isLive &&
+				a.hostId === b.hostId &&
+				a.startedAt === b.startedAt &&
+				arraysEqualAsSets(a.speakers, b.speakers) &&
+				arraysEqualAsSets(a.listeners, b.listeners) &&
+				arraysEqualAsSets(a.muted, b.muted)
+			)
+		},
+		[arraysEqualAsSets]
+	)
 
 	const cleanupPeer = useCallback((peerId: string) => {
 		const pc = pcMapRef.current.get(peerId)
@@ -380,6 +411,20 @@ export const useLiveRoom = ({
 		(chatId: string, userId: string) => {
 			if (!socket) return
 			const dto: ApproveSpeakerDto = { chatId, userId }
+			// Optimistic UI update
+			setState(prev => {
+				const room = prev.room
+				if (!room || room.chatId !== chatId) return prev
+				const nextRoom: LiveRoomState = {
+					...room,
+					listeners: room.listeners.filter(id => id !== userId),
+					speakers: room.speakers.includes(userId)
+						? room.speakers
+						: [...room.speakers, userId],
+					muted: room.muted.filter(id => id !== userId),
+				}
+				return { ...prev, room: nextRoom }
+			})
 			socket.emit("approveSpeaker", dto)
 		},
 		[socket]
@@ -389,6 +434,21 @@ export const useLiveRoom = ({
 		(chatId: string, userId: string) => {
 			if (!socket) return
 			const dto: RevokeSpeakerDto = { chatId, userId }
+			// Optimistic UI update
+			setState(prev => {
+				const room = prev.room
+				if (!room || room.chatId !== chatId) return prev
+				const nextListeners = room.listeners.includes(userId)
+					? room.listeners
+					: [...room.listeners, userId]
+				const nextRoom: LiveRoomState = {
+					...room,
+					speakers: room.speakers.filter(id => id !== userId),
+					listeners: nextListeners,
+					muted: room.muted.filter(id => id !== userId),
+				}
+				return { ...prev, room: nextRoom }
+			})
 			socket.emit("revokeSpeaker", dto)
 		},
 		[socket]
@@ -398,6 +458,17 @@ export const useLiveRoom = ({
 		(chatId: string, userId: string, isMuted: boolean) => {
 			if (!socket) return
 			const dto: ToggleMuteDto = { chatId, userId, isMuted }
+			// Optimistic UI update
+			setState(prev => {
+				const room = prev.room
+				if (!room || room.chatId !== chatId) return prev
+				const nextMuted = isMuted
+					? room.muted.includes(userId)
+						? room.muted
+						: [...room.muted, userId]
+					: room.muted.filter(id => id !== userId)
+				return { ...prev, room: { ...room, muted: nextMuted } }
+			})
 			socket.emit("toggleMute", dto)
 		},
 		[socket]
@@ -486,22 +557,7 @@ export const useLiveRoom = ({
 		needsIceRestartRef.current = false
 	}, [attachLocalTracks, ensurePcForPeer, socket, state.chatId])
 
-	const toggleSelfVideo = useCallback(async () => {
-		const videoTrack = (state.localStream?.getVideoTracks() || [])[0]
-		if (!videoTrack) {
-			const newTrack = await ensureLocalVideoTrack()
-			if (newTrack) {
-				// enable it if it was off
-				newTrack.enabled = true
-				setState(prev => ({ ...prev, isSelfVideoOff: false }))
-				await renegotiateAllPeers()
-			}
-			return
-		}
-		videoTrack.enabled = !videoTrack.enabled
-		setState(prev => ({ ...prev, isSelfVideoOff: !videoTrack.enabled }))
-	}, [ensureLocalVideoTrack, renegotiateAllPeers, state.localStream])
-
+	// Helper: replace video track on all peers and adjust transceiver direction
 	const replaceVideoTrackForAllPeers = useCallback(
 		(track: MediaStreamTrack | null, streamForTrack?: MediaStream | null) => {
 			pcMapRef.current.forEach(pc => {
@@ -526,6 +582,48 @@ export const useLiveRoom = ({
 		},
 		[]
 	)
+
+	const toggleSelfVideo = useCallback(async () => {
+		// Ensure we have a base local stream
+		let streamLocal = state.localStream
+		if (!streamLocal) streamLocal = await getLocalStream()
+		const currentTrack = streamLocal?.getVideoTracks()?.[0] || null
+		// If there is no current video track, turn camera ON
+		if (!currentTrack) {
+			const newTrack = await ensureLocalVideoTrack()
+			if (newTrack) {
+				newTrack.enabled = true
+				setState(prev => ({ ...prev, isSelfVideoOff: false }))
+				// Make sure peers fully apply the new video by renegotiation
+				needsIceRestartRef.current = true
+				await renegotiateAllPeers()
+			}
+			return
+		}
+		// If we have a track (camera is ON) – turn camera OFF by removing/stopping it
+		try {
+			currentTrack.stop()
+		} catch {}
+		try {
+			streamLocal!.removeTrack(currentTrack)
+		} catch {}
+		// Replace on all peers with null and update transceivers to recvonly
+		replaceVideoTrackForAllPeers(null)
+		setState(prev => ({
+			...prev,
+			localStream: streamLocal!,
+			isSelfVideoOff: true,
+		}))
+		// Force ICE restart to ensure remote peers clear black frames
+		needsIceRestartRef.current = true
+		await renegotiateAllPeers()
+	}, [
+		ensureLocalVideoTrack,
+		getLocalStream,
+		renegotiateAllPeers,
+		replaceVideoTrackForAllPeers,
+		state.localStream,
+	])
 
 	const stopScreenShareInternal = useCallback(async () => {
 		const screenTrack = screenVideoTrackRef.current
@@ -641,6 +739,7 @@ export const useLiveRoom = ({
 		const handleLiveState = (room: LiveRoomState) => {
 			const targetChatId = state.chatId || chat?.id
 			if (!targetChatId || room.chatId !== targetChatId) return
+			lastLiveUpdateAtRef.current = Date.now()
 			setState(prev => ({
 				...prev,
 				room,
@@ -705,12 +804,15 @@ export const useLiveRoom = ({
 		}
 
 		socket.on("liveRoomState", handleLiveState)
+		// Support backend event name 'liveState'
+		socket.on("liveState", handleLiveState)
 		socket.on("liveWebrtcOffer", handleOffer)
 		socket.on("liveWebrtcAnswer", handleAnswer)
 		socket.on("liveWebrtcIceCandidate", handleIce)
 
 		return () => {
 			socket.off("liveRoomState", handleLiveState)
+			socket.off("liveState", handleLiveState)
 			socket.off("liveWebrtcOffer", handleOffer)
 			socket.off("liveWebrtcAnswer", handleAnswer)
 			socket.off("liveWebrtcIceCandidate", handleIce)
@@ -798,27 +900,25 @@ export const useLiveRoom = ({
 		}
 	}, [state.room, cleanupPeer])
 
-	// Poll room state for this chat even if we are not joined, to keep participants fresh
+	// One-time snapshot to seed state, then rely on socket events
 	useEffect(() => {
 		if (!socket) return
 		const effectiveChatId = state.chatId || chat?.id
 		if (!effectiveChatId) return
-		const fetchSnapshot = () => {
-			socket.emit(
-				"getLiveRoomState",
-				{ chatId: effectiveChatId } as GetLiveRoomStateDto,
-				(resp?: LiveRoomState) => {
-					if (resp && resp.chatId === effectiveChatId) {
-						setState(prev => ({ ...prev, room: resp }))
-					}
+		socket.emit(
+			"getLiveRoomState",
+			{ chatId: effectiveChatId } as GetLiveRoomStateDto,
+			(resp?: LiveRoomState) => {
+				if (resp && resp.chatId === effectiveChatId) {
+					setState(prev =>
+						isLiveRoomEqual(prev.room, resp) ? prev : { ...prev, room: resp }
+					)
 				}
-			)
-		}
-		// initial fetch
-		fetchSnapshot()
-		const id = setInterval(fetchSnapshot, 4000)
-		return () => clearInterval(id)
-	}, [socket, state.chatId, chat?.id])
+			}
+		)
+		// Join chat room to receive broadcast updates even when not actively in live
+		socket.emit("joinChat", { chatId: effectiveChatId })
+	}, [socket, state.chatId, chat?.id, isLiveRoomEqual])
 
 	const memberMap = useMemo(() => {
 		const map = new Map<string, { name?: string; imageUrl?: string }>()
@@ -840,6 +940,32 @@ export const useLiveRoom = ({
 				role: "host" | "speaker" | "listener"
 				micOn: boolean
 			}>
+		// Prefer server-provided participants if available
+		if (state.room.participants && state.room.participants.length > 0) {
+			return state.room.participants.map(p => {
+				const peerAudio = state.peerAudio.get(p.userId)
+				const isSelf = p.userId === (user?.id || "")
+				const localAudioOn = isSelf
+					? !!state.localStream?.getAudioTracks().some(t => t.enabled) &&
+					  !state.isSelfMuted
+					: false
+				const micOn = isSelf
+					? localAudioOn
+					: p.isMuted
+					? false
+					: peerAudio !== undefined
+					? peerAudio.hasAudioTrack && !peerAudio.isTrackMuted
+					: false
+				return {
+					userId: p.userId,
+					name: p.name,
+					imageUrl: p.imageUrl,
+					role: p.role.toLowerCase() as "host" | "speaker" | "listener",
+					micOn,
+				}
+			})
+		}
+		// Fallback to local derivation
 		const ids = Array.from(
 			new Set([
 				...(state.room.hostId ? [state.room.hostId] : []),
@@ -850,40 +976,22 @@ export const useLiveRoom = ({
 		return ids.map(userId => {
 			const isHost = state.room?.hostId === userId
 			const isSpeaker = state.room?.speakers.includes(userId)
-			const isListener = !isHost && !isSpeaker
 			const muted = state.room?.muted.includes(userId)
-			// Real-time audio activity
 			const peerAudio = state.peerAudio.get(userId)
 			const isSelf = userId === (user?.id || "")
 			const localAudioOn = isSelf
 				? !!state.localStream?.getAudioTracks().some(t => t.enabled) &&
 				  !state.isSelfMuted
 				: false
-			const dynamicSpeaker = isHost
-				? false
-				: isSelf
-				? localAudioOn
-				: peerAudio !== undefined
-				? peerAudio.hasAudioTrack && !peerAudio.isTrackMuted
-				: undefined
-			const role = isHost
-				? "host"
-				: dynamicSpeaker !== undefined
-				? dynamicSpeaker
-					? "speaker"
-					: "listener"
-				: isSpeaker
-				? "speaker"
-				: "listener"
+			const role = isHost ? "host" : isSpeaker ? "speaker" : "listener"
 			const { name, imageUrl } = memberMap.get(userId) || {}
-			// Mic indicator in real time
 			const micOn = isSelf
 				? localAudioOn
+				: muted
+				? false
 				: peerAudio !== undefined
 				? peerAudio.hasAudioTrack && !peerAudio.isTrackMuted
-				: isListener
-				? false
-				: !muted
+				: false
 			return { userId, name, imageUrl, role, micOn }
 		})
 	}, [

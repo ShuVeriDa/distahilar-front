@@ -1,16 +1,16 @@
 "use client"
 
-import { Button, Typography } from "@/shared"
+import { Typography } from "@/shared"
 import type { LivePhase } from "@/shared/hooks/useLiveRoom"
 import { UseLiveRoomApi } from "@/shared/hooks/useLiveRoom"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { LiveRoomState } from "@/shared/lib/services/live/live.types"
 import { cn } from "@/shared/lib/utils/cn"
 import { FC, useEffect, useMemo, useRef } from "react"
-import { LuMinimize2 } from "react-icons/lu"
 import { LiveMiniPlayer } from "../entities/LiveMiniPlayer"
 import { LocalPreview } from "../entities/LocalPreview"
 import { ParticipantsList } from "../entities/ParticipantsList"
+import { RemovePreview } from "../entities/RemovePreview"
 import { ConfirmLeaveDialog } from "../features/ConfirmLeaveDialog"
 import { LiveControls } from "../features/LiveControls"
 
@@ -143,14 +143,13 @@ export const LiveOverlay: FC<Props> = ({
 			.join("|")
 	}, [remoteVideoStream])
 
-	const isRemoteVideoStream = isScreenSharing || !!remoteVideoStream
-
 	console.log({
+		participants,
+		remoteStreams,
+		localStream,
 		isSelfVideoOff,
 		isScreenSharing,
 		remoteVideoStream,
-		isRemoteVideoStream,
-		localStream,
 	})
 
 	if (!visible && !isMinimized) return null
@@ -201,28 +200,11 @@ export const LiveOverlay: FC<Props> = ({
 						</div>
 
 						{/* Remote screen/camera preview (for viewers) */}
-						{isLive && remoteVideoStream ? (
-							<div className="w-full mb-2 px-3.5 py-0.5">
-								<div className="w-full aspect-video rounded-md overflow-hidden border border-white/10 bg-black">
-									<video
-										key={remoteVideoKey}
-										ref={node => {
-											if (node && remoteVideoStream) {
-												;(node as HTMLVideoElement).srcObject =
-													remoteVideoStream
-												node.muted = true
-												node.autoplay = true
-												node.playsInline = true
-												try {
-													void (node as HTMLVideoElement).play?.()
-												} catch {}
-											}
-										}}
-										className="w-full h-full object-cover"
-									/>
-								</div>
-							</div>
-						) : null}
+						<RemovePreview
+							isLive={isLive}
+							remoteVideoStream={remoteVideoStream}
+							remoteVideoKey={remoteVideoKey}
+						/>
 
 						{/* Local video preview (for sharer or when camera is on) */}
 						<LocalPreview
@@ -263,17 +245,8 @@ export const LiveOverlay: FC<Props> = ({
 							onLeave={handleLeaveClick}
 							isScreenSharing={isScreenSharing}
 							onToggleScreenShare={liveApi.toggleScreenShare}
+							handleMinimize={handleMinimize}
 						/>
-						<Button
-							variant="clean"
-							aria-label="Minimize"
-							className="flex flex-col gap-1.5 absolute top-2.5 right-2.5"
-							onClick={handleMinimize}
-						>
-							<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-1 rounded-full">
-								<LuMinimize2 size={18} />
-							</div>
-						</Button>
 					</div>
 				</div>
 			) : null}

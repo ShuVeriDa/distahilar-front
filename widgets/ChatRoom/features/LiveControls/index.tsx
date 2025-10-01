@@ -6,6 +6,7 @@ import dynamic from "next/dynamic"
 import { FC } from "react"
 import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi"
 import { IoVideocam, IoVideocamOff } from "react-icons/io5"
+import { LuMinimize2 } from "react-icons/lu"
 import { MdCallEnd, MdScreenShare, MdStopScreenShare } from "react-icons/md"
 
 const MotionDiv = dynamic(() =>
@@ -15,24 +16,26 @@ const AnimatePresence = dynamic(() =>
 	import("framer-motion").then(mod => mod.AnimatePresence)
 )
 
-type Props = {
+interface ILiveControls {
 	isSelfVideoOff: boolean | undefined
 	isSelfMuted: boolean
+	isScreenSharing?: boolean
 	onToggleVideo: () => void
 	onToggleMute: () => void
 	onLeave: () => void
-	isScreenSharing?: boolean
 	onToggleScreenShare?: () => void
+	handleMinimize: () => void
 }
 
-export const LiveControls: FC<Props> = ({
+export const LiveControls: FC<ILiveControls> = ({
 	isSelfVideoOff,
 	isSelfMuted,
+	isScreenSharing,
 	onToggleVideo,
 	onToggleMute,
 	onLeave,
-	isScreenSharing,
 	onToggleScreenShare,
+	handleMinimize,
 }) => {
 	return (
 		<div className="w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4">
@@ -149,6 +152,18 @@ export const LiveControls: FC<Props> = ({
 						)}
 					</AnimatePresence>
 				</div>
+			</Button>
+
+			<Button
+				variant="clean"
+				aria-label="Minimize"
+				className="flex flex-col gap-1.5"
+				onClick={handleMinimize}
+			>
+				<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-3 rounded-full">
+					<LuMinimize2 size={22} />
+				</div>
+				<span className="text-white text-[11px] !font-normal">Minimize</span>
 			</Button>
 
 			<Button

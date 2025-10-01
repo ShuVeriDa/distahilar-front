@@ -27,9 +27,9 @@ export const LiveBannerJoined: FC<ILiveBannerJoinedProps> = ({
 				<div className="flex gap-2 items-center">
 					<div>
 						{isSelfMuted ? (
-							<PiMicrophoneSlashFill size={24} />
+							<PiMicrophoneSlashFill color="white" size={24} />
 						) : (
-							<PiMicrophoneFill size={24} />
+							<PiMicrophoneFill color="white" size={24} />
 						)}
 					</div>
 					<div className="flex items-center -space-x-5 relative">
@@ -54,10 +54,7 @@ export const LiveBannerJoined: FC<ILiveBannerJoinedProps> = ({
 				</div>
 
 				<div className="flex flex-col gap-0.5">
-					<Typography
-						tag="span"
-						className="text-[13px] font-medium dark:text-white text-[#000000]"
-					>
+					<Typography tag="span" className="text-[13px] font-medium text-white">
 						{nameOfChat}
 					</Typography>
 				</div>

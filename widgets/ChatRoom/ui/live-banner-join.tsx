@@ -16,10 +16,7 @@ export const LiveBannerJoin: FC<ILiveBannerJoinProps> = ({
 	return (
 		<div className="w-full py-2 px-4 flex items-center justify-between bg-[#FFFFFF] dark:bg-[#17212B] border-b border-b-[#E7E7E7] dark:border-b-[#101921] dark:text-white">
 			<div className="flex flex-col gap-0.5">
-				<Typography
-					tag="span"
-					className="text-[13px] font-medium dark:text-white text-[#000000]"
-				>
+				<Typography tag="span" className="text-[13px] font-medium text-white ">
 					Live Stream
 				</Typography>
 				<Typography tag="span" className="text-[13px] text-[#999999]">

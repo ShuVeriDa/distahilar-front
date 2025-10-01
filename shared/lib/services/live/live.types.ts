@@ -10,15 +10,23 @@ export interface LiveRoomState {
 	hostId: string | null
 	speakers: string[]
 	listeners: string[]
-	raisedHands: string[]
 	muted: string[]
 	startedAt?: number
+	participants?: LiveParticipant[]
 }
 
 export type LiveUserId = string
 
 export interface LivePeerInfo {
 	userId: string
+	role: LiveRoleEnum
+	isMuted: boolean
+}
+
+export interface LiveParticipant {
+	userId: string
+	name?: string
+	imageUrl?: string
 	role: LiveRoleEnum
 	isMuted: boolean
 }
@@ -95,7 +103,6 @@ export type LiveAudience = {
 	hostId: string | null
 	speakers: string[]
 	listeners: string[]
-	raisedHands: string[]
 	muted: string[]
 }
 

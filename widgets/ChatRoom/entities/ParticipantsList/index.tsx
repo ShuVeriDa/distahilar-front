@@ -19,7 +19,7 @@ export const ParticipantsList: FC<Props> = ({
 }) => {
 	const { user } = useUser()
 
-	console.log("ParticipantsList")
+	console.log("ParticipantsList", { participants })
 
 	return (
 		<div className="flex flex-col gap-1">

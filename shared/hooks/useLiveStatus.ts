@@ -32,13 +32,14 @@ export const useLiveStatus = (chatId?: string) => {
 			if (payload.chatId === chatId) setRoom(payload)
 		}
 
+		// Fetch once, then rely on server-pushed updates
 		fetchSnapshot()
+		socket.emit("joinChat", { chatId })
+		socket.on("liveState", handleLiveState)
 		socket.on("liveRoomState", handleLiveState)
-
-		const id = setInterval(fetchSnapshot, 5000)
 		return () => {
+			socket.off("liveState", handleLiveState)
 			socket.off("liveRoomState", handleLiveState)
-			clearInterval(id)
 		}
 	}, [socket, chatId])
 
