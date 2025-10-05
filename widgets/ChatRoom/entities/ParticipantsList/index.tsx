@@ -1,34 +1,82 @@
 "use client"
 
-import { Typography, useUser } from "@/shared"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
+import { cn } from "@/shared/lib/utils/cn"
 import Image from "next/image"
 import { FC } from "react"
-import { LuMic, LuMicOff } from "react-icons/lu"
+import { PiScreencastFill } from "react-icons/pi"
+import { Microphone } from "./shared/ui/Microphone"
+import { Title } from "./shared/ui/Title"
 
-type Props = {
+interface IParticipantsListProps {
 	participants: LiveParticipantType[]
 	remoteStreams: Map<string, MediaStream>
 	isSelfMuted: boolean
+	className?: string
+	isScreenSharing: boolean | undefined
+	userId: string | undefined
+	// optional: allow selecting which stream to preview
+	onSelect?: (stream: MediaStream | null) => void
+	// provide local screen stream (only when actually sharing) so self can be selected
+	localStream?: MediaStream | null
 }
 
-export const ParticipantsList: FC<Props> = ({
+export const ParticipantsList: FC<IParticipantsListProps> = ({
 	participants,
 	remoteStreams,
 	isSelfMuted,
+	className,
+	isScreenSharing,
+	userId,
+	onSelect,
+	localStream,
 }) => {
-	const { user } = useUser()
+	console.log({ remoteStreams })
+	const hasLiveVideo = (s?: MediaStream) =>
+		!!s
+			?.getVideoTracks()
+			?.some(t => t.readyState === "live" && !t.muted && (t.enabled ?? true))
 
-	console.log("ParticipantsList", { participants })
-
+	// Determine which participant is currently sharing the screen (or live video)
+	const currentSharingUserId = isScreenSharing
+		? (() => {
+				for (const [peerId, stream] of remoteStreams) {
+					if (hasLiveVideo(stream)) return peerId
+				}
+				return userId || ""
+		  })()
+		: ""
 	return (
 		<div className="flex flex-col gap-1">
 			{participants.map(p => {
 				const stream = remoteStreams.get(p.userId)
+				const isSelf = p.userId === userId
+				const selectableStream =
+					isSelf && localStream ? localStream : stream || null
+				const canSelect =
+					!!onSelect && hasLiveVideo(selectableStream || undefined)
+
+				const isCurrentParticipantSharingScreen =
+					p.userId === currentSharingUserId || currentSharingUserId === userId
 				return (
 					<div
 						key={p.userId}
-						className="rounded-md overflow-hidden border border-white/10 p-2.5 flex items-center gap-3 bg-[#2C333D]"
+						className={cn(
+							"rounded-md overflow-hidden border border-white/10 p-2.5 flex items-center gap-3 bg-[#2C333D]",
+							className
+						)}
+						onClick={() =>
+							canSelect && selectableStream && onSelect?.(selectableStream)
+						}
+						role={canSelect ? "button" : undefined}
+						aria-label={
+							canSelect ? `Select ${p.name || p.userId} stream` : undefined
+						}
+						aria-disabled={canSelect ? undefined : true}
+						style={{
+							cursor: canSelect ? "pointer" : undefined,
+							opacity: canSelect ? 1 : 0.7,
+						}}
 					>
 						{p.imageUrl ? (
 							<Image
@@ -43,26 +91,47 @@ export const ParticipantsList: FC<Props> = ({
 								{(p.name || p.userId).slice(0, 2).toUpperCase()}
 							</div>
 						)}
-						<div className="flex-1 min-w-0">
-							<div className="flex items-center gap-2">
-								<Typography
-									tag="p"
-									className="text-white text-[14px] font-medium truncate"
-								>
-									{p.name || p.userId}
-								</Typography>
-								<span className="text-white/60 text-[12px] capitalize">
-									{p.role}
-								</span>
+						{!isScreenSharing ? (
+							<>
+								<Title
+									name={p.name || p.userId}
+									role={p.role}
+									className="flex-col items-start gap-0"
+								/>
+								<Microphone
+									isSelfMuted={isSelfMuted}
+									micOn={p.micOn}
+									participantUserId={p.userId}
+									userId={userId}
+								/>
+							</>
+						) : (
+							<div className="flex flex-col">
+								<Title
+									name={p.name || p.userId}
+									role={p.role}
+									isScreenSharing={isScreenSharing}
+								/>
+
+								<div className="flex gap-2">
+									<Microphone
+										isSelfMuted={isSelfMuted}
+										micOn={p.micOn}
+										participantUserId={p.userId}
+										userId={userId}
+									/>
+									{isCurrentParticipantSharingScreen && (
+										<div>
+											<PiScreencastFill className="text-white" size={14} />
+										</div>
+									)}
+									<span className="text-white/60 text-[12px] capitalize">
+										{p.role}
+									</span>
+								</div>
 							</div>
-						</div>
-						<div className="flex items-center gap-2">
-							{(p.userId === (user?.id || "") ? !isSelfMuted : p.micOn) ? (
-								<LuMic size={18} className="text-white" />
-							) : (
-								<LuMicOff size={18} className="text-white/60" />
-							)}
-						</div>
+						)}
+
 						{stream ? (
 							<audio
 								ref={node => {

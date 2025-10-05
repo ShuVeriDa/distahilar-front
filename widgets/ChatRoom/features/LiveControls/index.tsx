@@ -20,6 +20,7 @@ interface ILiveControls {
 	isSelfVideoOff: boolean | undefined
 	isSelfMuted: boolean
 	isScreenSharing?: boolean
+	className?: string
 	onToggleVideo: () => void
 	onToggleMute: () => void
 	onLeave: () => void
@@ -31,6 +32,7 @@ export const LiveControls: FC<ILiveControls> = ({
 	isSelfVideoOff,
 	isSelfMuted,
 	isScreenSharing,
+	className,
 	onToggleVideo,
 	onToggleMute,
 	onLeave,
@@ -38,7 +40,12 @@ export const LiveControls: FC<ILiveControls> = ({
 	handleMinimize,
 }) => {
 	return (
-		<div className="w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4">
+		<div
+			className={cn(
+				"w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4",
+				className
+			)}
+		>
 			<Button
 				variant="clean"
 				aria-label={isSelfVideoOff ? "Turn camera on" : "Turn camera off"}
@@ -59,7 +66,9 @@ export const LiveControls: FC<ILiveControls> = ({
 						<IoVideocamOff size={22} />
 					)}
 				</div>
-				<span className="text-white text-[11px]">Video</span>
+				{!isScreenSharing && (
+					<span className="text-white text-[11px]">Video</span>
+				)}
 			</Button>
 
 			<Button
@@ -82,7 +91,9 @@ export const LiveControls: FC<ILiveControls> = ({
 						<MdScreenShare size={22} />
 					)}
 				</div>
-				<span className="text-white text-[11px]">Share</span>
+				{!isScreenSharing && (
+					<span className="text-white text-[11px]">Share</span>
+				)}
 			</Button>
 
 			<Button
@@ -96,10 +107,16 @@ export const LiveControls: FC<ILiveControls> = ({
 						"relative flex items-center justify-center text-white p-[26px] rounded-full overflow-hidden",
 						isSelfMuted
 							? "live-gradient-animated_blue"
-							: "live-gradient-animated_green"
+							: "live-gradient-animated_green",
+						isScreenSharing && "p-3"
 					)}
 				>
-					<div className="h-[35px] w-[35px] flex items-center justify-center overflow-hidden">
+					<div
+						className={cn(
+							"h-[35px] w-[35px] flex items-center justify-center overflow-hidden",
+							isScreenSharing && "h-fit w-fit"
+						)}
+					>
 						<AnimatePresence mode="wait" initial={false}>
 							{isSelfMuted ? (
 								<MotionDiv
@@ -109,7 +126,7 @@ export const LiveControls: FC<ILiveControls> = ({
 									exit={{ scale: 0.9 }}
 									transition={{ duration: 0.12, ease: "easeOut" }}
 								>
-									<BiSolidMicrophoneOff size={35} />
+									<BiSolidMicrophoneOff size={isScreenSharing ? 22 : 35} />
 								</MotionDiv>
 							) : (
 								<MotionDiv
@@ -119,39 +136,44 @@ export const LiveControls: FC<ILiveControls> = ({
 									exit={{ scale: 0.9 }}
 									transition={{ duration: 0.12, ease: "easeOut" }}
 								>
-									<BiSolidMicrophone size={35} />
+									<BiSolidMicrophone size={isScreenSharing ? 22 : 35} />
 								</MotionDiv>
 							)}
 						</AnimatePresence>
 					</div>
 				</div>
-				<div className="h-[20px] w-full overflow-hidden">
-					<AnimatePresence mode="wait" initial={false}>
-						{isSelfMuted ? (
-							<MotionDiv
-								key="muted"
-								className="w-full text-center text-white text-[15px]"
-								initial={{ opacity: 0, y: -4 }}
-								animate={{ opacity: 1, y: 0 }}
-								exit={{ opacity: 0, y: 4 }}
-								transition={{ duration: 0.1, ease: "easeOut" }}
-							>
-								Unmute
-							</MotionDiv>
-						) : (
-							<MotionDiv
-								key="live"
-								className="w-full text-center text-white text-[15px]"
-								initial={{ opacity: 0, y: -4 }}
-								animate={{ opacity: 1, y: 0 }}
-								exit={{ opacity: 0, y: 4 }}
-								transition={{ duration: 0.1, ease: "easeOut" }}
-							>
-								You are live
-							</MotionDiv>
-						)}
-					</AnimatePresence>
-				</div>
+				{!isScreenSharing && (
+					<div className="h-[20px] w-full overflow-hidden">
+						<AnimatePresence mode="wait" initial={false}>
+							{isSelfMuted ? (
+								<MotionDiv
+									key="muted"
+									className={cn(
+										"w-full text-center text-white text-[15px]",
+										isScreenSharing && "text-[12px]"
+									)}
+									initial={{ opacity: 0, y: -4 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: 4 }}
+									transition={{ duration: 0.1, ease: "easeOut" }}
+								>
+									Unmute
+								</MotionDiv>
+							) : (
+								<MotionDiv
+									key="live"
+									className="w-full text-center text-white text-[15px]"
+									initial={{ opacity: 0, y: -4 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: 4 }}
+									transition={{ duration: 0.1, ease: "easeOut" }}
+								>
+									You are live
+								</MotionDiv>
+							)}
+						</AnimatePresence>
+					</div>
+				)}
 			</Button>
 
 			<Button
@@ -163,7 +185,9 @@ export const LiveControls: FC<ILiveControls> = ({
 				<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-3 rounded-full">
 					<LuMinimize2 size={22} />
 				</div>
-				<span className="text-white text-[11px] !font-normal">Minimize</span>
+				{!isScreenSharing && (
+					<span className="text-white text-[11px] !font-normal">Minimize</span>
+				)}
 			</Button>
 
 			<Button
@@ -175,7 +199,9 @@ export const LiveControls: FC<ILiveControls> = ({
 				<div className="flex items-center justify-center bg-[#883E41] hover:bg-[#8b383b] p-3 rounded-full">
 					<MdCallEnd size={22} className="text-white" />
 				</div>
-				<span className="text-white text-[11px] !font-normal">Leave</span>
+				{!isScreenSharing && (
+					<span className="text-white text-[11px] !font-normal">Leave</span>
+				)}
 			</Button>
 		</div>
 	)

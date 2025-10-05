@@ -1,22 +1,18 @@
 "use client"
 
-import { Typography } from "@/shared"
 import type { LivePhase } from "@/shared/hooks/useLiveRoom"
 import { UseLiveRoomApi } from "@/shared/hooks/useLiveRoom"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { LiveRoomState } from "@/shared/lib/services/live/live.types"
-import { cn } from "@/shared/lib/utils/cn"
 import { FC, useEffect, useMemo, useRef } from "react"
 import { LiveMiniPlayer } from "../entities/LiveMiniPlayer"
-import { LocalPreview } from "../entities/LocalPreview"
-import { ParticipantsList } from "../entities/ParticipantsList"
-import { RemovePreview } from "../entities/RemovePreview"
+import { SharingScreenLive } from "../entities/SharingScreenLive"
+import { UnSharingScreenLive } from "../entities/UnSharingScreenLive"
 import { ConfirmLeaveDialog } from "../features/ConfirmLeaveDialog"
-import { LiveControls } from "../features/LiveControls"
 
 //
 
-type Props = {
+interface ILiveOverlayProps {
 	chatId: string
 	// chat?: ChatType
 	isPrivilegedMember: boolean
@@ -31,6 +27,7 @@ type Props = {
 	isSelfMuted: boolean
 	isSelfVideoOff: boolean | undefined
 	localStream: MediaStream | null
+	// treat as 'anyone sharing' for layout/status purposes
 	isScreenSharing?: boolean
 	isMinimized: boolean
 	onClose: () => void
@@ -39,7 +36,7 @@ type Props = {
 	setIsMinimized: (value: boolean) => void
 }
 
-export const LiveOverlay: FC<Props> = ({
+export const LiveOverlay: FC<ILiveOverlayProps> = ({
 	chatId,
 	isPrivilegedMember,
 	room,
@@ -127,30 +124,9 @@ export const LiveOverlay: FC<Props> = ({
 		return null
 	}, [remoteStreams])
 
-	// Force <video> remount when underlying track state changes to clear black frames
-	const remoteVideoKey = useMemo(() => {
-		if (!remoteVideoStream) return "none"
-		const tracks = remoteVideoStream.getVideoTracks
-			? remoteVideoStream.getVideoTracks()
-			: []
-		return tracks
-			.map(
-				t =>
-					`${t.id}:${t.readyState}:${t.muted ? 1 : 0}:${
-						t.enabled === false ? 0 : 1
-					}`
-			)
-			.join("|")
-	}, [remoteVideoStream])
+	// Remote video key is handled inside the unified Preview component
 
-	console.log({
-		participants,
-		remoteStreams,
-		localStream,
-		isSelfVideoOff,
-		isScreenSharing,
-		remoteVideoStream,
-	})
+	console.log({ isScreenSharing })
 
 	if (!visible && !isMinimized) return null
 	return (
@@ -177,77 +153,43 @@ export const LiveOverlay: FC<Props> = ({
 						if (e.target === e.currentTarget) handleMinimize()
 					}}
 				>
-					<div
-						className={cn(
-							"relative flex flex-col mx-10 justify-between border border-white/10 w-full max-w-[420px] h-full max-h-[580px] rounded-lg overflow-hidden bg-[#1A2026]"
-							// !isVideoOff && "max-h-[calc(100vh-40px)] h-auto"
-						)}
-					>
-						<div className="w-full px-6 pt-2 pb-0.5 flex flex-col items-center justify-center ">
-							<Typography
-								tag="p"
-								className="text-white text-[14px] font-medium text-center"
-							>
-								{title}
-							</Typography>
-							<Typography
-								tag="span"
-								className="text-white/60 text-[13px] font-normal text-center"
-							>
-								{description}
-								{statusText ? ` • ${statusText}` : ""}
-							</Typography>
-						</div>
-
-						{/* Remote screen/camera preview (for viewers) */}
-						<RemovePreview
+					{isScreenSharing ? (
+						<SharingScreenLive
+							title={title}
 							isLive={isLive}
+							statusText={statusText}
+							description={description}
 							remoteVideoStream={remoteVideoStream}
-							remoteVideoKey={remoteVideoKey}
-						/>
-
-						{/* Local video preview (for sharer or when camera is on) */}
-						<LocalPreview
-							isLive={isLive}
-							isScreenSharing={isScreenSharing}
-							isSelfVideoOff={isSelfVideoOff}
+							liveApi={liveApi}
 							localStream={localStream}
-						/>
-
-						<div
-							className={cn(
-								"overflow-y-auto px-3.5 py-0.5",
-								isVideoOff && "flex-1"
-							)}
-						>
-							{isLive ? (
-								<div className="flex flex-col gap-1">
-									<ParticipantsList
-										participants={participants}
-										remoteStreams={remoteStreams}
-										isSelfMuted={isSelfMuted}
-									/>
-								</div>
-							) : (
-								<div className="w-full h-full flex items-center justify-center">
-									<Typography tag="span" className="text-white/70 text-[15px]">
-										No live session. Start one to begin.
-									</Typography>
-								</div>
-							)}
-						</div>
-
-						<LiveControls
-							isSelfVideoOff={isSelfVideoOff}
 							isSelfMuted={isSelfMuted}
-							onToggleVideo={liveApi.toggleSelfVideo}
-							onToggleMute={liveApi.toggleSelfMute}
-							onLeave={handleLeaveClick}
 							isScreenSharing={isScreenSharing}
-							onToggleScreenShare={liveApi.toggleScreenShare}
+							isSelfVideoOff={isSelfVideoOff}
+							participants={participants}
+							remoteStreams={remoteStreams}
+							isVideoOff={isVideoOff}
 							handleMinimize={handleMinimize}
+							handleLeaveClick={handleLeaveClick}
 						/>
-					</div>
+					) : (
+						<UnSharingScreenLive
+							title={title}
+							isLive={isLive}
+							statusText={statusText}
+							description={description}
+							remoteVideoStream={remoteVideoStream}
+							liveApi={liveApi}
+							localStream={localStream}
+							isSelfMuted={isSelfMuted}
+							isScreenSharing={isScreenSharing}
+							isSelfVideoOff={isSelfVideoOff}
+							participants={participants}
+							remoteStreams={remoteStreams}
+							isVideoOff={isVideoOff}
+							handleMinimize={handleMinimize}
+							handleLeaveClick={handleLeaveClick}
+						/>
+					)}
 				</div>
 			) : null}
 

@@ -42,6 +42,8 @@ export interface UseLiveRoomState {
 	peerAudio: Map<PeerId, { hasAudioTrack: boolean; isTrackMuted: boolean }>
 	// whether we are currently sharing the screen
 	isScreenSharing?: boolean
+	// whether anyone (self or any remote) is sharing the screen
+	isAnyScreenSharing?: boolean
 }
 
 export interface UseLiveRoomApi {
@@ -974,7 +976,6 @@ export const useLiveRoom = ({
 			])
 		) as string[]
 		return ids.map(userId => {
-			const isHost = state.room?.hostId === userId
 			const isSpeaker = state.room?.speakers.includes(userId)
 			const muted = state.room?.muted.includes(userId)
 			const peerAudio = state.peerAudio.get(userId)
@@ -983,7 +984,7 @@ export const useLiveRoom = ({
 				? !!state.localStream?.getAudioTracks().some(t => t.enabled) &&
 				  !state.isSelfMuted
 				: false
-			const role = isHost ? "host" : isSpeaker ? "speaker" : "listener"
+			const role = isSpeaker ? "speaker" : "listener"
 			const { name, imageUrl } = memberMap.get(userId) || {}
 			const micOn = isSelf
 				? localAudioOn
@@ -1032,5 +1033,26 @@ export const useLiveRoom = ({
 		]
 	)
 
-	return [state, api, participants]
+	// Derived: true if we are sharing OR any remote stream has a live video track
+	const isAnyScreenSharing = useMemo(() => {
+		if (state.isScreenSharing) return true
+		for (const stream of state.remoteStreams.values()) {
+			const tracks = stream.getVideoTracks ? stream.getVideoTracks() : []
+			if (
+				tracks.some(
+					t => t.readyState === "live" && !t.muted && (t.enabled ?? true)
+				)
+			) {
+				return true
+			}
+		}
+		return false
+	}, [state.isScreenSharing, state.remoteStreams])
+
+	const stateWithDerived: UseLiveRoomState = useMemo(
+		() => ({ ...state, isAnyScreenSharing }),
+		[state, isAnyScreenSharing]
+	)
+
+	return [stateWithDerived, api, participants]
 }
