@@ -22,6 +22,12 @@ export const chatService = {
 		return data
 	},
 
+	async joinChat(link: string) {
+		const { data } = await instance.patch<ChatType>(getChatUrl(`/join/${link}`))
+
+		return data
+	},
+
 	async deleteChat(chatId: string, body: IDeleteChatRequest) {
 		const { data } = await instance.delete<string>(getChatUrl(`/${chatId}`), {
 			data: body,

@@ -16,6 +16,7 @@ import { WrapperMessages } from "../entities"
 import { Header } from "../entities/Header"
 import { SideBar } from "../entities/Sidebar"
 import { RichMessageInput } from "../features"
+import { JoinChat } from "../features/JoinChat"
 import { PinnedMessage } from "../shared/ui/PinnedMessage"
 import { CallOverlay } from "./call-overlay"
 import { LiveBannerJoin } from "./live-banner-join"
@@ -44,6 +45,9 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 
 	const peerUserId =
 		chat?.members?.find(m => m.userId !== user?.id)?.userId || null
+
+	const isMember = chat?.members?.some(m => m.userId === user?.id)
+	const typeOfChat = chat?.type
 
 	const onToggleSideBar = () => setOpenSideBar(!openSideBar)
 
@@ -142,7 +146,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		startLive,
 	]
 
-	// console.log({ isParticipantLive, isRoomLive })
+	console.log({ isMember, members: chat?.members })
 
 	return (
 		<div className="w-full h-full flex">
@@ -183,12 +187,20 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					setSelectedMessages={setSelectedMessages}
 					handleEditMessage={handleEditMessage}
 				/>
-				<RichMessageInput
-					chatId={chatId}
-					chatType={chat?.type}
-					editedMessage={editedMessage}
-					handleEditMessage={handleEditMessage}
-				/>
+				{!isMember && typeOfChat !== ChatRole.DIALOG ? (
+					<JoinChat
+						typeOfChat={typeOfChat as ChatRole}
+						chatLink={chat?.link}
+						chatId={chat?.id}
+					/>
+				) : (
+					<RichMessageInput
+						chatId={chatId}
+						chatType={chat?.type}
+						editedMessage={editedMessage}
+						handleEditMessage={handleEditMessage}
+					/>
+				)}
 				<CallOverlay
 					chat={chat}
 					chatId={chatId}

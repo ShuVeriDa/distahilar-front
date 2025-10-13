@@ -33,6 +33,19 @@ export const useDeleteChatQuery = (chatId: string) => {
 	})
 }
 
+export const useJoinChatQuery = (chatId: string) => {
+	const client = useQueryClient()
+	return useMutation({
+		mutationFn: (data: { link: string }) => chatService.joinChat(data.link),
+		mutationKey: ["joinChat", chatId],
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ["fetchChatById", chatId],
+			})
+		},
+	})
+}
+
 export const useSearchChatsWSQuery = (query: string) => {
 	const { socket } = useSocket()
 
