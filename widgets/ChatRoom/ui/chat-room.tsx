@@ -189,12 +189,13 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					setSelectedMessages={setSelectedMessages}
 					handleEditMessage={handleEditMessage}
 				/>
-				{!isMember && typeOfChat !== ChatRole.DIALOG ? (
+				{isChatLoading ? (
+					<JoinChat.Skeleton />
+				) : !isMember && typeOfChat !== ChatRole.DIALOG ? (
 					<JoinChat
 						typeOfChat={typeOfChat as ChatRole}
 						chatLink={chat?.link}
 						chatId={chat?.id}
-						isChatLoading={isChatLoading}
 					/>
 				) : (
 					<RichMessageInput
