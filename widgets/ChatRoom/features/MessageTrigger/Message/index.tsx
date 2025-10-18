@@ -1,7 +1,7 @@
 "use client"
 
 import { MediaType, MediaTypeEnum, MessageType } from "@/prisma/models"
-import { Typography } from "@/shared"
+import { Skeleton, Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 
 import { ISlideImage } from "@/features/LightBox/ui/LightBox"
@@ -13,7 +13,7 @@ import {
 	getMessageSpacingClasses,
 	getMessageTailClasses,
 } from "@/shared/lib/utils/classesForMessage"
-import { FC, RefObject } from "react"
+import { RefObject } from "react"
 import { MessageFile } from "../../MessageFile"
 import { MessageVoice } from "../../MessageVoice"
 import { VideoMessage } from "../../VideoMessage"
@@ -39,7 +39,7 @@ interface IMessageProps {
 	allVideos: IVideoLightBox[]
 }
 
-export const Message: FC<IMessageProps> = ({
+export const Message = ({
 	message,
 	nextMessage,
 	isFile,
@@ -57,7 +57,7 @@ export const Message: FC<IMessageProps> = ({
 	isFirstMessage,
 	allImages,
 	allVideos,
-}) => {
+}: IMessageProps) => {
 	const media = message.media?.length ? message.media[0] : null
 	const isMessageContent = !!message.content
 	const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
@@ -166,3 +166,79 @@ export const Message: FC<IMessageProps> = ({
 }
 
 Message.displayName = "Message"
+
+interface IMessageSkeleton {
+	isMyMessage: boolean
+	isNextMessageMine: boolean
+	isDifferentSenderPrevious: boolean
+	isFirstMessage: boolean
+	isSameMessage: boolean
+}
+
+Message.Skeleton = function MessageSkeleton({
+	isMyMessage,
+	isDifferentSenderPrevious,
+	isFirstMessage,
+	isNextMessageMine,
+	isSameMessage,
+}: IMessageSkeleton) {
+	return (
+		<div
+			className={cn(
+				"flex w-full",
+				isMyMessage && "justify-end",
+				!isMyMessage && "justify-start"
+			)}
+		>
+			<Skeleton
+				className={cn(
+					"relative w-[40%] h-[36px] px-3 py-2 flex gap-3",
+					isMyMessage
+						? "bg-[#EFFDDE] dark:bg-[#2B5278] rounded-l-2xl self-end"
+						: "bg-white dark:bg-[#182533] rounded-r-2xl self-start",
+					isMyMessage
+						? cn(
+								!isNextMessageMine &&
+									"rounded-tr-[6px] after:-right-[20px] after:rounded-bl-[13px]",
+								isNextMessageMine && "rounded-tr-[6px] rounded-br-md",
+								isDifferentSenderPrevious && "rounded-tr-[16px]",
+								isFirstMessage && "rounded-tr-2xl"
+						  )
+						: cn(
+								isNextMessageMine &&
+									"rounded-tl-[6px] after:-left-[20px] after:rounded-br-[13px]",
+								!isNextMessageMine && "rounded-tl-[16px] rounded-bl-md",
+								isDifferentSenderPrevious && "rounded-tl-[16px]",
+								isFirstMessage && "rounded-tl-2xl"
+						  ),
+					isMyMessage
+						? cn(
+								!isNextMessageMine &&
+									"rounded-tr-[6px] after:-right-[20px] after:rounded-bl-[13px]",
+								isNextMessageMine && "rounded-tr-[6px] rounded-br-md",
+								isDifferentSenderPrevious && "rounded-tr-[16px]",
+								isFirstMessage && "rounded-tr-2xl"
+						  )
+						: cn(
+								isNextMessageMine &&
+									"rounded-tl-[6px] after:-left-[20px] after:rounded-br-[13px]",
+								!isNextMessageMine && "rounded-tl-[16px] rounded-bl-md",
+								isDifferentSenderPrevious && "rounded-tl-[16px]",
+								isFirstMessage && "rounded-tl-2xl"
+						  ),
+					"after:absolute after:w-[20px] after:h-[13px] after:bottom-0 after:transparent",
+					isMyMessage &&
+						!isNextMessageMine &&
+						(isSameMessage
+							? "after:shadow-[-13px_0_0_0_#B9D8E5]"
+							: "after:shadow-[-13px_0_0_0_#EFFDDE] dark:after:shadow-[-13px_0_0_0_#2B5278]"),
+					!isMyMessage &&
+						isNextMessageMine &&
+						(isSameMessage
+							? "after:shadow-[13px_0_0_0_#C4D9FC]"
+							: "after:shadow-[13px_0_0_0_#ffffff] dark:after:shadow-[13px_0_0_0_#182533]")
+				)}
+			/>
+		</div>
+	)
+}

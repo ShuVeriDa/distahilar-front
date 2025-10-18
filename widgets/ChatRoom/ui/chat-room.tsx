@@ -30,7 +30,7 @@ interface IChatRoomProps {
 
 export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const { user } = useUser()
-	const { data: chat } = useFetchChatByIdQuery(chatId)
+	const { data: chat, isLoading: isChatLoading } = useFetchChatByIdQuery(chatId)
 	const { isLive: isRoomLive } = useLiveStatus(chatId)
 	const [openSideBar, setOpenSideBar] = useState(false)
 	const [editedMessage, setEditedMessage] = useState<MessageType | null>(null)
@@ -67,6 +67,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const {
 		data: messages,
 		isSuccess: isSuccessMessages,
+		isLoading: isLoadingMessages,
 		// isLoading,
 	} = useMessagesWSQuery(chatId)
 
@@ -183,6 +184,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					locale={locale}
 					selectedMessages={selectedMessages}
 					hasSelectedMessages={hasSelectedMessages}
+					isLoadingMessages={isLoadingMessages}
 					messages={isSuccessMessages ? messages?.messages : []}
 					setSelectedMessages={setSelectedMessages}
 					handleEditMessage={handleEditMessage}
@@ -192,6 +194,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 						typeOfChat={typeOfChat as ChatRole}
 						chatLink={chat?.link}
 						chatId={chat?.id}
+						isChatLoading={isChatLoading}
 					/>
 				) : (
 					<RichMessageInput
