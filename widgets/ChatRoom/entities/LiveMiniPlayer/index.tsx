@@ -7,30 +7,30 @@ import { LuMaximize2, LuMic, LuMicOff } from "react-icons/lu"
 import { MdCallEnd } from "react-icons/md"
 import { useMiniDock } from "../../shared/hooks/useMiniDock"
 
-type Props = {
-	title: string | undefined
-	descriptionBase: string
+interface ILiveMiniPlayer {
 	statusText: string
 	isSelfMuted: boolean
-	isLive: boolean | undefined
 	isMinimized: boolean
-	onMaximize: () => void
-	onLeave: () => void
-	onToggleMute?: () => void
+	descriptionBase: string
+	title: string | undefined
+	isLive: boolean | undefined
 	remoteStreams: Map<string, MediaStream>
+	onLeave: () => void
+	onMaximize: () => void
+	onToggleMute?: () => void
 }
 
-export const LiveMiniPlayer: FC<Props> = ({
+export const LiveMiniPlayer: FC<ILiveMiniPlayer> = ({
 	title,
-	descriptionBase,
-	statusText,
-	isSelfMuted,
 	isLive,
+	statusText,
 	isMinimized,
-	onMaximize,
-	onLeave,
-	onToggleMute,
+	isSelfMuted,
 	remoteStreams,
+	descriptionBase,
+	onLeave,
+	onMaximize,
+	onToggleMute,
 }) => {
 	const description = useMemo(
 		() => `${descriptionBase}${statusText ? ` • ${statusText}` : ""}`,
@@ -56,7 +56,7 @@ export const LiveMiniPlayer: FC<Props> = ({
 		<div
 			ref={miniWrapperRef}
 			className={cn(
-				"absolute z-50 transition-all duration-200 ease-out",
+				"fixed z-50 transition-all duration-200 ease-out",
 				!miniPos && dockPosition === "br" && "bottom-[52px] right-5",
 				!miniPos && dockPosition === "bl" && "bottom-[52px] left-1",
 				!miniPos && dockPosition === "tr" && "top-[103px] right-5",

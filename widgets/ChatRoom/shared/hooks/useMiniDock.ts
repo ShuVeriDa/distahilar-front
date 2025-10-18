@@ -26,8 +26,14 @@ export function useMiniDock({ isMinimized, margins }: UseMiniDockParams) {
 	const miniWrapperRef = useRef<HTMLDivElement | null>(null)
 	const dragStart = useRef<{ x: number; y: number } | null>(null)
 	const miniStart = useRef<{ top: number; left: number } | null>(null)
+	// const { isLive: isRoomLive } = useLiveStatus(chatId)
 
 	const getContainerRect = () => {
+		// Constrain to ChatRoom root if present, otherwise fallback to viewport body
+		const chatRoot = document.querySelector(
+			"[data-chat-room-root]"
+		) as HTMLElement | null
+		if (chatRoot) return chatRoot.getBoundingClientRect()
 		const parent = miniWrapperRef.current?.offsetParent as HTMLElement | null
 		return parent?.getBoundingClientRect() || null
 	}
@@ -39,15 +45,19 @@ export function useMiniDock({ isMinimized, margins }: UseMiniDockParams) {
 			const el = miniCardRef.current
 			const w = el?.offsetWidth || 260
 			const h = el?.offsetHeight || 56
-			const top =
+			// Compute offsets within the ChatRoom rect, then translate to viewport coords
+			const innerTop =
 				dock === "tr" || dock === "tl"
 					? margins.top
 					: containerRect.height - margins.bottom - h
-			const left =
+			const innerLeft =
 				dock === "tr" || dock === "br"
 					? containerRect.width - margins.right - w
 					: margins.left
-			return { top, left }
+			return {
+				top: containerRect.top + innerTop,
+				left: containerRect.left + innerLeft,
+			}
 		},
 		[margins.bottom, margins.left, margins.right, margins.top]
 	)
@@ -108,13 +118,13 @@ export function useMiniDock({ isMinimized, margins }: UseMiniDockParams) {
 			const dy = ev.clientY - dragStart.current.y
 			const nextTop = clamp(
 				miniStart.current.top + dy,
-				margins.top,
-				containerRect.height - margins.bottom - h
+				containerRect.top + margins.top,
+				containerRect.bottom - margins.bottom - h
 			)
 			const nextLeft = clamp(
 				miniStart.current.left + dx,
-				margins.left,
-				containerRect.width - margins.right - w
+				containerRect.left + margins.left,
+				containerRect.right - margins.right - w
 			)
 			setMiniPos({ top: nextTop, left: nextLeft })
 		}
@@ -157,4 +167,3 @@ export function useMiniDock({ isMinimized, margins }: UseMiniDockParams) {
 		handleMiniPointerDown,
 	}
 }
-

@@ -14,22 +14,22 @@ import { ConfirmLeaveDialog } from "../features/ConfirmLeaveDialog"
 
 interface ILiveOverlayProps {
 	chatId: string
-	// chat?: ChatType
-	isPrivilegedMember: boolean
-	room: LiveRoomState | null
 	phase: LivePhase
 	visible: boolean
-	nameOfChat: string | undefined
-	liveApi: UseLiveRoomApi
-	participants: LiveParticipantType[]
-	confirmLeaveOpen: boolean
-	remoteStreams: Map<string, MediaStream>
-	isSelfMuted: boolean
-	isSelfVideoOff: boolean | undefined
-	localStream: MediaStream | null
-	// treat as 'anyone sharing' for layout/status purposes
-	isScreenSharing?: boolean
+	// chat?: ChatType
 	isMinimized: boolean
+	isSelfMuted: boolean
+	liveApi: UseLiveRoomApi
+	isScreenSharing?: boolean
+	confirmLeaveOpen: boolean
+	room: LiveRoomState | null
+	isPrivilegedMember: boolean
+	nameOfChat: string | undefined
+	localStream: MediaStream | null
+	participants: LiveParticipantType[]
+	isSelfVideoOff: boolean | undefined
+	remoteStreams: Map<string, MediaStream>
+	// treat as 'anyone sharing' for layout/status purposes
 	onClose: () => void
 	closeWindowsLive: () => void
 	setConfirmLeaveOpen: (value: boolean) => void
@@ -37,23 +37,23 @@ interface ILiveOverlayProps {
 }
 
 export const LiveOverlay: FC<ILiveOverlayProps> = ({
-	chatId,
-	isPrivilegedMember,
 	room,
 	phase,
+	chatId,
+	liveApi,
 	visible,
 	nameOfChat,
-	liveApi,
+	isSelfMuted,
+	localStream,
+	isMinimized,
 	participants,
 	remoteStreams,
-	isSelfMuted,
 	isSelfVideoOff,
-	localStream,
-	confirmLeaveOpen,
 	isScreenSharing,
-	isMinimized,
-	setIsMinimized,
+	confirmLeaveOpen,
+	isPrivilegedMember,
 	onClose,
+	setIsMinimized,
 	closeWindowsLive,
 	setConfirmLeaveOpen,
 }) => {
@@ -124,25 +124,21 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 		return null
 	}, [remoteStreams])
 
-	// Remote video key is handled inside the unified Preview component
-
-	console.log({ isScreenSharing })
-
 	if (!visible && !isMinimized) return null
 	return (
 		<>
 			{/* Mini-player when minimized */}
 			<LiveMiniPlayer
 				title={title}
-				descriptionBase={`${participants.length} participant`}
-				statusText={statusText}
-				isSelfMuted={isSelfMuted}
 				isLive={isLive}
+				statusText={statusText}
 				isMinimized={isMinimized}
+				isSelfMuted={isSelfMuted}
+				descriptionBase={`${participants.length} participant`}
 				onMaximize={handleMaximize}
+				remoteStreams={remoteStreams}
 				onLeave={handleLeaveClick}
 				onToggleMute={liveApi.toggleSelfMute}
-				remoteStreams={remoteStreams}
 			/>
 
 			{/* Full overlay when not minimized */}
