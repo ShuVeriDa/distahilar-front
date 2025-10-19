@@ -2,7 +2,7 @@ import { routing } from "@/i18n/routing"
 import { Providers } from "@/shared/providers/providers"
 import { ReactScan } from "@/widgets/ReactScan"
 import type { Metadata } from "next"
-import { NextIntlClientProvider } from "next-intl"
+import { NextIntlClientProvider, hasLocale } from "next-intl"
 import { getMessages } from "next-intl/server"
 import { Roboto } from "next/font/google"
 import { notFound } from "next/navigation"
@@ -12,6 +12,10 @@ const robotoMono = Roboto({
 	weight: ["100", "300", "400", "500", "700", "900"],
 	subsets: ["latin"],
 })
+
+export function generateStaticParams() {
+	return routing.locales.map(locale => ({ locale }))
+}
 
 export const metadata: Metadata = {
 	title: "Distahilar",
@@ -23,11 +27,10 @@ export default async function RootLayout({
 	params,
 }: Readonly<{
 	children: React.ReactNode
-	params: { locale: string }
+	params: Promise<{ locale: string }>
 }>) {
 	const { locale } = await params
-
-	if (!routing.locales.includes(locale as string)) {
+	if (!hasLocale(routing.locales, locale)) {
 		notFound()
 	}
 

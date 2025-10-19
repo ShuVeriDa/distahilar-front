@@ -50,5 +50,6 @@ export const config = {
 		"/:lang(ru|en|che)/:path*",
 		"/:lang(ru|en|che)/((?!.+\\.[\\w]+$|_next).*)",
 		"/:lang(ru|en|che)/(api|trpc)(.*)",
+		"/((?!api|trpc|_next|_vercel|.*\\..*).*)",
 	],
 }
