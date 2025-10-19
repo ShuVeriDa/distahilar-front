@@ -9,7 +9,8 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/shared/ui/Sheet/sheet"
-import { FC, useState } from "react"
+import { useTranslations } from "next-intl"
+import { FC, useMemo, useState } from "react"
 import { FaRegCircleUser, FaRegMoon } from "react-icons/fa6"
 import { IoMdMenu } from "react-icons/io"
 import { IoMegaphoneOutline, IoSettingsOutline } from "react-icons/io5"
@@ -18,36 +19,40 @@ import { IItem, SheetLinks } from "./entities/Links"
 
 interface ISheetComponentProps {}
 
-const items: IItem[] = [
-	{
-		name: "New Group",
-		icon: <RiGroupLine size={20} />,
-		type: EnumModel.GROUP,
-	},
-	{
-		name: "New Channel",
-		icon: <IoMegaphoneOutline size={20} />,
-		type: EnumModel.CHANNEL,
-	},
-	{
-		name: "Contacts",
-		icon: <FaRegCircleUser size={20} />,
-		type: EnumModel.CONTACTS,
-	},
-	{
-		name: "Settings",
-		icon: <IoSettingsOutline size={20} />,
-		type: EnumModel.SETTINGS,
-	},
-	{
-		name: "Night Mode",
-		icon: <FaRegMoon size={20} />,
-		type: EnumModel.NO_TYPE,
-	},
-]
-
 export const SheetComponent: FC<ISheetComponentProps> = () => {
 	const [isOpen, setIsOpen] = useState(false)
+	const t = useTranslations("nav-bar")
+
+	const items: IItem[] = useMemo(
+		() => [
+			{
+				name: t("new-group"),
+				icon: <RiGroupLine size={20} />,
+				type: EnumModel.GROUP,
+			},
+			{
+				name: t("new-channel"),
+				icon: <IoMegaphoneOutline size={20} />,
+				type: EnumModel.CHANNEL,
+			},
+			{
+				name: t("contacts"),
+				icon: <FaRegCircleUser size={20} />,
+				type: EnumModel.CONTACTS,
+			},
+			{
+				name: t("settings"),
+				icon: <IoSettingsOutline size={20} />,
+				type: EnumModel.SETTINGS,
+			},
+			{
+				name: t("night-mode"),
+				icon: <FaRegMoon size={20} />,
+				type: EnumModel.NO_TYPE,
+			},
+		],
+		[t]
+	)
 
 	const closeSheet = () => setIsOpen(false)
 	return (

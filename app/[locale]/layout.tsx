@@ -22,19 +22,21 @@ export const metadata: Metadata = {
 	description: "Created by shuverida",
 }
 
-export default async function RootLayout({
+export default async function RootLayoutRootLayout({
 	children,
 	params,
 }: Readonly<{
 	children: React.ReactNode
-	params: Promise<{ locale: string }>
+	params: { locale: string }
 }>) {
-	const { locale } = await params
+	const { locale } = params
 	if (!hasLocale(routing.locales, locale)) {
 		notFound()
 	}
 
-	const messages = await getMessages()
+	console.log({ locale })
+
+	const messages = await getMessages({ locale })
 
 	return (
 		<html lang={locale} className="light" style={{ colorScheme: "light" }}>

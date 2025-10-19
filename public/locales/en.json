@@ -28,5 +28,12 @@
 				"select": "Select"
 			}
 		}
+	},
+	"nav-bar": {
+		"new-group": "New Group",
+		"new-channel": "New Channel",
+		"contacts": "Contacts",
+		"settings": "Settings",
+		"night-mode": "Night Mode"
 	}
 }
