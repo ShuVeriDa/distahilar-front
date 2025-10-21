@@ -21,32 +21,32 @@ interface ISheetComponentProps {}
 
 export const SheetComponent: FC<ISheetComponentProps> = () => {
 	const [isOpen, setIsOpen] = useState(false)
-	const t = useTranslations("nav-bar")
+	const t = useTranslations("NAV_BAR")
 
 	const items: IItem[] = useMemo(
 		() => [
 			{
-				name: t("new-group"),
+				name: t("NEW_GROUP"),
 				icon: <RiGroupLine size={20} />,
 				type: EnumModel.GROUP,
 			},
 			{
-				name: t("new-channel"),
+				name: t("NEW_CHANNEL"),
 				icon: <IoMegaphoneOutline size={20} />,
 				type: EnumModel.CHANNEL,
 			},
 			{
-				name: t("contacts"),
+				name: t("CONTACTS"),
 				icon: <FaRegCircleUser size={20} />,
 				type: EnumModel.CONTACTS,
 			},
 			{
-				name: t("settings"),
+				name: t("SETTINGS"),
 				icon: <IoSettingsOutline size={20} />,
 				type: EnumModel.SETTINGS,
 			},
 			{
-				name: t("night-mode"),
+				name: t("NIGHT_MODE"),
 				icon: <FaRegMoon size={20} />,
 				type: EnumModel.NO_TYPE,
 			},

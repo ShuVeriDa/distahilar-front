@@ -3,6 +3,7 @@
 import { useFolder } from "@/shared/hooks/useFolder"
 import { useFetchChatsQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { Search } from "@/widgets/Search"
+import { useTranslations } from "next-intl"
 import { ChangeEvent, FC, useState } from "react"
 import { Chats } from "../entities/Chats"
 
@@ -12,6 +13,7 @@ interface IChatsProps {
 
 export const ChatsList: FC<IChatsProps> = ({ locale }) => {
 	const [query, setQuery] = useState<string>("")
+	const t = useTranslations("COMMON")
 
 	// Используем кастомный хук useChatsQuery
 	const {
@@ -37,7 +39,7 @@ export const ChatsList: FC<IChatsProps> = ({ locale }) => {
 					variant="searchV2"
 					value={query}
 					onChange={handleSearch}
-					placeholder="Search"
+					placeholder={t("SEARCH")}
 					className="placeholder:text-[#6D7883]"
 				/>
 			</div>

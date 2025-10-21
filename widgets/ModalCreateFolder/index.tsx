@@ -4,6 +4,7 @@ import { useFolderManager } from "@/shared/hooks/useFolderManager"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 
+import { useTranslations } from "next-intl"
 import { FC } from "react"
 
 interface IModalCreateFolderProps {}
@@ -23,6 +24,7 @@ export const ModalCreateFolder: FC<IModalCreateFolderProps> = () => {
 		onChangeIcon,
 		onOpenModal,
 	} = useFolderManager("create")
+	const t = useTranslations("MODALS.FOLDERS.MANAGE_FOLDER")
 
 	const onOpenIncludeChats = () => {
 		onOpenModal(EnumModel.INCLUDE_CHATS, {
@@ -42,7 +44,7 @@ export const ModalCreateFolder: FC<IModalCreateFolderProps> = () => {
 			translateX={0}
 		>
 			<HeaderFolderManager
-				title="New Folder"
+				title={t("NEW_FOLDER'S_TITLE")}
 				folderName={folderNameValue}
 				onChangeFolderName={onChangeFolderName}
 				onChangeIcon={onChangeIcon}

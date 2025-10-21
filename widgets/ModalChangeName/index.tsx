@@ -6,6 +6,7 @@ import { ModalFooter } from "@/entities/ModalFooter"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { useTranslations } from "next-intl"
 import { useChangeAccountInfo } from "../../shared/hooks/useChangeAccountInfo"
 import { ChangeName } from "./features/ChangeName"
 
@@ -21,6 +22,7 @@ export const ModalChangeName: FC<IModalChangeNameProps> = () => {
 		handleSubmit,
 		onCloseCurrentModal,
 	} = useChangeAccountInfo()
+	const t = useTranslations("MODALS.EDIT_NAME")
 
 	return (
 		<ModalLayout
@@ -33,7 +35,7 @@ export const ModalChangeName: FC<IModalChangeNameProps> = () => {
 				<div className="flex flex-col">
 					<div className={cn("flex flex-col gap-4 px-4 py-4")}>
 						<Typography tag="h4" className="font-normal">
-							Edit your name
+							{t("TITLE")}
 						</Typography>
 					</div>
 					<ChangeName

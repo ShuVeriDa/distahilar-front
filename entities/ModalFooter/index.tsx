@@ -1,6 +1,7 @@
 import { Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
+import { useTranslations } from "next-intl"
 import { FC } from "react"
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
 
@@ -21,10 +22,12 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 	isLoadingCircle,
 	className,
 	type = "button",
-	anotherName = "Save",
+	anotherName,
 	onClose,
 	onSave,
 }) => {
+	const t = useTranslations("COMMON")
+	const saveText = anotherName || t("SAVE")
 	const CLASSNAME_UPPERDERLINE =
 		"relative after:absolute after:w-full after:h-[1px] after:left-[0px] after:top-0 after:bg-[#E0E0E0] after:dark:bg-[#101921]"
 
@@ -44,7 +47,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 				disabled={isLoading}
 				onClick={() => onClose()}
 			>
-				<Typography className="text-[14px]">Cancel</Typography>
+				<Typography className="text-[14px]">{t("CANCEL")}</Typography>
 			</Button>
 			<Button
 				variant="withoutBg"
@@ -57,7 +60,7 @@ export const ModalFooter: FC<IModalFooterProps> = ({
 				{isLoadingCircle ? (
 					<AiOutlineLoading3Quarters className="animate-spin" />
 				) : (
-					<Typography className="text-[14px]">{anotherName}</Typography>
+					<Typography className="text-[14px]">{saveText}</Typography>
 				)}
 			</Button>
 		</div>

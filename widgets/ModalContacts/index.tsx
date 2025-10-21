@@ -8,6 +8,7 @@ import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { useTranslations } from "next-intl"
 import { Search } from "../Search"
 import { ContactList } from "./entities/ContactList"
 
@@ -15,6 +16,7 @@ interface IModalContactsProps {}
 
 export const ModalContacts: FC<IModalContactsProps> = () => {
 	const { onClose, isModalOpen } = useModal()
+	const t = useTranslations("COMMON")
 
 	const { contacts, onChangeValue, value, isSuccess } =
 		useSearchContact(isModalOpen)
@@ -26,14 +28,14 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 		<ModalLayout onClose={onClose} className="p-0 " isClickOutside>
 			<div className={cn("flex flex-col gap-4 px-4 pt-4", CLASSNAME_UNDERLINE)}>
 				<Typography tag="h4" className="font-normal">
-					Contacts
+					{t("CONTACTS")}
 				</Typography>
 
 				<Search
 					variant="searchV1"
 					value={value}
 					onChange={onChangeValue}
-					placeholder="Search"
+					placeholder={t("SEARCH")}
 					className="placeholder:text-[#6D7883]"
 				/>
 			</div>
@@ -47,7 +49,7 @@ export const ModalContacts: FC<IModalContactsProps> = () => {
 				)}
 			>
 				<Button variant="withoutBg" size="md" onClick={onClose}>
-					Close
+					{t("CLOSE")}
 				</Button>
 			</div>
 		</ModalLayout>

@@ -7,6 +7,7 @@ import { ChatRole } from "@/prisma/models"
 import { Typography, useModal } from "@/shared"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { useDeleteMessage } from "@/shared/lib/services/message/useMessagesQuery"
+import { useTranslations } from "next-intl"
 import { FaCheck } from "react-icons/fa6"
 
 interface IModalDeleteMessagesProps {}
@@ -14,6 +15,7 @@ interface IModalDeleteMessagesProps {}
 export const ModalDeleteMessages: FC<IModalDeleteMessagesProps> = () => {
 	const [isDeleteBoth, setIsDeleteBoth] = useState<boolean>(true)
 	const onToggleDeleteBoth = () => setIsDeleteBoth(!isDeleteBoth)
+	const t = useTranslations("MODALS.DELETE_MESSAGES")
 
 	const { onClose, currentModal } = useModal()
 	const { data } = currentModal
@@ -46,7 +48,7 @@ export const ModalDeleteMessages: FC<IModalDeleteMessagesProps> = () => {
 		>
 			<div className="flex flex-col gap-5 pt-5 px-5">
 				<Typography tag="p" className="text-[15px] ">
-					Do you want to delete this message?
+					{t("TITLE")}
 				</Typography>
 				{chatType === ChatRole.DIALOG && (
 					<div className="flex gap-3">
@@ -62,7 +64,7 @@ export const ModalDeleteMessages: FC<IModalDeleteMessagesProps> = () => {
 							</div>
 
 							<Typography tag="p" className="text-[15px]">
-								Also delete for {interlocutorsName}
+								{t("ALSO_DELETE_FOR", { name: interlocutorsName ?? "" })}
 							</Typography>
 						</label>
 					</div>
@@ -74,7 +76,7 @@ export const ModalDeleteMessages: FC<IModalDeleteMessagesProps> = () => {
 				onSave={onDeleteMessages}
 				isLoading={false}
 				type="button"
-				anotherName="Delete"
+				anotherName={t("DELETE_BUTTON")}
 				className="after:h-0"
 			/>
 		</ModalLayout>

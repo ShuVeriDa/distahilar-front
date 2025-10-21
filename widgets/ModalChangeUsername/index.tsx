@@ -8,6 +8,7 @@ import { useChangeAccountInfo } from "@/shared/hooks/useChangeAccountInfo"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { useTranslations } from "next-intl"
 import { Description } from "../ModalAccountInfo/shared/ui/Description"
 
 interface IModalChangeUserNameProps {}
@@ -22,6 +23,8 @@ export const ModalChangeUserName: FC<IModalChangeUserNameProps> = () => {
 		handleSubmit,
 		onCloseCurrentModal,
 	} = useChangeAccountInfo()
+	const t = useTranslations("MODALS.EDIT_USERNAME")
+	const tValidation = useTranslations("VALIDATION")
 
 	return (
 		<ModalLayout
@@ -34,18 +37,18 @@ export const ModalChangeUserName: FC<IModalChangeUserNameProps> = () => {
 				<div className="flex flex-col">
 					<div className={cn("flex flex-col gap-4 px-4 py-4")}>
 						<Typography tag="h4" className="font-normal">
-							Username
+							{t("TITLE")}
 						</Typography>
 					</div>
 					<div className="flex flex-col gap-6">
 						<div className="flex flex-col gap-2 px-4">
 							<Field
 								variant="primary"
-								label="@username"
+								label={t("USERNAME")}
 								minLength={2}
 								maxLength={16}
 								register={register("username", {
-									required: "Username is required",
+									required: tValidation("USERNAME_REQUIRED"),
 								})}
 								watch={watch}
 								disabled={isPending}
@@ -54,7 +57,7 @@ export const ModalChangeUserName: FC<IModalChangeUserNameProps> = () => {
 						</div>
 						<Description
 							text={cn(
-								`You can choose a username on Telegram. If you do, other people will be able to find you by this username and contract you without knowing your phone number. You can user a-z, 0-9 and underscores. Minimum length is 5 characters.`
+								`${t("USERNAME_INFO.TITLE")} ${t("USERNAME_INFO.EXAMPLE")}`
 							)}
 							splitWord="You can user"
 						/>

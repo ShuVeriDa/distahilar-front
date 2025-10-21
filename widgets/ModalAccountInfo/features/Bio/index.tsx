@@ -1,12 +1,14 @@
 import { useUser } from "@/shared/hooks/useUser"
 import { useUserQuery } from "@/shared/lib/services/user/useUserQuery"
 import { Textarea } from "@/shared/ui/Textarea"
+import { useTranslations } from "next-intl"
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react"
 
 interface IBioProps {}
 
 export const Bio: FC<IBioProps> = () => {
 	const { user } = useUser()
+	const t = useTranslations("MODALS.ACCOUNT_INFO")
 	const [value, setValue] = useState(user?.bio ?? "")
 	const textAreaRef = useRef<HTMLTextAreaElement>(null)
 	const { userEdit } = useUserQuery()
@@ -33,7 +35,7 @@ export const Bio: FC<IBioProps> = () => {
 		<Textarea
 			variant="accountInfo"
 			maxLength={70}
-			placeholder="Bio"
+			placeholder={t("BIO_PLACEHOLDER")}
 			ref={textAreaRef}
 			onChange={onChange}
 			onBlur={onBlur}

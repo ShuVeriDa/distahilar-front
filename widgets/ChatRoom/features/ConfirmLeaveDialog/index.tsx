@@ -9,6 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/shared/ui/Dialog/dialog"
+import { useTranslations } from "next-intl"
 import { FC } from "react"
 
 type Props = {
@@ -26,17 +27,19 @@ export const ConfirmLeaveDialog: FC<Props> = ({
 	liveApi,
 	onCloseOverlay,
 }) => {
+	const t = useTranslations("COMMON")
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="bg-[#1A2026] border-white/10 text-white w-[300px]">
 				<DialogHeader>
-					<DialogTitle>Leave or stop live?</DialogTitle>
+					<DialogTitle>{t("LEAVE_OR_STOP")}</DialogTitle>
 				</DialogHeader>
 				<DialogFooter className="">
 					<div className="w-full flex items-center justify-end gap-2">
 						<Button
 							variant="clean"
-							aria-label="Leave"
+							aria-label={t("LEAVE")}
 							className=" text-white px-4 py-2 rounded-md"
 							onClick={() => {
 								onOpenChange(false)
@@ -44,10 +47,10 @@ export const ConfirmLeaveDialog: FC<Props> = ({
 								onCloseOverlay()
 							}}
 						>
-							Leave
+							{t("LEAVE")}
 						</Button>
 						<Button
-							aria-label="Stop live"
+							aria-label={t("STOP_LIVE")}
 							variant="clean"
 							className=" text-white px-4 py-2 rounded-md hover:text-blue-600"
 							onClick={() => {
@@ -55,7 +58,7 @@ export const ConfirmLeaveDialog: FC<Props> = ({
 								liveApi.stopLive(chatId)
 							}}
 						>
-							Stop live
+							{t("STOP_LIVE")}
 						</Button>
 					</div>
 				</DialogFooter>

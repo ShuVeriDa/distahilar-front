@@ -2,6 +2,7 @@ import { MessageEnum, MessageType } from "@/prisma/models"
 import { Button, Typography } from "@/shared"
 import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { cn } from "@/shared/lib/utils/cn"
+import { useTranslations } from "next-intl"
 import { FC } from "react"
 import { FiX } from "react-icons/fi"
 
@@ -13,6 +14,7 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 	const { mutateAsync: pinMessage } = usePinMessage(
 		pinnedMessages?.chatId || ""
 	)
+	const t = useTranslations("CHAT")
 
 	const handleUnpin = () => {
 		if (pinnedMessages) {
@@ -36,7 +38,7 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 						tag="p"
 						className="text-[14px] font-[500] text-[#168ADE] text-start"
 					>
-						Pinned Message
+						{t("PINNED_MESSAGE")}
 					</Typography>
 				</div>
 				<div>
@@ -50,9 +52,9 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 						{pinnedMessages?.messageType === MessageEnum.TEXT &&
 							pinnedMessages?.content}
 						{pinnedMessages?.messageType === MessageEnum.VOICE &&
-							"Voice message"}
+							t("VOICE_MESSAGE")}
 						{pinnedMessages?.messageType === MessageEnum.VIDEO &&
-							"Video message"}
+							t("VIDEO_MESSAGE")}
 					</Typography>
 				</div>
 			</div>

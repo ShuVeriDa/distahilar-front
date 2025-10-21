@@ -13,6 +13,7 @@ import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { useCommunityQuery } from "@/shared/lib/services/chat/community/useCommunityQuery"
 import { Button } from "@/shared/ui/Button"
+import { useTranslations } from "next-intl"
 import { SubmitHandler, useForm } from "react-hook-form"
 
 interface IForm {
@@ -25,17 +26,13 @@ interface IModalCreateChannelGroupProps {}
 export const ModalCreateChannelGroup: FC<
 	IModalCreateChannelGroupProps
 > = () => {
+	const t = useTranslations("MODALS.CREATE_CHANNEL_GROUP")
+	const tCommon = useTranslations("COMMON")
 	const { onClose, currentModal } = useModal()
 	const { type } = currentModal
 
-	const {
-		file,
-		inputRef,
-		handleClickInput,
-		onChangeImage,
-		onSubmitFile,
-		imageUrl,
-	} = useChangePhoto()
+	const { file, inputRef, handleClickInput, onChangeImage, imageUrl } =
+		useChangePhoto()
 
 	const { createCommunityQuery } = useCommunityQuery()
 	const { mutateAsync: createCommunity } = createCommunityQuery
@@ -59,7 +56,8 @@ export const ModalCreateChannelGroup: FC<
 		onClose()
 	}
 
-	const fieldName = type === EnumModel.CHANNEL ? "Channel name" : "Group name"
+	const fieldName =
+		type === EnumModel.CHANNEL ? t("CHANNEL_NAME") : t("GROUP_NAME")
 
 	return (
 		<ModalLayout onClose={onClose} isClickOutside>
@@ -77,11 +75,13 @@ export const ModalCreateChannelGroup: FC<
 
 							<Field
 								type="text"
-								placeholder={`Write the name of the ${
-									type === EnumModel.CHANNEL ? "channel" : "group"
-								}`}
+								placeholder={
+									type === EnumModel.CHANNEL
+										? t("CHANNEL_PLACEHOLDER")
+										: t("GROUP_PLACEHOLDER")
+								}
 								register={register("name", {
-									required: "Name is required",
+									required: t("NAME_REQUIRED"),
 								})}
 								minLength={2}
 								maxLength={32}
@@ -95,11 +95,13 @@ export const ModalCreateChannelGroup: FC<
 							register={register("description")}
 							errors={errors.description}
 							maxLength={70}
-							placeholder={`Write the description of the ${
-								type === EnumModel.CHANNEL ? "channel" : "group"
-							}`}
-							label="Description (optional)"
-							classNameLabel="text-[13px] text-blue-500  dark:text-[#6F8398]  font-medium"
+							placeholder={
+								type === EnumModel.CHANNEL
+									? t("CHANNEL_DESCRIPTION_PLACEHOLDER")
+									: t("GROUP_DESCRIPTION_PLACEHOLDER")
+							}
+							label={t("DESCRIPTION_OPTIONAL")}
+							classNameLabel="text-[13px]  dark:text-[#6F8398] text-blue-500 font-medium"
 						/>
 					</div>
 
@@ -110,10 +112,10 @@ export const ModalCreateChannelGroup: FC<
 							type="button"
 							onClick={onClose}
 						>
-							Cancel
+							{tCommon("CANCEL")}
 						</Button>
 						<Button variant="withoutBg" size="md" type="submit">
-							Create
+							{tCommon("CREATE")}
 						</Button>
 					</div>
 				</div>

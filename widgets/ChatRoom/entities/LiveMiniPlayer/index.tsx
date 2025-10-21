@@ -2,6 +2,7 @@
 
 import { Button, Typography } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
+import { useTranslations } from "next-intl"
 import { FC, useMemo } from "react"
 import { LuMaximize2, LuMic, LuMicOff } from "react-icons/lu"
 import { MdCallEnd } from "react-icons/md"
@@ -32,6 +33,7 @@ export const LiveMiniPlayer: FC<ILiveMiniPlayer> = ({
 	onMaximize,
 	onToggleMute,
 }) => {
+	const t = useTranslations("COMMON")
 	const description = useMemo(
 		() => `${descriptionBase}${statusText ? ` • ${statusText}` : ""}`,
 		[descriptionBase, statusText]
@@ -99,7 +101,7 @@ export const LiveMiniPlayer: FC<ILiveMiniPlayer> = ({
 				<div className="flex items-center gap-2">
 					<Button
 						variant="clean"
-						aria-label="Restore"
+						aria-label={t("RESTORE")}
 						className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
 						onClick={onMaximize}
 					>
@@ -107,7 +109,7 @@ export const LiveMiniPlayer: FC<ILiveMiniPlayer> = ({
 					</Button>
 					<Button
 						variant="clean"
-						aria-label={isSelfMuted ? "Unmute" : "Mute"}
+						aria-label={isSelfMuted ? t("UNMUTE") : t("MUTE")}
 						className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
 						onClick={onToggleMute}
 					>
@@ -115,7 +117,7 @@ export const LiveMiniPlayer: FC<ILiveMiniPlayer> = ({
 					</Button>
 					<Button
 						variant="clean"
-						aria-label="Leave"
+						aria-label={t("LEAVE")}
 						className="bg-[#883E41] hover:bg-[#8b383b] p-2 rounded-full"
 						onClick={onLeave}
 					>

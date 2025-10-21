@@ -5,6 +5,7 @@ import { FC } from "react"
 import { ModalFooter } from "@/entities/ModalFooter"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
+import { useTranslations } from "next-intl"
 import { HeaderFolderManager } from "../../features/HeaderFolderManager"
 import { IncludedChatsFolderManager } from "../../features/IncludedChatsFolderManager"
 import { useFolderManager } from "../../shared/hooks/useFolderManager"
@@ -26,6 +27,7 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 		onClose,
 		onOpenModal,
 	} = useFolderManager("edit")
+	const t = useTranslations("MODALS.FOLDERS.MANAGE_FOLDER")
 
 	const onOpenIncludeChats = () => {
 		if (folder) {
@@ -48,7 +50,7 @@ export const ModalEditFolder: FC<IModalEditFolderProps> = ({}) => {
 			translateX={0}
 		>
 			<HeaderFolderManager
-				title="Edit Folder"
+				title={t("EDIT_FOLDER'S_TITLE")}
 				folderName={folderNameValue}
 				onChangeFolderName={onChangeFolderName}
 				onChangeIcon={onChangeIcon}

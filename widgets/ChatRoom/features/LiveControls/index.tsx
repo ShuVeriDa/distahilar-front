@@ -2,6 +2,7 @@
 
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
+import { useTranslations } from "next-intl"
 import dynamic from "next/dynamic"
 import { FC } from "react"
 import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi"
@@ -39,6 +40,8 @@ export const LiveControls: FC<ILiveControls> = ({
 	onToggleScreenShare,
 	handleMinimize,
 }) => {
+	const t = useTranslations("COMMON")
+
 	return (
 		<div
 			className={cn(
@@ -48,7 +51,7 @@ export const LiveControls: FC<ILiveControls> = ({
 		>
 			<Button
 				variant="clean"
-				aria-label={isSelfVideoOff ? "Turn camera on" : "Turn camera off"}
+				aria-label={isSelfVideoOff ? t("TURN_CAMERA_ON") : t("TURN_CAMERA_OFF")}
 				className="flex flex-col gap-1.5 font-normal"
 				onClick={onToggleVideo}
 			>
@@ -67,13 +70,15 @@ export const LiveControls: FC<ILiveControls> = ({
 					)}
 				</div>
 				{!isScreenSharing && (
-					<span className="text-white text-[11px]">Video</span>
+					<span className="text-white text-[11px]">{t("VIDEO")}</span>
 				)}
 			</Button>
 
 			<Button
 				variant="clean"
-				aria-label={isScreenSharing ? "Stop screen share" : "Share screen"}
+				aria-label={
+					isScreenSharing ? t("STOP_SCREEN_SHARE") : t("SHARE_SCREEN")
+				}
 				className="flex flex-col gap-1.5 font-normal"
 				onClick={onToggleScreenShare}
 			>
@@ -92,13 +97,13 @@ export const LiveControls: FC<ILiveControls> = ({
 					)}
 				</div>
 				{!isScreenSharing && (
-					<span className="text-white text-[11px]">Share</span>
+					<span className="text-white text-[11px]">{t("SHARE")}</span>
 				)}
 			</Button>
 
 			<Button
 				variant="clean"
-				aria-label={isSelfMuted ? "Unmute" : "You are live"}
+				aria-label={isSelfMuted ? t("UNMUTE") : t("YOU_ARE_LIVE")}
 				className="flex flex-col gap-1.5 font-normal"
 				onClick={onToggleMute}
 			>
@@ -157,7 +162,7 @@ export const LiveControls: FC<ILiveControls> = ({
 									exit={{ opacity: 0, y: 4 }}
 									transition={{ duration: 0.1, ease: "easeOut" }}
 								>
-									Unmute
+									{t("UNMUTE")}
 								</MotionDiv>
 							) : (
 								<MotionDiv
@@ -168,7 +173,7 @@ export const LiveControls: FC<ILiveControls> = ({
 									exit={{ opacity: 0, y: 4 }}
 									transition={{ duration: 0.1, ease: "easeOut" }}
 								>
-									You are live
+									{t("YOU_ARE_LIVE")}
 								</MotionDiv>
 							)}
 						</AnimatePresence>
@@ -178,7 +183,7 @@ export const LiveControls: FC<ILiveControls> = ({
 
 			<Button
 				variant="clean"
-				aria-label="Minimize"
+				aria-label={t("MINIMIZE")}
 				className="flex flex-col gap-1.5"
 				onClick={handleMinimize}
 			>
@@ -186,13 +191,15 @@ export const LiveControls: FC<ILiveControls> = ({
 					<LuMinimize2 size={22} />
 				</div>
 				{!isScreenSharing && (
-					<span className="text-white text-[11px] !font-normal">Minimize</span>
+					<span className="text-white text-[11px] !font-normal">
+						{t("MINIMIZE")}
+					</span>
 				)}
 			</Button>
 
 			<Button
 				variant="clean"
-				aria-label="Leave"
+				aria-label={t("LEAVE")}
 				className="flex flex-col gap-1.5"
 				onClick={onLeave}
 			>
@@ -200,7 +207,9 @@ export const LiveControls: FC<ILiveControls> = ({
 					<MdCallEnd size={22} className="text-white" />
 				</div>
 				{!isScreenSharing && (
-					<span className="text-white text-[11px] !font-normal">Leave</span>
+					<span className="text-white text-[11px] !font-normal">
+						{t("LEAVE")}
+					</span>
 				)}
 			</Button>
 		</div>

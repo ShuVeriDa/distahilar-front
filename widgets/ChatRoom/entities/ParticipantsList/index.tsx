@@ -2,6 +2,7 @@
 
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { cn } from "@/shared/lib/utils/cn"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { FC } from "react"
 import { PiScreencastFill } from "react-icons/pi"
@@ -31,7 +32,20 @@ export const ParticipantsList: FC<IParticipantsListProps> = ({
 	onSelect,
 	localStream,
 }) => {
+	const t = useTranslations("COMMON")
 	console.log({ remoteStreams })
+
+	const getRoleTranslation = (role: string) => {
+		switch (role) {
+			case "speaker":
+				return t("SPEAKER")
+			case "listener":
+				return t("LISTENER")
+			default:
+				return role
+		}
+	}
+
 	const hasLiveVideo = (s?: MediaStream) =>
 		!!s
 			?.getVideoTracks()
@@ -126,7 +140,7 @@ export const ParticipantsList: FC<IParticipantsListProps> = ({
 										</div>
 									)}
 									<span className="text-white/60 text-[12px] capitalize">
-										{p.role}
+										{getRoleTranslation(p.role)}
 									</span>
 								</div>
 							</div>

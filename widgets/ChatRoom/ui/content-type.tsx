@@ -2,6 +2,7 @@ import { MessageType } from "@/prisma/models"
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
 import { IconPicker } from "@/shared/ui/EmojiPicker"
+import { useTranslations } from "next-intl"
 import { ChangeEvent, FC, useRef } from "react"
 import {
 	SubmitHandler,
@@ -45,6 +46,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 	onAddFiles,
 }) => {
 	const fileInputRef = useRef<HTMLInputElement>(null)
+	const t = useTranslations("COMMON")
 
 	const onOpenInput = () => {
 		if (fileInputRef.current) {
@@ -88,7 +90,7 @@ export const ContentType: FC<IContentTypeProps> = ({
 					className="w-full min-h-[47px] text-[13px] resize-none outline-none py-3 placeholder:text-[14px] placeholder:!font-[400] dark:bg-[#17212B]"
 					rows={1}
 					maxRows={11}
-					placeholder="Write a message..."
+					placeholder={t("WRITE_MESSAGE")}
 					onKeyDown={e => {
 						if (e.key === "Enter" && !e.shiftKey) {
 							e.preventDefault()

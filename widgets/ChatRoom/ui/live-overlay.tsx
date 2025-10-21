@@ -4,6 +4,7 @@ import type { LivePhase } from "@/shared/hooks/useLiveRoom"
 import { UseLiveRoomApi } from "@/shared/hooks/useLiveRoom"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { LiveRoomState } from "@/shared/lib/services/live/live.types"
+import { useTranslations } from "next-intl"
 import { FC, useEffect, useMemo, useRef } from "react"
 import { LiveMiniPlayer } from "../entities/LiveMiniPlayer"
 import { SharingScreenLive } from "../entities/SharingScreenLive"
@@ -57,14 +58,14 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 	closeWindowsLive,
 	setConfirmLeaveOpen,
 }) => {
-	//
+	const t = useTranslations("COMMON")
 
 	const isVideoOff = isSelfVideoOff
 
 	const title = useMemo(() => {
-		if (!room?.isLive) return "Start live stream"
+		if (!room?.isLive) return t("START_LIVE_STREAM")
 		return nameOfChat
-	}, [room, nameOfChat])
+	}, [room, nameOfChat, t])
 
 	const isLive = room?.isLive
 
@@ -90,17 +91,17 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 		prevIsLiveRef.current = isLive
 	}, [closeWindowsLive, isLive, setIsMinimized])
 
-	const description = `${participants.length} participant`
+	const description = `${participants.length} ${t("PARTICIPANT")}`
 
 	const statusText = useMemo(() => {
-		if (phase === "connecting") return "Connecting…"
+		if (phase === "connecting") return t("CONNECTING")
 		if (phase === "live") {
-			const base = isSelfMuted ? "Muted" : "Unmuted"
-			return isScreenSharing ? `${base} • Sharing screen` : base
+			const base = isSelfMuted ? t("MUTED") : t("UNMUTED")
+			return isScreenSharing ? `${base} • ${t("SHARING_SCREEN")}` : base
 		}
-		if (phase === "ended") return "Ended"
+		if (phase === "ended") return t("ENDED")
 		return ""
-	}, [phase, isSelfMuted, isScreenSharing])
+	}, [phase, isSelfMuted, isScreenSharing, t])
 
 	const handleMinimize = () => {
 		setIsMinimized(true)
@@ -134,7 +135,7 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 				statusText={statusText}
 				isMinimized={isMinimized}
 				isSelfMuted={isSelfMuted}
-				descriptionBase={`${participants.length} participant`}
+				descriptionBase={`${participants.length} ${t("PARTICIPANT")}`}
 				onMaximize={handleMaximize}
 				remoteStreams={remoteStreams}
 				onLeave={handleLeaveClick}

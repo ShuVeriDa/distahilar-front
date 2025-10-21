@@ -1,6 +1,7 @@
 import { ChatRole, ChatType, UserType } from "@/prisma/models"
 import { Typography } from "@/shared"
 import { CopyClickBoard } from "@/widgets/SheetComponent/features/clickboard"
+import { useTranslations } from "next-intl"
 import { FC, useMemo } from "react"
 import { FiInfo } from "react-icons/fi"
 interface IInfoProps {
@@ -10,20 +11,21 @@ interface IInfoProps {
 
 export const Info: FC<IInfoProps> = ({ chat, user }) => {
 	const isDialog = chat?.type === ChatRole.DIALOG
+	const t = useTranslations("COMMON")
 
 	const infoObj = useMemo(
 		() => [
 			{
 				value: isDialog ? user?.phone : chat?.link,
-				description: isDialog ? "Mobile" : "Link",
+				description: isDialog ? t("MOBILE") : t("LINK"),
 			},
 			{
 				value: isDialog ? user?.bio : chat?.description,
-				description: isDialog ? "Bio" : "Description",
+				description: isDialog ? t("BIO_INFO") : t("DESCRIPTION"),
 			},
 			{
 				value: isDialog ? `@${user?.username}` : undefined,
-				description: isDialog ? "Username" : undefined,
+				description: isDialog ? t("USERNAME") : undefined,
 			},
 		],
 		[
@@ -33,6 +35,7 @@ export const Info: FC<IInfoProps> = ({ chat, user }) => {
 			user?.bio,
 			user?.phone,
 			user?.username,
+			t,
 		]
 	)
 

@@ -1,39 +1,240 @@
 {
-	"pages": {
-		"Chat": {
-			"lastSeen": {
-				"justNow": "был(а) только что",
-				"minutesAgo": "был(а) {count} минуту назад",
-				"minutesAgo_plural": "был(а) {count} минуты назад",
-				"todayAt": "был(а) сегодня в {time}",
-				"weekdayAt": "был(а) {day} в {time}",
-				"date": "был(а) {date}",
-				"daysOfWeek": [
-					"воскресенье",
-					"понедельник",
-					"вторник",
-					"среда",
-					"четверг",
-					"пятница",
-					"суббота"
-				]
-			},
-			"options": {
-				"reply": "Жоп дала",
-				"edit": "Йоза нисдан",
-				"pin": "ТӀелато",
-				"copy_text": "Йоза схьаэца",
-				"forward": "Кхин дӀадахьийта",
-				"delete": "ДӀадаккха",
-				"select": "Харжа"
+	"COMMON": {
+		"CONTACTS": "Хуттургаш йу",
+		"CREATE": "Кхолла",
+		"SAVE": "Ӏалашдан",
+		"CANCEL": "ДӀадаккха",
+		"CLOSE": "ДӀакъовла",
+		"SIGN_IN": "Йукъа дала",
+		"SIGN_UP": "ДӀайаздала",
+		"USERNAME": "Пайдаэцархочунна цӀе",
+		"PASSWORD": "Билламан дош",
+		"EMAIL": "Пошта",
+		"NAME": "ЦӀе",
+		"SURNAME": "Фамили",
+		"BIO": "Шех лаьцна (лаахь)",
+		"SEARCH": "Лехам",
+		"WRITE_MESSAGE": "Кехат дӀайаздан",
+		"NO_RESULTS": "Ца карийна",
+		"NO_RESULTS_QUERY": "\"{query}\" хаттарехь цхьа а хӀума ца карина",
+		"FILL_ALL_FIELDS": "Массо а могӀанаш дуза",
+		"DONT_HAVE_ACCOUNT": "",
+		"ALREADY_HAVE_ACCOUNT": "",
+		"SELECT_CHAT_TO_START": "Къамел дӀадоладан чоь схьахаржа",
+		"ONLINE": "Йукъахь ву",
+		"MEMBERS": "",
+		"SUBSCRIBERS": "",
+		"DELETE_CONTACT": "",
+		"ADD_TO_CONTACTS": "",
+		"DELETE_CHAT": "",
+		"MOBILE": "",
+		"LINK": "",
+		"BIO_INFO": "",
+		"DESCRIPTION": "",
+		"START_LIVE_STREAM": "",
+		"PARTICIPANT": "",
+		"CONNECTING": "",
+		"MUTED": "",
+		"UNMUTED": "",
+		"SHARING_SCREEN": "",
+		"ENDED": "",
+		"LEAVE_OR_STOP": "",
+		"LEAVE": "",
+		"STOP_LIVE": "",
+		"RESTORE": "",
+		"MUTE": "",
+		"UNMUTE": "",
+		"TURN_CAMERA_ON": "",
+		"TURN_CAMERA_OFF": "",
+		"STOP_SCREEN_SHARE": "",
+		"SHARE_SCREEN": "",
+		"YOU_ARE_LIVE": "",
+		"MINIMIZE": "",
+		"VIDEO": "",
+		"SHARE": "",
+		"NO_LIVE_SESSION": "",
+		"SPEAKER": "",
+		"LISTENER": ""
+	},
+	"PAGES": {
+		"CHAT": {
+			"OPTIONS": {
+				"REPLY": "Жоп дала",
+				"EDIT": "Йоза нисдан",
+				"PIN": "ТӀелато",
+				"COPY_TEXT": "Йоза схьаэца",
+				"FORWARD": "Кхин дӀадахьийта",
+				"DELETE": "ДӀадаккха",
+				"SELECT": "Харжа"
 			}
 		}
 	},
-	"nav-bar": {
-		"new-group": "Керла харш дан",
-		"new-channel": "Керла тоба йан",
-		"contacts": "Хуттургаш йу",
-		"settings": "Нисдар ду",
-		"night-mode": "Буьйсанан раж йу"
+	"LAST_SEEN": {
+		"JUST_NOW": "хӀинцца чохь вара",
+		"MINUTES_AGO": "чохь вара {count} минот хьалха",
+		"MINUTES_AGO_PLURAL": "чохь вара {count} минот хьалха",
+		"TODAY_AT": "чохь вара {time}-чу хенахь",
+		"WEEKDAY_AT": "чохь вара {day} денахь {time}-чу хенахь",
+		"DATE": "чохь вара {date}",
+		"DAYS_OF_WEEK": [
+			"кӀиран",
+			"оршот",
+			"шинара",
+			"кхаара",
+			"йеара",
+			"пӀераскан",
+			"шот"
+		]
+	},
+	"NAV_BAR": {
+		"NEW_GROUP": "Керла тоба дан",
+		"NEW_CHANNEL": "Керла харш йан",
+		"CONTACTS": "Хуттургаш йу",
+		"SETTINGS": "Нисдар ду",
+		"NIGHT_MODE": "Буьйсанан раж йу"
+	},
+	"MODALS": {
+		"CREATING_GROUP": {
+			"NAME": "Тобанан цӀе",
+			"NAMES_PLACEHOLDER": "Тобанан цӀе йазъйе",
+			"DESCRIPTION": "Тобанах лаьцна (лаахь)",
+			"DESCRIPTIONS_PLACEHOLDER": "Тобанах лаьцна йазъйе"
+		},
+		"CREATING_CHANNEL": {
+			"NAME": "Харши цӀе",
+			"NAMES_PLACEHOLDER": "Хорши цӀе йазъйе",
+			"DESCRIPTION": "Хоршах лаьцна (лаахь)",
+			"DESCRIPTIONS_PLACEHOLDER": "Хоршах лаьцна йазъйе"
+		},
+		"SETTINGS": {
+			"TITLE": "",
+			"MY_ACCOUNT": "",
+			"FOLDERS": "",
+			"LANGUAGE": ""
+		},
+		"MY_ACCOUNT": {
+			"TITLE": "",
+			"BIO": "",
+			"BIO_INFO": {
+				"TITLE": "",
+				"EXAMPLE": ""
+			},
+			"NAME": "",
+			"PHONE_NUMBER": "",
+			"USERNAME": "",
+			"USERNAME_INFO": ""
+		},
+		"EDIT_NAME": {
+			"TITLE": "",
+			"FIRST_NAME": "",
+			"LAST_NAME": ""
+		},
+		"EDIT_PHONE_NUMBER": {
+			"TITLE": "",
+			"PHONE_NUMBER": ""
+		},
+		"EDIT_USERNAME": {
+			"TITLE": "",
+			"USERNAME": "",
+			"USERNAME_INFO": {
+				"TITLE": "",
+				"EXAMPLE": ""
+			}
+		},
+		"FOLDERS": {
+			"TITLE": "",
+			"INFO": "",
+			"MY_FOLDERS": "",
+			"CREATE_NEW_FOLDER": "",
+			"MANAGE_FOLDER": {
+				"NEW_FOLDER'S_TITLE": "",
+				"EDIT_FOLDER'S_TITLE": "",
+				"FOLDER_NAME": "",
+				"INCLUDED_CHATS": "",
+				"CHOOSE_AN_ICON": "",
+				"ADD_CHATS": "",
+				"INCLUDE_CHATS": "",
+				"CHATS": ""
+			}
+		},
+		"DELETE_MESSAGES": {
+			"TITLE": "",
+			"ALSO_DELETE_FOR": "",
+			"DELETE_BUTTON": ""
+		},
+		"DELETE_CHAT": {
+			"TITLE": "",
+			"CONFIRMATION": "",
+			"CANNOT_UNDONE": "",
+			"ALSO_DELETE_FOR": "",
+			"DELETE_BUTTON": ""
+		},
+		"CREATE_CHANNEL_GROUP": {
+			"CHANNEL_NAME": "",
+			"GROUP_NAME": "",
+			"CHANNEL_PLACEHOLDER": "",
+			"GROUP_PLACEHOLDER": "",
+			"DESCRIPTION_OPTIONAL": "",
+			"CHANNEL_DESCRIPTION_PLACEHOLDER": "",
+			"GROUP_DESCRIPTION_PLACEHOLDER": "",
+			"NAME_REQUIRED": ""
+		},
+		"ADD_FILE": {
+			"FILES_SELECTED": "",
+			"SEND_AS_FILE": "",
+			"COMMENT": "",
+			"ADD": "",
+			"SEND": ""
+		},
+		"ACCOUNT_INFO": {
+			"TITLE": "",
+			"BIO_PLACEHOLDER": "",
+			"PHONE_REQUIRED": "",
+			"INVALID_PHONE": "",
+			"LAST_NAME_REQUIRED": "",
+			"LAST_NAME_MIN_LENGTH": "",
+			"LAST_NAME_MAX_LENGTH": ""
+		}
+	},
+	"VALIDATION": {
+		"USERNAME_REQUIRED": "",
+		"PASSWORD_REQUIRED": "",
+		"EMAIL_REQUIRED": "",
+		"NAME_REQUIRED": "",
+		"NAME_MIN_LENGTH": "",
+		"NAME_MAX_LENGTH": "",
+		"SURNAME_REQUIRED": "",
+		"PHONE_REQUIRED": ""
+	},
+	"CHAT": {
+		"PINNED_MESSAGE": "",
+		"VOICE_MESSAGE": "",
+		"VIDEO_MESSAGE": "",
+		"FORWARD": "",
+		"DELETE": "",
+		"LIVE": "",
+		"LEAVE_OR_STOP": "",
+		"LEAVE": "",
+		"STOP_LIVE": ""
+	},
+	"CALL": {
+		"START_VIDEO": "",
+		"START_CALL": "",
+		"ACCEPT": "",
+		"REJECT": "",
+		"MUTE": "",
+		"CAMERA": "",
+		"END_CALL": "",
+		"CANCEL": "",
+		"VIDEO": "",
+		"SHARE": "",
+		"MINIMIZE": "",
+		"UNMUTE": "",
+		"YOU_ARE_LIVE": "",
+		"CLICK_CAMERA_TO_START": "",
+		"CONNECTING": "",
+		"CALLING": "",
+		"INCOMING_CALL": "",
+		"ENDED": ""
 	}
 }

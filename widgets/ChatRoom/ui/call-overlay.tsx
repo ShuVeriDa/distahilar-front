@@ -8,6 +8,7 @@ import {
 } from "@/shared/hooks/useWebRTCCall"
 import { CallPhaseEnum } from "@/shared/lib/services/call/call.types"
 import { cn } from "@/shared/lib/utils/cn"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { FC, useEffect, useMemo, useState } from "react"
 import { FaVideo } from "react-icons/fa"
@@ -41,6 +42,7 @@ export const CallOverlay: FC<Props> = ({
 		phase,
 		isRemoteVideoOn,
 	} = callState
+	const t = useTranslations("CALL")
 
 	const peerAvatarUrl =
 		chat?.members.find((m: ChatMemberType) => m.userId === peerUserId)?.user
@@ -88,15 +90,14 @@ export const CallOverlay: FC<Props> = ({
 	}
 
 	const statusText = useMemo(() => {
-		if (phase === CallPhaseEnum.IDLE)
-			return "Click on the Camera icon if you want to start a video call."
+		if (phase === CallPhaseEnum.IDLE) return t("CLICK_CAMERA_TO_START")
 		if (phase === CallPhaseEnum.ACTIVE) return formatDuration(callSeconds)
-		if (phase === CallPhaseEnum.CONNECTING) return "Connecting…"
-		if (phase === CallPhaseEnum.CALLING) return "Calling…"
-		if (phase === CallPhaseEnum.INCOMING) return "Incoming call"
-		if (phase === CallPhaseEnum.ENDED) return "Ended"
+		if (phase === CallPhaseEnum.CONNECTING) return t("CONNECTING")
+		if (phase === CallPhaseEnum.CALLING) return t("CALLING")
+		if (phase === CallPhaseEnum.INCOMING) return t("INCOMING_CALL")
+		if (phase === CallPhaseEnum.ENDED) return t("ENDED")
 		return ""
-	}, [phase, callSeconds])
+	}, [phase, callSeconds, t])
 
 	const startDialogAudioCall = () => {
 		if (!peerUserId) return
@@ -222,7 +223,9 @@ export const CallOverlay: FC<Props> = ({
 								<div className="flex items-center justify-center bg-[#66C95B] hover:bg-[#56b14a] p-3 rounded-full">
 									<FaVideo size={22} className="text-white" />
 								</div>
-								<span className="text-white text-[13px]">Start Video</span>
+								<span className="text-white text-[13px]">
+									{t("START_VIDEO")}
+								</span>
 							</Button>
 							<Button
 								variant="clean"
@@ -234,7 +237,7 @@ export const CallOverlay: FC<Props> = ({
 									<IoMdClose size={22} className="text-[#222222]" />
 								</div>
 
-								<span className="text-white text-[13px]">Cancel</span>
+								<span className="text-white text-[13px]">{t("CANCEL")}</span>
 							</Button>
 							<Button
 								variant="clean"
@@ -245,7 +248,9 @@ export const CallOverlay: FC<Props> = ({
 								<div className="flex items-center justify-center bg-[#66C95B] hover:bg-[#56b14a] p-3 rounded-full">
 									<IoMdCall size={22} className="text-white" />
 								</div>
-								<span className="text-white text-[13px]">Start Call</span>
+								<span className="text-white text-[13px]">
+									{t("START_CALL")}
+								</span>
 							</Button>
 						</div>
 					) : phase === CallPhaseEnum.INCOMING ? (
@@ -259,7 +264,7 @@ export const CallOverlay: FC<Props> = ({
 								<div className="flex items-center justify-center bg-[#D75A5A] hover:bg-[#c44a4a] p-3 rounded-full">
 									<MdCallEnd size={22} className="text-white" />
 								</div>
-								<span className="text-white text-[13px]">Reject</span>
+								<span className="text-white text-[13px]">{t("REJECT")}</span>
 							</Button>
 
 							<Button
@@ -271,7 +276,7 @@ export const CallOverlay: FC<Props> = ({
 								<div className="flex items-center justify-center bg-[#66C95B] hover:bg-[#56b14a] p-3 rounded-full">
 									<IoMdCall size={22} className="text-white" />
 								</div>
-								<span className="text-white text-[13px]">Accept</span>
+								<span className="text-white text-[13px]">{t("ACCEPT")}</span>
 							</Button>
 						</div>
 					) : (
@@ -285,7 +290,7 @@ export const CallOverlay: FC<Props> = ({
 								<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-3 rounded-full">
 									{isMuted ? <LuMicOff size={20} /> : <LuMic size={20} />}
 								</div>
-								<span className="text-white text-[13px]">Mute</span>
+								<span className="text-white text-[13px]">{t("MUTE")}</span>
 							</Button>
 							{isVideo ? (
 								<Button
@@ -301,7 +306,7 @@ export const CallOverlay: FC<Props> = ({
 											<LuVideo size={20} />
 										)}
 									</div>
-									<span className="text-white text-[13px]">Camera</span>
+									<span className="text-white text-[13px]">{t("CAMERA")}</span>
 								</Button>
 							) : null}
 							<Button
@@ -313,7 +318,7 @@ export const CallOverlay: FC<Props> = ({
 								<div className="flex items-center justify-center bg-red-500 hover:bg-red-600 p-3 rounded-full">
 									<MdCallEnd size={22} className="text-white" />
 								</div>
-								<span className="text-white text-[13px]">End call</span>
+								<span className="text-white text-[13px]">{t("END_CALL")}</span>
 							</Button>
 						</div>
 					)}

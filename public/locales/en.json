@@ -1,39 +1,240 @@
 {
-	"pages": {
-		"Chat": {
-			"lastSeen": {
-				"justNow": "last seen just now",
-				"minutesAgo": "last seen {count} minute ago",
-				"minutesAgo_plural": "last seen {count} minutes ago",
-				"todayAt": "last seen today at {time}",
-				"weekdayAt": "last seen {day} at {time}",
-				"date": "last seen on {date}",
-				"daysOfWeek": [
-					"Sunday",
-					"Monday",
-					"Tuesday",
-					"Wednesday",
-					"Thursday",
-					"Friday",
-					"Saturday"
-				]
-			},
-			"options": {
-				"reply": "Reply",
-				"edit": "Edit",
-				"pin": "Pin",
-				"copy_text": "Copy text",
-				"forward": "Forward",
-				"delete": "Delete",
-				"select": "Select"
+	"COMMON": {
+		"CONTACTS": "Contacts",
+		"CREATE": "Create",
+		"SAVE": "Save",
+		"CANCEL": "Cancel",
+		"CLOSE": "Close",
+		"SIGN_IN": "Sign in",
+		"SIGN_UP": "Sign up",
+		"USERNAME": "Username",
+		"PASSWORD": "Password",
+		"EMAIL": "Email",
+		"NAME": "Name",
+		"SURNAME": "Surname",
+		"BIO": "Bio (not required)",
+		"SEARCH": "Search",
+		"WRITE_MESSAGE": "Write a message...",
+		"NO_RESULTS": "No Results",
+		"NO_RESULTS_QUERY": "There were no results for \"{query}\"",
+		"FILL_ALL_FIELDS": "Fill in all fields",
+		"DONT_HAVE_ACCOUNT": "You don't have an account?",
+		"ALREADY_HAVE_ACCOUNT": "You already have an account?",
+		"SELECT_CHAT_TO_START": "Select a chat to start messaging",
+		"ONLINE": "online",
+		"MEMBERS": "members",
+		"SUBSCRIBERS": "subscribers",
+		"DELETE_CONTACT": "Delete Contact",
+		"ADD_TO_CONTACTS": "Add to contacts",
+		"DELETE_CHAT": "Delete chat",
+		"MOBILE": "Mobile",
+		"LINK": "Link",
+		"BIO_INFO": "Bio",
+		"DESCRIPTION": "Description",
+		"START_LIVE_STREAM": "Start live stream",
+		"PARTICIPANT": "participant",
+		"CONNECTING": "Connecting…",
+		"MUTED": "Muted",
+		"UNMUTED": "Unmuted",
+		"SHARING_SCREEN": "Sharing screen",
+		"ENDED": "Ended",
+		"LEAVE_OR_STOP": "Leave or stop live?",
+		"LEAVE": "Leave",
+		"STOP_LIVE": "Stop live",
+		"RESTORE": "Restore",
+		"MUTE": "Mute",
+		"UNMUTE": "Unmute",
+		"TURN_CAMERA_ON": "Turn camera on",
+		"TURN_CAMERA_OFF": "Turn camera off",
+		"STOP_SCREEN_SHARE": "Stop screen share",
+		"SHARE_SCREEN": "Share screen",
+		"YOU_ARE_LIVE": "You are live",
+		"MINIMIZE": "Minimize",
+		"VIDEO": "Video",
+		"SHARE": "Share",
+		"NO_LIVE_SESSION": "No live session. Start one to begin.",
+		"SPEAKER": "Speaker",
+		"LISTENER": "Listener"
+	},
+	"PAGES": {
+		"CHAT": {
+			"OPTIONS": {
+				"REPLY": "Reply",
+				"EDIT": "Edit",
+				"PIN": "Pin",
+				"COPY_TEXT": "Copy text",
+				"FORWARD": "Forward",
+				"DELETE": "Delete",
+				"SELECT": "Select"
 			}
 		}
 	},
-	"nav-bar": {
-		"new-group": "New Group",
-		"new-channel": "New Channel",
-		"contacts": "Contacts",
-		"settings": "Settings",
-		"night-mode": "Night Mode"
+	"NAV_BAR": {
+		"NEW_GROUP": "New Group",
+		"NEW_CHANNEL": "New Channel",
+		"CONTACTS": "Contacts",
+		"SETTINGS": "Settings",
+		"NIGHT_MODE": "Night Mode"
+	},
+	"LAST_SEEN": {
+		"JUST_NOW": "last seen just now",
+		"MINUTES_AGO": "last seen {count} minute ago",
+		"MINUTES_AGO_PLURAL": "last seen {count} minutes ago",
+		"TODAY_AT": "last seen today at {time}",
+		"WEEKDAY_AT": "last seen {day} at {time}",
+		"DATE": "last seen on {date}",
+		"DAYS_OF_WEEK": [
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday"
+		]
+	},
+	"MODALS": {
+		"CREATING_GROUP": {
+			"NAME": "Group name",
+			"NAMES_PLACEHOLDER": "Write the name of the group",
+			"DESCRIPTION": "Description (optional)",
+			"DESCRIPTIONS_PLACEHOLDER": "Write the description of the group"
+		},
+		"CREATING_CHANNEL": {
+			"NAME": "Channel name",
+			"NAMES_PLACEHOLDER": "Write the name of the channel",
+			"DESCRIPTION": "Description (optional)",
+			"DESCRIPTIONS_PLACEHOLDER": "Write the description of the channel"
+		},
+		"SETTINGS": {
+			"TITLE": "SETTINGS",
+			"MY_ACCOUNT": "My Account",
+			"FOLDERS": "Folders",
+			"LANGUAGE": "Language"
+		},
+		"MY_ACCOUNT": {
+			"TITLE": "INFO",
+			"BIO": "Bio",
+			"BIO_INFO": {
+				"TITLE": "Any details such as age, occupation or city.",
+				"EXAMPLE": "23 y.o. designer from San Francisco"
+			},
+			"NAME": "Name",
+			"PHONE_NUMBER": "Phone number",
+			"USERNAME": "Username",
+			"USERNAME_INFO": "Username lets people contact you on DistaHilar without needing your phone number."
+		},
+		"EDIT_NAME": {
+			"TITLE": "Edit your name",
+			"FIRST_NAME": "First name",
+			"LAST_NAME": "Last name"
+		},
+		"EDIT_PHONE_NUMBER": {
+			"TITLE": "Edit your phone number",
+			"PHONE_NUMBER": "Phone number"
+		},
+		"EDIT_USERNAME": {
+			"TITLE": "Username",
+			"USERNAME": "@username",
+			"USERNAME_INFO": {
+				"TITLE": "You can choose a username on Telegram. If you do, other people will be able to find you by this username and contract you without knowing your phone number.",
+				"EXAMPLE": "You can user a-z, 0-9 and underscores. Minimum length is 5 characters."
+			}
+		},
+		"FOLDERS": {
+			"TITLE": "Folders",
+			"INFO": "Create folders for different groups of chats and quickly switch between them.",
+			"MY_FOLDERS": "My folders",
+			"CREATE_NEW_FOLDER": "Create new folder",
+			"MANAGE_FOLDER": {
+				"NEW_FOLDER'S_TITLE": "New Folder",
+				"EDIT_FOLDER'S_TITLE": "Edit Folder",
+				"FOLDER_NAME": "Folder name",
+				"INCLUDED_CHATS": "Included chats",
+				"CHOOSE_AN_ICON": "Choose an icon",
+				"ADD_CHATS": "Add chats",
+				"INCLUDE_CHATS": "Include chats",
+				"CHATS": "Chats"
+			}
+		},
+		"DELETE_MESSAGES": {
+			"TITLE": "Do you want to delete this message?",
+			"ALSO_DELETE_FOR": "Also delete for {name}",
+			"DELETE_BUTTON": "Delete"
+		},
+		"DELETE_CHAT": {
+			"TITLE": "Delete chat",
+			"CONFIRMATION": "Are you sure you want to delete all message history with {name}?",
+			"CANNOT_UNDONE": "This action cannot be undone.",
+			"ALSO_DELETE_FOR": "Also delete for {name}",
+			"DELETE_BUTTON": "Delete"
+		},
+		"CREATE_CHANNEL_GROUP": {
+			"CHANNEL_NAME": "Channel name",
+			"GROUP_NAME": "Group name",
+			"CHANNEL_PLACEHOLDER": "Write the name of the channel",
+			"GROUP_PLACEHOLDER": "Write the name of the group",
+			"DESCRIPTION_OPTIONAL": "Description (optional)",
+			"CHANNEL_DESCRIPTION_PLACEHOLDER": "Write the description of the channel",
+			"GROUP_DESCRIPTION_PLACEHOLDER": "Write the description of the group",
+			"NAME_REQUIRED": "Name is required"
+		},
+		"ADD_FILE": {
+			"FILES_SELECTED": "{count} files selected",
+			"SEND_AS_FILE": "Send as a file",
+			"COMMENT": "Comment",
+			"ADD": "Add",
+			"SEND": "Send"
+		},
+		"ACCOUNT_INFO": {
+			"TITLE": "Info",
+			"BIO_PLACEHOLDER": "Bio",
+			"PHONE_REQUIRED": "Phone number is required",
+			"INVALID_PHONE": "Invalid phone number format",
+			"LAST_NAME_REQUIRED": "Last name is required",
+			"LAST_NAME_MIN_LENGTH": "Last name must be at least 2 characters long",
+			"LAST_NAME_MAX_LENGTH": "Last name must be no more than 32 characters long"
+		}
+	},
+	"VALIDATION": {
+		"USERNAME_REQUIRED": "Username is required",
+		"PASSWORD_REQUIRED": "Password must be at least 6 characters",
+		"EMAIL_REQUIRED": "Email is required",
+		"NAME_REQUIRED": "Name is required",
+		"NAME_MIN_LENGTH": "Name must be at least 2 characters long",
+		"NAME_MAX_LENGTH": "Name must be no more than 32 characters long",
+		"SURNAME_REQUIRED": "Surname is required",
+		"PHONE_REQUIRED": "phone is required"
+	},
+	"CHAT": {
+		"PINNED_MESSAGE": "Pinned Message",
+		"VOICE_MESSAGE": "Voice message",
+		"VIDEO_MESSAGE": "Video message",
+		"FORWARD": "Forward",
+		"DELETE": "Delete",
+		"LIVE": "LIVE",
+		"LEAVE_OR_STOP": "Leave or stop live?",
+		"LEAVE": "Leave",
+		"STOP_LIVE": "Stop live"
+	},
+	"CALL": {
+		"START_VIDEO": "Start Video",
+		"START_CALL": "Start Call",
+		"ACCEPT": "Accept",
+		"REJECT": "Reject",
+		"MUTE": "Mute",
+		"CAMERA": "Camera",
+		"END_CALL": "End call",
+		"CANCEL": "Cancel",
+		"VIDEO": "Video",
+		"SHARE": "Share",
+		"MINIMIZE": "Minimize",
+		"UNMUTE": "Unmute",
+		"YOU_ARE_LIVE": "You are live",
+		"CLICK_CAMERA_TO_START": "Click on the Camera icon if you want to start a video call.",
+		"CONNECTING": "Connecting…",
+		"CALLING": "Calling…",
+		"INCOMING_CALL": "Incoming call",
+		"ENDED": "Ended"
 	}
 }

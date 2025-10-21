@@ -5,12 +5,14 @@ import {
 	MemberRole,
 	UserType,
 } from "@/prisma/models"
+import { useTranslations } from "next-intl"
 import { useFormatLastSeen } from "../lib/utils/formatLastSeen"
 
 export const useChatInfo = (
 	chat: ChatType | undefined,
 	user: UserType | null
 ) => {
+	const t = useTranslations("COMMON")
 	const interlocutor = chat?.members.find(
 		(m: ChatMemberType) => m.userId !== user?.id
 	)?.user
@@ -34,14 +36,14 @@ export const useChatInfo = (
 	const lastSeen = useFormatLastSeen(interlocutor?.lastSeen)
 
 	const online = interlocutor?.isOnline
-		? "online"
+		? t("ONLINE")
 		: `${interlocutor?.lastSeen ? lastSeen : " "}`
 
 	const onlineOrFollowers = isDialog
 		? online
 		: isGroup
-		? `${chat?.members.length} members`
-		: `${chat?.members.length} subscribers`
+		? `${chat?.members.length} ${t("MEMBERS")}`
+		: `${chat?.members.length} ${t("SUBSCRIBERS")}`
 
 	return {
 		nameOfChat,

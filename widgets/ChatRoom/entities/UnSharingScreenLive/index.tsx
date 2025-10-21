@@ -2,6 +2,7 @@ import { Typography } from "@/shared"
 import { UseLiveRoomApi } from "@/shared/hooks/useLiveRoom"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { cn } from "@/shared/lib/utils/cn"
+import { useTranslations } from "next-intl"
 import { FC, useMemo } from "react"
 import { LiveControls } from "../../features/LiveControls"
 import { HeaderOfLiveStream } from "../HeaderOfLiveStream"
@@ -47,6 +48,7 @@ export const UnSharingScreenLive: FC<IUnSharingScreenLiveProps> = ({
 	handleLeaveClick,
 	handleMinimize,
 }) => {
+	const t = useTranslations("COMMON")
 	const selectCameraOnlyStream = (stream: MediaStream | null) => {
 		if (!stream) return null
 		const videoTracks = stream.getVideoTracks ? stream.getVideoTracks() : []
@@ -117,7 +119,7 @@ export const UnSharingScreenLive: FC<IUnSharingScreenLiveProps> = ({
 				) : (
 					<div className="w-full h-full flex items-center justify-center">
 						<Typography tag="span" className="text-white/70 text-[15px]">
-							No live session. Start one to begin.
+							{t("NO_LIVE_SESSION")}
 						</Typography>
 					</div>
 				)}

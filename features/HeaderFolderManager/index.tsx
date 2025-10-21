@@ -6,6 +6,7 @@ import { Field } from "@/shared/ui/Field"
 import { IconsRendererType } from "@/shared/ui/IconRenderer/data"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { HoverCardWrapper } from "@/widgets/HoverCardWrapper"
+import { useTranslations } from "next-intl"
 
 interface IHeaderFolderManagerProps {
 	title: string
@@ -27,6 +28,8 @@ export const HeaderFolderManager: FC<IHeaderFolderManagerProps> = ({
 	onChangeIcon,
 	className,
 }) => {
+	const t = useTranslations("MODALS.FOLDERS.MANAGE_FOLDER")
+
 	return (
 		<div
 			className={cn(
@@ -41,7 +44,7 @@ export const HeaderFolderManager: FC<IHeaderFolderManagerProps> = ({
 
 			<div className="relative">
 				<Field
-					label="Folder name"
+					label={t("FOLDER_NAME")}
 					variant={"primary"}
 					value={folderName}
 					onChange={onChangeFolderName}

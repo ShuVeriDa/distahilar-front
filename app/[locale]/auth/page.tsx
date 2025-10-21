@@ -4,6 +4,7 @@ import { Login } from "@/features/Login"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { Register } from "@/widgets/Register"
 import { NextPage } from "next"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -11,17 +12,16 @@ interface IAuthProps {}
 
 const Auth: NextPage<IAuthProps> = () => {
 	const [type, setType] = useState<"login" | "register">("login")
+	const t = useTranslations("COMMON")
 
 	const onChangeType = () => {
 		if (type === "login") setType("register")
 		else setType("login")
 	}
 
-	const header = type === "login" ? "Sign in" : "Sign up"
+	const header = type === "login" ? t("SIGN_IN") : t("SIGN_UP")
 	const titleForDescription =
-		type === "login"
-			? "You don't have an account?"
-			: "You already have an account?"
+		type === "login" ? t("DONT_HAVE_ACCOUNT") : t("ALREADY_HAVE_ACCOUNT")
 
 	return (
 		<div className="w-full h-screen flex justify-center items-center">
@@ -35,7 +35,7 @@ const Auth: NextPage<IAuthProps> = () => {
 						{`${header} to Distahilar`}
 					</Typography>
 					<Typography tag="p" className="text-[16px] text-[#aaaaaa]">
-						Fill in all fields
+						{t("FILL_ALL_FIELDS")}
 					</Typography>
 				</div>
 
@@ -48,7 +48,7 @@ const Auth: NextPage<IAuthProps> = () => {
 							onClick={onChangeType}
 							className="dark:text-white text-gray-600 font-bold hover:cursor-pointer"
 						>
-							{type === "login" ? "Sign up" : "Sign in"}
+							{type === "login" ? t("SIGN_UP") : t("SIGN_IN")}
 						</span>
 					</Typography>
 				</div>

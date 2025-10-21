@@ -4,6 +4,7 @@ import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
 import { passwordPattern } from "@/shared/lib/utils/patterns"
 import { Button } from "@/shared/ui/Button"
 import { Field } from "@/shared/ui/Field"
+import { useTranslations } from "next-intl"
 import { FC } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { VscLoading } from "react-icons/vsc"
@@ -18,6 +19,8 @@ interface ILoginProps {}
 export const Login: FC<ILoginProps> = () => {
 	const { login } = useAuthQuery()
 	const { mutateAsync, isPending, isSuccess } = login
+	const t = useTranslations("COMMON")
+	const tValidation = useTranslations("VALIDATION")
 
 	const {
 		register,
@@ -36,24 +39,24 @@ export const Login: FC<ILoginProps> = () => {
 			<div className="flex flex-col gap-2 w-[300px]">
 				<Field
 					type="text"
-					placeholder="Username"
+					placeholder={t("USERNAME")}
 					minLength={2}
 					maxLength={16}
 					register={register("username", {
-						required: "Username is required",
+						required: tValidation("USERNAME_REQUIRED"),
 					})}
 					disabled={isPending}
 					errors={errors.username}
 				/>
 				<Field
 					type="password"
-					placeholder="Password"
+					placeholder={t("PASSWORD")}
 					minLength={6}
 					register={register("password", {
 						required: true,
 						minLength: {
 							value: 6,
-							message: "Password must be at least 6 characters",
+							message: tValidation("PASSWORD_REQUIRED"),
 						},
 						pattern: passwordPattern,
 					})}
@@ -64,7 +67,7 @@ export const Login: FC<ILoginProps> = () => {
 					{isPending || isSuccess ? (
 						<VscLoading className="animate-spin" />
 					) : (
-						"Sign in"
+						t("SIGN_IN")
 					)}
 				</Button>
 			</div>

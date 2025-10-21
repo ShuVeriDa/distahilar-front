@@ -8,6 +8,7 @@ import { useChangeAccountInfo } from "@/shared/hooks/useChangeAccountInfo"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { useTranslations } from "next-intl"
 
 interface IModalChangePhoneProps {}
 
@@ -23,6 +24,8 @@ export const ModalChangePhone: FC<IModalChangePhoneProps> = () => {
 		onCloseCurrentModal,
 		onChangePhone,
 	} = useChangeAccountInfo()
+	const t = useTranslations("MODALS.EDIT_PHONE_NUMBER")
+	const tAccountInfo = useTranslations("MODALS.ACCOUNT_INFO")
 
 	return (
 		<ModalLayout
@@ -35,20 +38,20 @@ export const ModalChangePhone: FC<IModalChangePhoneProps> = () => {
 				<div className="flex flex-col">
 					<div className={cn("flex flex-col gap-4 px-4 py-4")}>
 						<Typography tag="h4" className="font-normal">
-							Edit your phone number
+							{t("TITLE")}
 						</Typography>
 					</div>
 					<div className="flex flex-col gap-2 px-4">
 						<Field
 							variant="primary"
-							label="Phone number"
+							label={t("PHONE_NUMBER")}
 							value={phoneValue}
 							{...register("phone", {
-								required: "Phone number is required",
+								required: tAccountInfo("PHONE_REQUIRED"),
 								validate: value =>
 									/^\+?\d+\s?\(?\d{1,3}\)?\s?\d{1,3}-\d{1,2}-\d{1,2}$/.test(
 										value ? value : ""
-									) || "Invalid phone number format",
+									) || tAccountInfo("INVALID_PHONE"),
 								onChange: onChangePhone,
 							})}
 							type="tel"

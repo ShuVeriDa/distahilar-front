@@ -6,6 +6,7 @@ import {
 	useDeleteContactQuery,
 } from "@/shared/lib/services/contact/useContactQuery"
 import { cn } from "@/shared/lib/utils/cn"
+import { useTranslations } from "next-intl"
 import { FC, useCallback, useMemo } from "react"
 import { GoTrash } from "react-icons/go"
 import { MdOutlinePersonAddAlt } from "react-icons/md"
@@ -26,12 +27,13 @@ export const ManageContact: FC<IManageContactProps> = ({
 	interlocutorsAvatar,
 }) => {
 	const { user } = useUser()
+	const t = useTranslations("COMMON")
 
 	const isContactExist = user?.contactSaver.some(
 		contact => contact.savedContactId === interlocutorId
 	)
 
-	const title = isContactExist ? "Delete Contact" : "Add to contacts"
+	const title = isContactExist ? t("DELETE_CONTACT") : t("ADD_TO_CONTACTS")
 
 	const { mutateAsync: addContact } = useCreateContactQuery()
 	const { mutateAsync: removeContact } = useDeleteContactQuery(interlocutorId!)
@@ -61,7 +63,7 @@ export const ManageContact: FC<IManageContactProps> = ({
 				function: () => handleManageContact(),
 			},
 			{
-				title: "Delete chat",
+				title: t("DELETE_CHAT"),
 				icon: <GoTrash size={23} className="text-[#EC3942]" />,
 				function: () => {
 					onOpenModal(EnumModel.DELETE_CHAT, {
@@ -85,6 +87,7 @@ export const ManageContact: FC<IManageContactProps> = ({
 			isContactExist,
 			onOpenModal,
 			title,
+			t,
 		]
 	)
 

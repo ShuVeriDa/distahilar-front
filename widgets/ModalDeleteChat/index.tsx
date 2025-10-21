@@ -7,6 +7,7 @@ import { ChatRole } from "@/prisma/models"
 import { Typography, useModal } from "@/shared"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { useDeleteChatQuery } from "@/shared/lib/services/chat/useChatQuery"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { FaCheck } from "react-icons/fa6"
 
@@ -15,6 +16,7 @@ interface IModalDeleteChatProps {}
 export const ModalDeleteChat: FC<IModalDeleteChatProps> = () => {
 	const [isDeleteBoth, setIsDeleteBoth] = useState<boolean>(false)
 	const onToggleDeleteBoth = () => setIsDeleteBoth(!isDeleteBoth)
+	const t = useTranslations("MODALS.DELETE_CHAT")
 
 	const { onClose, currentModal } = useModal()
 	const { data } = currentModal
@@ -58,15 +60,14 @@ export const ModalDeleteChat: FC<IModalDeleteChatProps> = () => {
 
 					<div>
 						<Typography tag="p" className="text-[18px] ">
-							Delete chat
+							{t("TITLE")}
 						</Typography>
 					</div>
 				</div>
 				<Typography tag="p" className="text-[15px] ">
-					Are you sure you want to delete all message history with{" "}
-					{interlocutorsName}? <br />
+					{t("CONFIRMATION", { name: interlocutorsName ?? "" })} <br />
 					<br />
-					This action cannot be undone.
+					{t("CANNOT_UNDONE")}
 				</Typography>
 				{chatType === ChatRole.DIALOG && (
 					<div className="flex gap-3">
@@ -82,7 +83,7 @@ export const ModalDeleteChat: FC<IModalDeleteChatProps> = () => {
 							</div>
 
 							<Typography tag="p" className="text-[15px]">
-								Also delete for {interlocutorsName}
+								{t("ALSO_DELETE_FOR", { name: interlocutorsName ?? "" })}
 							</Typography>
 						</label>
 					</div>
@@ -94,7 +95,7 @@ export const ModalDeleteChat: FC<IModalDeleteChatProps> = () => {
 				onSave={onDeleteChat}
 				isLoading={false}
 				type="button"
-				anotherName="Delete"
+				anotherName={t("DELETE_BUTTON")}
 				className="after:h-0"
 			/>
 		</ModalLayout>

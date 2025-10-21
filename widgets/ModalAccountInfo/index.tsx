@@ -7,6 +7,7 @@ import { useUser } from "@/shared/hooks/useUser"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { useTranslations } from "next-intl"
 import { NameAndOnline } from "./entities/NameAndOnline"
 import { Avatar } from "./features/Avatar"
 import { Bio } from "./features/Bio"
@@ -18,6 +19,8 @@ interface IModalAccountInfoProps {}
 export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 	const { onClose, popoverRef, onCloseCurrentModal } = useModal()
 	const { user } = useUser()
+	const tAccountInfo = useTranslations("MODALS.ACCOUNT_INFO")
+	const tMyAccount = useTranslations("MODALS.MY_ACCOUNT")
 
 	return (
 		<ModalLayout
@@ -30,7 +33,7 @@ export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 		>
 			<div className={cn("flex flex-col gap-4 ml-12 px-4 py-4")}>
 				<Typography tag="h4" className="font-normal">
-					Info
+					{tAccountInfo("TITLE")}
 				</Typography>
 			</div>
 			<div className="w-full flex flex-col gap-5 items-center justify-center pb-1.5">
@@ -44,18 +47,16 @@ export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 			</div>
 			<Description
 				text={cn(
-					`Any details such as age, occupation or city. Example: 23 y.o. designer from San Francisco`
+					`${tMyAccount("BIO_INFO.TITLE")} Example: ${tMyAccount(
+						"BIO_INFO.EXAMPLE"
+					)}`
 				)}
 				splitWord="Example:"
 			/>
 
 			<Info user={user!} />
 
-			<Description
-				text={cn(
-					`Username lets people contact you on DistaHilar without needing your phone number.`
-				)}
-			/>
+			<Description text={cn(tMyAccount("USERNAME_INFO"))} />
 		</ModalLayout>
 	)
 }

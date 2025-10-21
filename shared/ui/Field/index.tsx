@@ -72,6 +72,7 @@ export const Field: FC<IFieldProps> = ({ isType = "input", ...props }) => {
 					className={className}
 					placeholder={placeholder}
 					register={register}
+					labelClassName={classNameLabel}
 					{...rest}
 				/>
 			)}

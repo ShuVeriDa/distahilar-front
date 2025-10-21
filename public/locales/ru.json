@@ -1,39 +1,240 @@
 {
-	"pages": {
-		"Chat": {
-			"lastSeen": {
-				"justNow": "был(а) только что",
-				"minutesAgo": "был(а) {count} минуту назад",
-				"minutesAgo_plural": "был(а) {count} минуты назад",
-				"todayAt": "был(а) сегодня в {time}",
-				"weekdayAt": "был(а) {day} в {time}",
-				"date": "был(а) {date}",
-				"daysOfWeek": [
-					"воскресенье",
-					"понедельник",
-					"вторник",
-					"среда",
-					"четверг",
-					"пятница",
-					"суббота"
-				]
-			},
-			"options": {
-				"reply": "Ответить",
-				"edit": "Редактировать",
-				"pin": "Закрепить",
-				"copy_text": "Копировать текст",
-				"forward": "Переслать",
-				"delete": "Удалить",
-				"select": "Выбрать"
+	"COMMON": {
+		"CONTACTS": "Контакты",
+		"CREATE": "Создать",
+		"SAVE": "Сохранить",
+		"CANCEL": "Отмена",
+		"CLOSE": "Закрыть",
+		"SIGN_IN": "Войти",
+		"SIGN_UP": "Зарегистрироваться",
+		"USERNAME": "Имя пользователя",
+		"PASSWORD": "Пароль",
+		"EMAIL": "Электронная почта",
+		"NAME": "Имя",
+		"SURNAME": "Фамилия",
+		"BIO": "О себе (необязательно)",
+		"SEARCH": "Поиск",
+		"WRITE_MESSAGE": "Написать сообщение...",
+		"NO_RESULTS": "Нет результатов",
+		"NO_RESULTS_QUERY": "По запросу \"{query}\" ничего не найдено",
+		"FILL_ALL_FIELDS": "Заполните все поля",
+		"DONT_HAVE_ACCOUNT": "У вас нет аккаунта?",
+		"ALREADY_HAVE_ACCOUNT": "У вас уже есть аккаунт?",
+		"SELECT_CHAT_TO_START": "Выберите чат для начала переписки",
+		"ONLINE": "в сети",
+		"MEMBERS": "участников",
+		"SUBSCRIBERS": "подписчиков",
+		"DELETE_CONTACT": "Удалить контакт",
+		"ADD_TO_CONTACTS": "Добавить в контакты",
+		"DELETE_CHAT": "Удалить чат",
+		"MOBILE": "Мобильный",
+		"LINK": "Ссылка",
+		"BIO_INFO": "О себе",
+		"DESCRIPTION": "Описание",
+		"START_LIVE_STREAM": "Начать прямую трансляцию",
+		"PARTICIPANT": "участник",
+		"CONNECTING": "Подключение…",
+		"MUTED": "Выключен",
+		"UNMUTED": "Включен",
+		"SHARING_SCREEN": "Демонстрация экрана",
+		"ENDED": "Завершена",
+		"LEAVE_OR_STOP": "Покинуть или остановить трансляцию?",
+		"LEAVE": "Покинуть",
+		"STOP_LIVE": "Остановить трансляцию",
+		"RESTORE": "Восстановить",
+		"MUTE": "Отключить звук",
+		"UNMUTE": "Включить звук",
+		"TURN_CAMERA_ON": "Включить камеру",
+		"TURN_CAMERA_OFF": "Выключить камеру",
+		"STOP_SCREEN_SHARE": "Остановить демонстрацию экрана",
+		"SHARE_SCREEN": "Демонстрация экрана",
+		"YOU_ARE_LIVE": "Вы в эфире",
+		"MINIMIZE": "Свернуть",
+		"VIDEO": "Видео",
+		"SHARE": "Поделиться",
+		"NO_LIVE_SESSION": "Нет активной трансляции. Начните трансляцию для продолжения.",
+		"SPEAKER": "Докладчик",
+		"LISTENER": "Слушатель"
+	},
+	"PAGES": {
+		"CHAT": {
+			"OPTIONS": {
+				"REPLY": "Ответить",
+				"EDIT": "Редактировать",
+				"PIN": "Закрепить",
+				"COPY_TEXT": "Копировать текст",
+				"FORWARD": "Переслать",
+				"DELETE": "Удалить",
+				"SELECT": "Выбрать"
 			}
 		}
 	},
-	"nav-bar": {
-		"new-group": "Создать группу",
-		"new-channel": "Создать канал",
-		"contacts": "Контакты",
-		"settings": "Настройки",
-		"night-mode": "Ночной режим"
+	"LAST_SEEN": {
+		"JUST_NOW": "был(а) только что",
+		"MINUTES_AGO": "был(а) {count} минуту назад",
+		"MINUTES_AGO_PLURAL": "был(а) {count} минуты назад",
+		"TODAY_AT": "был(а) сегодня в {time}",
+		"WEEKDAY_AT": "был(а) {day} в {time}",
+		"DATE": "был(а) {date}",
+		"DAYS_OF_WEEK": [
+			"воскресенье",
+			"понедельник",
+			"вторник",
+			"среда",
+			"четверг",
+			"пятница",
+			"суббота"
+		]
+	},
+	"NAV_BAR": {
+		"NEW_GROUP": "Создать группу",
+		"NEW_CHANNEL": "Создать канал",
+		"CONTACTS": "Контакты",
+		"SETTINGS": "Настройки",
+		"NIGHT_MODE": "Ночной режим"
+	},
+	"MODALS": {
+		"CREATING_GROUP": {
+			"NAME": "Название группы",
+			"NAMES_PLACEHOLDER": "Введите название группы",
+			"DESCRIPTION": "Описание (необязательно)",
+			"DESCRIPTIONS_PLACEHOLDER": "Введите описание группы"
+		},
+		"CREATING_CHANNEL": {
+			"NAME": "Название канала",
+			"NAMES_PLACEHOLDER": "Введите название канала",
+			"DESCRIPTION": "Описание (необязательно)",
+			"DESCRIPTIONS_PLACEHOLDER": "Введите описание канала"
+		},
+		"SETTINGS": {
+			"TITLE": "НАСТРОЙКИ",
+			"MY_ACCOUNT": "Мой аккаунт",
+			"FOLDERS": "Папки",
+			"LANGUAGE": "Язык"
+		},
+		"MY_ACCOUNT": {
+			"TITLE": "ИНФОРМАЦИЯ",
+			"BIO": "О себе",
+			"BIO_INFO": {
+				"TITLE": "Любая информация, например возраст, профессия или город.",
+				"EXAMPLE": "23 года, дизайнер из Сан-Франциско"
+			},
+			"NAME": "Имя",
+			"PHONE_NUMBER": "Номер телефона",
+			"USERNAME": "Имя пользователя",
+			"USERNAME_INFO": "Имя пользователя позволяет другим людям связаться с вами в DistaHilar, не зная ваш номер телефона."
+		},
+		"EDIT_NAME": {
+			"TITLE": "Редактировать имя",
+			"FIRST_NAME": "Имя",
+			"LAST_NAME": "Фамилия"
+		},
+		"EDIT_PHONE_NUMBER": {
+			"TITLE": "Редактировать номер телефона",
+			"PHONE_NUMBER": "Номер телефона"
+		},
+		"EDIT_USERNAME": {
+			"TITLE": "Имя пользователя",
+			"USERNAME": "@имя_пользователя",
+			"USERNAME_INFO": {
+				"TITLE": "Вы можете выбрать имя пользователя. Если вы это сделаете, другие люди смогут найти вас по этому имени и связаться с вами, не зная ваш номер телефона.",
+				"EXAMPLE": "Можно использовать a-z, 0-9 и подчеркивания. Минимальная длина — 5 символов."
+			}
+		},
+		"FOLDERS": {
+			"TITLE": "Папки",
+			"INFO": "Создавайте папки для разных групп чатов и быстро переключайтесь между ними.",
+			"MY_FOLDERS": "Мои папки",
+			"CREATE_NEW_FOLDER": "Создать новую папку",
+			"MANAGE_FOLDER": {
+				"NEW_FOLDER'S_TITLE": "Новая папка",
+				"EDIT_FOLDER'S_TITLE": "Редактировать папку",
+				"FOLDER_NAME": "Название папки",
+				"INCLUDED_CHATS": "Включенные чаты",
+				"CHOOSE_AN_ICON": "Выберите иконку",
+				"ADD_CHATS": "Добавить чаты",
+				"INCLUDE_CHATS": "Включить чаты",
+				"CHATS": "Чаты"
+			}
+		},
+		"DELETE_MESSAGES": {
+			"TITLE": "Удалить это сообщение?",
+			"ALSO_DELETE_FOR": "Также удалить для {name}",
+			"DELETE_BUTTON": "Удалить"
+		},
+		"DELETE_CHAT": {
+			"TITLE": "Удалить чат",
+			"CONFIRMATION": "Вы уверены, что хотите удалить всю историю сообщений с {name}?",
+			"CANNOT_UNDONE": "Это действие нельзя отменить.",
+			"ALSO_DELETE_FOR": "Также удалить для {name}",
+			"DELETE_BUTTON": "Удалить"
+		},
+		"CREATE_CHANNEL_GROUP": {
+			"CHANNEL_NAME": "Название канала",
+			"GROUP_NAME": "Название группы",
+			"CHANNEL_PLACEHOLDER": "Введите название канала",
+			"GROUP_PLACEHOLDER": "Введите название группы",
+			"DESCRIPTION_OPTIONAL": "Описание (необязательно)",
+			"CHANNEL_DESCRIPTION_PLACEHOLDER": "Введите описание канала",
+			"GROUP_DESCRIPTION_PLACEHOLDER": "Введите описание группы",
+			"NAME_REQUIRED": "Имя обязательно"
+		},
+		"ADD_FILE": {
+			"FILES_SELECTED": "Выбрано {count} файлов",
+			"SEND_AS_FILE": "Отправить как файл",
+			"COMMENT": "Комментарий",
+			"ADD": "Добавить",
+			"SEND": "Отправить"
+		},
+		"ACCOUNT_INFO": {
+			"TITLE": "Информация",
+			"BIO_PLACEHOLDER": "О себе",
+			"PHONE_REQUIRED": "Номер телефона обязателен",
+			"INVALID_PHONE": "Неверный формат номера телефона",
+			"LAST_NAME_REQUIRED": "Фамилия обязательна",
+			"LAST_NAME_MIN_LENGTH": "Фамилия должна содержать минимум 2 символа",
+			"LAST_NAME_MAX_LENGTH": "Фамилия должна содержать максимум 32 символа"
+		}
+	},
+	"VALIDATION": {
+		"USERNAME_REQUIRED": "Имя пользователя обязательно",
+		"PASSWORD_REQUIRED": "Пароль должен содержать минимум 6 символов",
+		"EMAIL_REQUIRED": "Электронная почта обязательна",
+		"NAME_REQUIRED": "Имя обязательно",
+		"NAME_MIN_LENGTH": "Имя должно содержать минимум 2 символа",
+		"NAME_MAX_LENGTH": "Имя должно содержать максимум 32 символа",
+		"SURNAME_REQUIRED": "Фамилия обязательна",
+		"PHONE_REQUIRED": "Телефон обязателен"
+	},
+	"CHAT": {
+		"PINNED_MESSAGE": "Закрепленное сообщение",
+		"VOICE_MESSAGE": "Голосовое сообщение",
+		"VIDEO_MESSAGE": "Видеосообщение",
+		"FORWARD": "Переслать",
+		"DELETE": "Удалить",
+		"LIVE": "В ЭФИРЕ",
+		"LEAVE_OR_STOP": "Покинуть или остановить трансляцию?",
+		"LEAVE": "Покинуть",
+		"STOP_LIVE": "Остановить трансляцию"
+	},
+	"CALL": {
+		"START_VIDEO": "Начать видео",
+		"START_CALL": "Начать звонок",
+		"ACCEPT": "Принять",
+		"REJECT": "Отклонить",
+		"MUTE": "Отключить звук",
+		"CAMERA": "Камера",
+		"END_CALL": "Завершить звонок",
+		"CANCEL": "Отмена",
+		"VIDEO": "Видео",
+		"SHARE": "Поделиться",
+		"MINIMIZE": "Свернуть",
+		"UNMUTE": "Включить звук",
+		"YOU_ARE_LIVE": "Вы в эфире",
+		"CLICK_CAMERA_TO_START": "Нажмите на иконку камеры, если хотите начать видеозвонок.",
+		"CONNECTING": "Подключение…",
+		"CALLING": "Звонок…",
+		"INCOMING_CALL": "Входящий звонок",
+		"ENDED": "Завершен"
 	}
 }

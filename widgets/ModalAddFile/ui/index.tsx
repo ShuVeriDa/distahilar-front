@@ -7,6 +7,7 @@ import { Button, Field, Typography, useModal } from "@/shared"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { getTypeOfMedia } from "@/shared/lib/utils/getTypeOfMedia"
+import { useTranslations } from "next-intl"
 import { FileItem } from "../features/Fileitem"
 import { useModelFileManager } from "../shared/hooks/modelFileManager"
 
@@ -14,6 +15,7 @@ interface IModalAddFileProps {}
 
 export const ModalAddFile: FC<IModalAddFileProps> = () => {
 	const { onClose, currentModal } = useModal()
+	const t = useTranslations("MODALS.ADD_FILE")
 
 	const { data } = currentModal
 	const addedFiles = data?.addFiles?.files
@@ -45,7 +47,9 @@ export const ModalAddFile: FC<IModalAddFileProps> = () => {
 	)
 
 	const title =
-		files.length > 1 ? `${files.length} files selected` : "Send as a file"
+		files.length > 1
+			? t("FILES_SELECTED", { count: files.length })
+			: t("SEND_AS_FILE")
 
 	return (
 		<ModalLayout
@@ -82,7 +86,7 @@ export const ModalAddFile: FC<IModalAddFileProps> = () => {
 					</div>
 
 					<Field
-						label="Comment"
+						label={t("COMMENT")}
 						variant={"primary"}
 						value={comment ?? ""}
 						onChange={onChangeComment}
@@ -102,7 +106,7 @@ export const ModalAddFile: FC<IModalAddFileProps> = () => {
 					onClick={onOpenInput}
 					disabled={lengthIs10 || isLoading}
 				>
-					<Typography className="text-[14px]">Add</Typography>
+					<Typography className="text-[14px]">{t("ADD")}</Typography>
 				</Button>
 
 				<input
@@ -119,7 +123,7 @@ export const ModalAddFile: FC<IModalAddFileProps> = () => {
 					isLoading={isLoading}
 					isLoadingCircle={isLoading}
 					type="button"
-					anotherName="Send"
+					anotherName={t("SEND")}
 					className="after:h-0 px-0"
 				/>
 			</div>

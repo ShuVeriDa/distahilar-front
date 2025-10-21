@@ -9,6 +9,7 @@ import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { Skeleton } from "@/shared/ui/Skeleton/skeleton"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { useTranslations } from "next-intl"
 import { FaPlus } from "react-icons/fa"
 import { FolderItem } from "../../shared/ui/FolderItem"
 
@@ -16,6 +17,7 @@ interface IMyFoldersProps {}
 
 export const MyFolders = ({}: IMyFoldersProps) => {
 	const { onOpenModal } = useModal()
+	const t = useTranslations("MODALS.FOLDERS")
 
 	const { data, isSuccess, isLoading } = useFetchFolders()
 	const { mutateAsync: deleteFolderMutate } = useDeleteFolderById()
@@ -26,7 +28,7 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 		<div className="w-full  flex flex-col">
 			<div className="px-5 py-4">
 				<Typography tag="h5" className="text-[#168ACD] font-normal text-[16px]">
-					My folders
+					{t("MY_FOLDERS")}
 				</Typography>
 			</div>
 			<div className="flex flex-col gap-1 w-full pb-2">
@@ -79,7 +81,7 @@ export const MyFolders = ({}: IMyFoldersProps) => {
 								tag="p"
 								className="text-[14px] font-normal text-[#71a3d8]"
 							>
-								Create new folder
+								{t("CREATE_NEW_FOLDER")}
 							</Typography>
 						</div>
 					</div>
