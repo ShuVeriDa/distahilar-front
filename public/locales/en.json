@@ -62,6 +62,7 @@
 				"REPLY": "Reply",
 				"EDIT": "Edit",
 				"PIN": "Pin",
+				"UNPIN": "Unpin",
 				"COPY_TEXT": "Copy text",
 				"FORWARD": "Forward",
 				"DELETE": "Delete",
@@ -137,7 +138,7 @@
 			"TITLE": "Username",
 			"USERNAME": "@username",
 			"USERNAME_INFO": {
-				"TITLE": "You can choose a username on Telegram. If you do, other people will be able to find you by this username and contract you without knowing your phone number.",
+				"TITLE": "You can choose a username on DistaHilar. If you do, other people will be able to find you by this username and contract you without knowing your phone number.",
 				"EXAMPLE": "You can user a-z, 0-9 and underscores. Minimum length is 5 characters."
 			}
 		},
@@ -146,6 +147,8 @@
 			"INFO": "Create folders for different groups of chats and quickly switch between them.",
 			"MY_FOLDERS": "My folders",
 			"CREATE_NEW_FOLDER": "Create new folder",
+			"FOLDER_IS_EMPTY": "Folder is empty",
+			"CHATS_COUNT": "{count} chats",
 			"MANAGE_FOLDER": {
 				"NEW_FOLDER'S_TITLE": "New Folder",
 				"EDIT_FOLDER'S_TITLE": "Edit Folder",
@@ -169,16 +172,7 @@
 			"ALSO_DELETE_FOR": "Also delete for {name}",
 			"DELETE_BUTTON": "Delete"
 		},
-		"CREATE_CHANNEL_GROUP": {
-			"CHANNEL_NAME": "Channel name",
-			"GROUP_NAME": "Group name",
-			"CHANNEL_PLACEHOLDER": "Write the name of the channel",
-			"GROUP_PLACEHOLDER": "Write the name of the group",
-			"DESCRIPTION_OPTIONAL": "Description (optional)",
-			"CHANNEL_DESCRIPTION_PLACEHOLDER": "Write the description of the channel",
-			"GROUP_DESCRIPTION_PLACEHOLDER": "Write the description of the group",
-			"NAME_REQUIRED": "Name is required"
-		},
+
 		"ADD_FILE": {
 			"FILES_SELECTED": "{count} files selected",
 			"SEND_AS_FILE": "Send as a file",

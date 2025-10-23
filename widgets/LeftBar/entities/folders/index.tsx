@@ -5,12 +5,14 @@ import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 
 import { useFolder } from "@/shared/hooks/useFolder"
 import { useFetchFoldersWS } from "@/shared/lib/services/folder/useFolderQuery"
+import { useTranslations } from "next-intl"
 import { FC } from "react"
 import { FolderItem } from "../folderItem"
 
 interface IFoldersProps {}
 
 export const Folders: FC<IFoldersProps> = () => {
+	const t = useTranslations()
 	const { onOpenModal } = useModal()
 	const { onChangeFolderName, currentName: folderName } = useFolder()
 
@@ -45,7 +47,7 @@ export const Folders: FC<IFoldersProps> = () => {
 
 			<FolderItem
 				imageUrl={"Settings"}
-				name={"Edit"}
+				name={t("PAGES.CHAT.OPTIONS.EDIT")}
 				size={30}
 				onChange={onOpen}
 			/>

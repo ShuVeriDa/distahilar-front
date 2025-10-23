@@ -18,6 +18,7 @@ import {
 } from "@/shared/ui/ContenxtMenu/context-menu"
 import { IsRead, IsReadType } from "@/shared/ui/isRead"
 import { EmojiClickData } from "emoji-picker-react"
+import { useTranslations } from "next-intl"
 import dynamic from "next/dynamic"
 import { FC, useCallback } from "react"
 import { AiOutlineDelete, AiOutlinePushpin } from "react-icons/ai"
@@ -52,6 +53,7 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	onSelectMessage,
 	handleEditMessage,
 }) => {
+	const t = useTranslations()
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
 	const { mutateAsync: addReaction } = useAddReaction()
@@ -105,17 +107,19 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	) : (
 		<AiOutlinePushpin size={20} />
 	)
-	const pinTitle = message.isPinned ? "Unpin" : "Pin"
+	const pinTitle = message.isPinned
+		? t("PAGES.CHAT.OPTIONS.UNPIN")
+		: t("PAGES.CHAT.OPTIONS.PIN")
 
 	const options = [
 		{
 			icon: <BsReply size={20} />,
-			title: "Reply",
+			title: t("PAGES.CHAT.OPTIONS.REPLY"),
 			function: () => {},
 		},
 		{
 			icon: <PiPencilSimple size={20} />,
-			title: "Edit",
+			title: t("PAGES.CHAT.OPTIONS.EDIT"),
 			function: handleEdit,
 		},
 		{
@@ -125,22 +129,22 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 		},
 		{
 			icon: <TbCopy size={20} />,
-			title: "Copy text",
+			title: t("PAGES.CHAT.OPTIONS.COPY_TEXT"),
 			function: handleCopy,
 		},
 		{
 			icon: <TiArrowForwardOutline size={20} />,
-			title: "Forward",
+			title: t("PAGES.CHAT.OPTIONS.FORWARD"),
 			function: () => {},
 		},
 		{
 			icon: <AiOutlineDelete size={20} />,
-			title: "Delete",
+			title: t("PAGES.CHAT.OPTIONS.DELETE"),
 			function: handleDelete,
 		},
 		{
 			icon: <IoCheckmarkCircleOutline size={20} />,
-			title: "Select",
+			title: t("PAGES.CHAT.OPTIONS.SELECT"),
 			function: onSelectMessage,
 		},
 	]

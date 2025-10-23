@@ -1,9 +1,9 @@
 {
 	"COMMON": {
-		"CONTACTS": "Хуттургаш йу",
+		"CONTACTS": "Хуттургаш",
 		"CREATE": "Кхолла",
 		"SAVE": "Ӏалашдан",
-		"CANCEL": "ДӀадаккха",
+		"CANCEL": "Йухавалар",
 		"CLOSE": "ДӀакъовла",
 		"SIGN_IN": "Йукъа дала",
 		"SIGN_UP": "ДӀайаздала",
@@ -11,71 +11,72 @@
 		"PASSWORD": "Билламан дош",
 		"EMAIL": "Пошта",
 		"NAME": "ЦӀе",
-		"SURNAME": "Фамили",
+		"SURNAME": "Доьзалан цӀе",
 		"BIO": "Шех лаьцна (лаахь)",
 		"SEARCH": "Лехам",
 		"WRITE_MESSAGE": "Кехат дӀайаздан",
 		"NO_RESULTS": "Ца карийна",
-		"NO_RESULTS_QUERY": "\"{query}\" хаттарехь цхьа а хӀума ца карина",
+		"NO_RESULTS_QUERY": "{query} хаттарехь цхьа а хӀума ца карина",
 		"FILL_ALL_FIELDS": "Массо а могӀанаш дуза",
-		"DONT_HAVE_ACCOUNT": "",
-		"ALREADY_HAVE_ACCOUNT": "",
-		"SELECT_CHAT_TO_START": "Къамел дӀадоладан чоь схьахаржа",
-		"ONLINE": "Йукъахь ву",
-		"MEMBERS": "",
-		"SUBSCRIBERS": "",
-		"DELETE_CONTACT": "",
-		"ADD_TO_CONTACTS": "",
-		"DELETE_CHAT": "",
-		"MOBILE": "",
-		"LINK": "",
-		"BIO_INFO": "",
-		"DESCRIPTION": "",
-		"START_LIVE_STREAM": "",
-		"PARTICIPANT": "",
-		"CONNECTING": "",
-		"MUTED": "",
-		"UNMUTED": "",
-		"SHARING_SCREEN": "",
-		"ENDED": "",
-		"LEAVE_OR_STOP": "",
-		"LEAVE": "",
-		"STOP_LIVE": "",
-		"RESTORE": "",
-		"MUTE": "",
-		"UNMUTE": "",
-		"TURN_CAMERA_ON": "",
-		"TURN_CAMERA_OFF": "",
-		"STOP_SCREEN_SHARE": "",
-		"SHARE_SCREEN": "",
-		"YOU_ARE_LIVE": "",
-		"MINIMIZE": "",
-		"VIDEO": "",
-		"SHARE": "",
-		"NO_LIVE_SESSION": "",
-		"SPEAKER": "",
-		"LISTENER": ""
+		"DONT_HAVE_ACCOUNT": "Хьан дӀайаздар дац?",
+		"ALREADY_HAVE_ACCOUNT": "Хьан дӀайаздар долуш ду?",
+		"SELECT_CHAT_TO_START": "Къамел дӀадоладан чукере схьахаржа",
+		"ONLINE": "машанехь (йукъахь) ву",
+		"MEMBERS": "декъашхой",
+		"SUBSCRIBERS": "йазвалархой",
+		"DELETE_CONTACT": "Хуттурга дӀайаккха",
+		"ADD_TO_CONTACTS": "Хуттургаш йукъа кхосса",
+		"DELETE_CHAT": "Чукера дӀайаккха",
+		"MOBILE": "Лоьмар",
+		"LINK": "ТӀехьажорг",
+		"BIO_INFO": "Хьайх лаьцна",
+		"DESCRIPTION": "Хаам",
+		"START_LIVE_STREAM": "Гайтар дӀадоладан",
+		"PARTICIPANT": "Декъашхо",
+		"CONNECTING": "ТӀетасар...",
+		"MUTED": "Аз дӀададаккхан",
+		"UNMUTED": "Аз схьалатин",
+		"SHARING_SCREEN": "Гойтург гайтар",
+		"ENDED": "Чекхйаьлла",
+		"LEAVE_OR_STOP": "Йа аравала, йа дерзо гайтар?",
+		"LEAVE": "Аравала",
+		"STOP_LIVE": "Сацайен гайтар",
+		"RESTORE": "МеттахӀотто̃",
+		"MUTE": "Аз дӀададаккха",
+		"UNMUTE": "Аз схьалатон",
+		"TURN_CAMERA_ON": "Сурт-доккхург лато",
+		"TURN_CAMERA_OFF": "Сурт-доккхург дӀайайъа",
+		"STOP_SCREEN_SHARE": "Сацайен гойтург",
+		"SHARE_SCREEN": "Гойтург гайтар",
+		"YOU_ARE_LIVE": "Хьо хӀаваэхь ву",
+		"MINIMIZE": "Къайладаккха",
+		"VIDEO": "Леласурт",
+		"SHARE": "Гайта",
+		"NO_LIVE_SESSION": "Схьалетта гойтург йац.",
+		"SPEAKER": "Дийцархо̃",
+		"LISTENER": "ЛадогӀархо"
 	},
 	"PAGES": {
 		"CHAT": {
 			"OPTIONS": {
 				"REPLY": "Жоп дала",
-				"EDIT": "Йоза нисдан",
-				"PIN": "ТӀелато",
+				"EDIT": "Хийца",
+				"PIN": "Хаам чӀагӀбан",
+				"UNPIN": "Хаам дӀайаккха",
 				"COPY_TEXT": "Йоза схьаэца",
-				"FORWARD": "Кхин дӀадахьийта",
+				"FORWARD": "ДӀатаса",
 				"DELETE": "ДӀадаккха",
 				"SELECT": "Харжа"
 			}
 		}
 	},
 	"LAST_SEEN": {
-		"JUST_NOW": "хӀинцца чохь вара",
-		"MINUTES_AGO": "чохь вара {count} минот хьалха",
-		"MINUTES_AGO_PLURAL": "чохь вара {count} минот хьалха",
-		"TODAY_AT": "чохь вара {time}-чу хенахь",
-		"WEEKDAY_AT": "чохь вара {day} денахь {time}-чу хенахь",
-		"DATE": "чохь вара {date}",
+		"JUST_NOW": "хӀинцца чохь хилла",
+		"MINUTES_AGO": "чохь хилла {count} минот хьалха",
+		"MINUTES_AGO_PLURAL": "чохь хилла {count} минот хьалха",
+		"TODAY_AT": "чохь хилла {time}-чу хенахь",
+		"WEEKDAY_AT": "чохь хилла {day} денахь {time}-чу хенахь",
+		"DATE": "чохь хилла {date}",
 		"DAYS_OF_WEEK": [
 			"кӀиран",
 			"оршот",
@@ -87,154 +88,147 @@
 		]
 	},
 	"NAV_BAR": {
-		"NEW_GROUP": "Керла тоба дан",
-		"NEW_CHANNEL": "Керла харш йан",
-		"CONTACTS": "Хуттургаш йу",
-		"SETTINGS": "Нисдар ду",
-		"NIGHT_MODE": "Буьйсанан раж йу"
+		"NEW_GROUP": "Керла тоба кхолла",
+		"NEW_CHANNEL": "Керла хьоста кхолла",
+		"CONTACTS": "Хуттургаш",
+		"SETTINGS": "Нисдарш",
+		"NIGHT_MODE": "Буьйсанан раж"
 	},
 	"MODALS": {
 		"CREATING_GROUP": {
 			"NAME": "Тобанан цӀе",
 			"NAMES_PLACEHOLDER": "Тобанан цӀе йазъйе",
-			"DESCRIPTION": "Тобанах лаьцна (лаахь)",
+			"DESCRIPTION": "Тобанах лаьцна (тӀедожош дац)",
 			"DESCRIPTIONS_PLACEHOLDER": "Тобанах лаьцна йазъйе"
 		},
 		"CREATING_CHANNEL": {
-			"NAME": "Харши цӀе",
-			"NAMES_PLACEHOLDER": "Хорши цӀе йазъйе",
-			"DESCRIPTION": "Хоршах лаьцна (лаахь)",
-			"DESCRIPTIONS_PLACEHOLDER": "Хоршах лаьцна йазъйе"
+			"NAME": "Хьостан цӀе",
+			"NAMES_PLACEHOLDER": "Хьостан цӀе йазъйе",
+			"DESCRIPTION": "Хьостах лаьцна (тӀедожош дац)",
+			"DESCRIPTIONS_PLACEHOLDER": "Хьостах лаьцна йазъйе"
 		},
 		"SETTINGS": {
-			"TITLE": "",
-			"MY_ACCOUNT": "",
-			"FOLDERS": "",
-			"LANGUAGE": ""
+			"TITLE": "НИСДАРШ",
+			"MY_ACCOUNT": "Сан дӀайаздар",
+			"FOLDERS": "Бохчанаш",
+			"LANGUAGE": "Мотт"
 		},
 		"MY_ACCOUNT": {
-			"TITLE": "",
-			"BIO": "",
+			"TITLE": "Хаамаш",
+			"BIO": "Хьайх лаьцна",
 			"BIO_INFO": {
-				"TITLE": "",
-				"EXAMPLE": ""
+				"TITLE": "Муьлхха а хаамаш: шохан, корматалла, гӀала.",
+				"EXAMPLE": "Масала: 23 шо, говзанча, СоьлгӀа-ГӀалара"
 			},
-			"NAME": "",
-			"PHONE_NUMBER": "",
-			"USERNAME": "",
-			"USERNAME_INFO": ""
+			"NAME": "ЦӀе",
+			"PHONE_NUMBER": "Лоьмар",
+			"USERNAME": "Пайдаэцархочунна цӀе",
+			"USERNAME_INFO": "Пайдаэцархочунна цӀеро кхечу нахана аьтто бо хьоьца зӀене бовла DistaHilar чохь, хьан лоьмар ца хиача."
 		},
 		"EDIT_NAME": {
-			"TITLE": "",
-			"FIRST_NAME": "",
-			"LAST_NAME": ""
+			"TITLE": "ЦӀе хийцар",
+			"FIRST_NAME": "ЦӀе",
+			"LAST_NAME": "Доьзалан цӀе"
 		},
 		"EDIT_PHONE_NUMBER": {
-			"TITLE": "",
-			"PHONE_NUMBER": ""
+			"TITLE": "Лоьмар хийцар",
+			"PHONE_NUMBER": "Лоьмар"
 		},
 		"EDIT_USERNAME": {
-			"TITLE": "",
-			"USERNAME": "",
+			"TITLE": "Пайдаэцархочунна цӀе",
+			"USERNAME": "@пайдаэцархочунна_цӀе",
 			"USERNAME_INFO": {
-				"TITLE": "",
-				"EXAMPLE": ""
+				"TITLE": "Хьоьга харжало пайдаэцархочунна цӀе. Ахьа и дахь хьоьца зӀене бовла лура бу нах оцу цӀарца, хьан лоьмара ца хаахь а",
+				"EXAMPLE": "Лела дан мега a-z а, 0-9 а, бух сиз хьакхар а. Лаххара а 5 хьаьрк хила йеза."
 			}
 		},
 		"FOLDERS": {
-			"TITLE": "",
-			"INFO": "",
-			"MY_FOLDERS": "",
-			"CREATE_NEW_FOLDER": "",
+			"TITLE": "Бохчанаш",
+			"INFO": "Хьайн йиш йу хьайна оьшучу чукеренийн бохчанаш а дина, дехьасехьа хьажа.",
+			"MY_FOLDERS": "Сан бохчанаш",
+			"CREATE_NEW_FOLDER": "Кхолла керла бохча",
+			"FOLDER_IS_EMPTY": "Бохча даьсса ду",
+			"CHATS_COUNT": "{count} чукереш",
 			"MANAGE_FOLDER": {
-				"NEW_FOLDER'S_TITLE": "",
-				"EDIT_FOLDER'S_TITLE": "",
-				"FOLDER_NAME": "",
-				"INCLUDED_CHATS": "",
-				"CHOOSE_AN_ICON": "",
-				"ADD_CHATS": "",
-				"INCLUDE_CHATS": "",
-				"CHATS": ""
+				"NEW_FOLDER'S_TITLE": "Керла бохча",
+				"EDIT_FOLDER'S_TITLE": "Бохчанна нисдарш дан",
+				"FOLDER_NAME": "Бохчин цӀе",
+				"INCLUDED_CHATS": "Билгалйина чукереш",
+				"CHOOSE_AN_ICON": "Веназ харжа",
+				"ADD_CHATS": "Чукереш ТӀетоха",
+				"INCLUDE_CHATS": "Чукереш бохчи чохь йу",
+				"CHATS": "Чукереш"
 			}
 		},
 		"DELETE_MESSAGES": {
-			"TITLE": "",
-			"ALSO_DELETE_FOR": "",
-			"DELETE_BUTTON": ""
+			"TITLE": "хӀара кост хаам дӀабоккхий?",
+			"ALSO_DELETE_FOR": "Иштта дӀайаккха",
+			"DELETE_BUTTON": "ДӀайаккха"
 		},
 		"DELETE_CHAT": {
-			"TITLE": "",
-			"CONFIRMATION": "",
-			"CANNOT_UNDONE": "",
-			"ALSO_DELETE_FOR": "",
-			"DELETE_BUTTON": ""
+			"TITLE": "ДӀайаккха чукере",
+			"CONFIRMATION": "Хьуна билггал лаьий {name} дерриге къамел дӀадаккха?",
+			"CANNOT_UNDONE": "ХӀара дар йухадаккха йиш хира йац.",
+			"ALSO_DELETE_FOR": "Иштта дӀайаккха",
+			"DELETE_BUTTON": "ДӀайаккха"
 		},
-		"CREATE_CHANNEL_GROUP": {
-			"CHANNEL_NAME": "",
-			"GROUP_NAME": "",
-			"CHANNEL_PLACEHOLDER": "",
-			"GROUP_PLACEHOLDER": "",
-			"DESCRIPTION_OPTIONAL": "",
-			"CHANNEL_DESCRIPTION_PLACEHOLDER": "",
-			"GROUP_DESCRIPTION_PLACEHOLDER": "",
-			"NAME_REQUIRED": ""
-		},
+
 		"ADD_FILE": {
-			"FILES_SELECTED": "",
-			"SEND_AS_FILE": "",
-			"COMMENT": "",
-			"ADD": "",
-			"SEND": ""
+			"FILES_SELECTED": "Хаьржина {count} хӀума",
+			"SEND_AS_FILE": "ДӀахьажон хӀума санна",
+			"COMMENT": "Хетарг",
+			"ADD": "ТӀетоха",
+			"SEND": "ДӀахьажон"
 		},
 		"ACCOUNT_INFO": {
-			"TITLE": "",
-			"BIO_PLACEHOLDER": "",
-			"PHONE_REQUIRED": "",
-			"INVALID_PHONE": "",
-			"LAST_NAME_REQUIRED": "",
-			"LAST_NAME_MIN_LENGTH": "",
-			"LAST_NAME_MAX_LENGTH": ""
+			"TITLE": "Хаам",
+			"BIO_PLACEHOLDER": "Хьайх лаьцна",
+			"PHONE_REQUIRED": "Лоьмар хила йезаш йу",
+			"INVALID_PHONE": "Лоьмар нийса ца йазйина.",
+			"LAST_NAME_REQUIRED": "Доьзалан цӀе хила йезаш йу.",
+			"LAST_NAME_MIN_LENGTH": "Доьзалан цӀе лаххара 2 хьаьрк йолуш хила йезаш йу.",
+			"LAST_NAME_MAX_LENGTH": "Доьзалан цӀе лаккхара 2 хьаьрк йолуш хила йезаш йу."
 		}
 	},
 	"VALIDATION": {
-		"USERNAME_REQUIRED": "",
-		"PASSWORD_REQUIRED": "",
-		"EMAIL_REQUIRED": "",
-		"NAME_REQUIRED": "",
-		"NAME_MIN_LENGTH": "",
-		"NAME_MAX_LENGTH": "",
-		"SURNAME_REQUIRED": "",
-		"PHONE_REQUIRED": ""
+		"USERNAME_REQUIRED": "Пайдаэцархочунна цӀе хила йезаш йу",
+		"PASSWORD_REQUIRED": "Билламан дош хила дезаш ду",
+		"EMAIL_REQUIRED": "Пошта хила йезаш йу",
+		"NAME_REQUIRED": "ЦӀе хила йезаш йу",
+		"NAME_MIN_LENGTH": "ЦӀе лаххара 2 хьаьрк йолуш хила йезаш йу.",
+		"NAME_MAX_LENGTH": "ЦӀе лаккхара 2 хьаьрк йолуш хила йезаш йу.",
+		"SURNAME_REQUIRED": "Доьазлан цӀе хила йезаш йу.",
+		"PHONE_REQUIRED": "Лоьмар хила йезаш йу"
 	},
 	"CHAT": {
-		"PINNED_MESSAGE": "",
-		"VOICE_MESSAGE": "",
-		"VIDEO_MESSAGE": "",
-		"FORWARD": "",
-		"DELETE": "",
-		"LIVE": "",
-		"LEAVE_OR_STOP": "",
-		"LEAVE": "",
-		"STOP_LIVE": ""
+		"PINNED_MESSAGE": "ТӀечӀагӀбина хаам",
+		"VOICE_MESSAGE": "Озанхаам",
+		"VIDEO_MESSAGE": "Суртихаам",
+		"FORWARD": "ДӀатаса",
+		"DELETE": "ДӀадаккха",
+		"LIVE": "ХӀаваэхь",
+		"LEAVE": "Аравала",
+		"LEAVE_OR_STOP": "Йа аравала, йа дерзо гайтар?",
+		"STOP_LIVE": "Гайтар дерзо"
 	},
 	"CALL": {
-		"START_VIDEO": "",
-		"START_CALL": "",
-		"ACCEPT": "",
-		"REJECT": "",
-		"MUTE": "",
-		"CAMERA": "",
-		"END_CALL": "",
-		"CANCEL": "",
-		"VIDEO": "",
-		"SHARE": "",
-		"MINIMIZE": "",
-		"UNMUTE": "",
-		"YOU_ARE_LIVE": "",
+		"START_VIDEO": "Леласурта латайе",
+		"START_CALL": "ДӀатоха",
+		"ACCEPT": "Схьаэца",
+		"REJECT": "ДӀайаккха",
+		"MUTE": "Аз дӀададаккха",
+		"CAMERA": "Сурт-доккхург",
+		"END_CALL": "Охьайилла",
+		"CANCEL": "Йухавалар",
+		"VIDEO": "Леласурт",
+		"SHARE": "Гайта",
+		"MINIMIZE": "Къайладаккха",
+		"UNMUTE": "Аз схьалатон",
+		"YOU_ARE_LIVE": "Хьо хӀаваэхь ву",
 		"CLICK_CAMERA_TO_START": "",
-		"CONNECTING": "",
-		"CALLING": "",
-		"INCOMING_CALL": "",
-		"ENDED": ""
+		"CONNECTING": "ТӀетасар...",
+		"CALLING": "ЗӀе тохар...",
+		"INCOMING_CALL": "ЗӀе туху хьоьга...",
+		"ENDED": "Чекхйаьлла"
 	}
 }

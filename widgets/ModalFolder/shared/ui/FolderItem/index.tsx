@@ -3,6 +3,7 @@ import { cn } from "@/shared/lib/utils/cn"
 import { Button } from "@/shared/ui/Button"
 import { IconRenderer } from "@/shared/ui/IconRenderer"
 import { Typography } from "@/shared/ui/Typography/Typography"
+import { useTranslations } from "next-intl"
 import { FC, KeyboardEvent, MouseEvent, MouseEventHandler } from "react"
 import { GoTrash } from "react-icons/go"
 
@@ -13,6 +14,7 @@ interface IFolderItemProps extends Partial<FolderType> {
 }
 
 export const FolderItem: FC<IFolderItemProps> = props => {
+	const t = useTranslations("MODALS.FOLDERS")
 	const { imageUrl, name, chatLength, onClick, onDeleteFolder } = props
 
 	const onDeleteChat: MouseEventHandler<HTMLDivElement> = e => {
@@ -22,7 +24,7 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === "Enter" || e.key === " ") {
-			e.preventDefault() // Предотвращает скроллинг при пробеле
+			e.preventDefault()
 			onDeleteChat(e as unknown as MouseEvent<HTMLDivElement>)
 		}
 	}
@@ -48,7 +50,9 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 					</Typography>
 
 					<Typography tag="p" className="text-[14px] text-[#858585] font-[400]">
-						{chatLength === 0 ? "Folder is empty" : `${chatLength} chats`}
+						{chatLength === 0
+							? t("FOLDER_IS_EMPTY")
+							: `${t("CHATS_COUNT", { count: chatLength ?? 0 })}`}
 					</Typography>
 				</div>
 			</div>
