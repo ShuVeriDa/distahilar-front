@@ -1,11 +1,14 @@
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { NextPage } from "next"
-import { useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
-interface IChatProps {}
+interface IChatProps {
+	params: Promise<{ locale: string }>
+}
 
-const Chat: NextPage<IChatProps> = () => {
-	const t = useTranslations("COMMON")
+const Chat: NextPage<IChatProps> = async ({ params }) => {
+	const { locale } = await params
+	const t = await getTranslations({ locale, namespace: "COMMON" })
 
 	return (
 		<div className="w-full h-screen flex justify-center items-center dark:bg-[#0E1621] bg-slate-100 bg-[url('/images/bg-wallpaper.jpg')] bg-no-repeat bg-cover bg-center dark:bg-[url('/')] border-r border-r-[#E7E7E7] dark:border-r-[#101921]">

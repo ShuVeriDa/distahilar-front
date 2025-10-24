@@ -34,8 +34,6 @@ export default async function RootLayoutRootLayout({
 		notFound()
 	}
 
-	console.log({ locale })
-
 	const messages = await getMessages({ locale })
 
 	return (

@@ -5,6 +5,7 @@ import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 
 import { useFolder } from "@/shared/hooks/useFolder"
 import { useFetchFoldersWS } from "@/shared/lib/services/folder/useFolderQuery"
+import { getFolderName } from "@/widgets/ModalFolder/shared/utils/folders-name"
 import { useTranslations } from "next-intl"
 import { FC } from "react"
 import { FolderItem } from "../folderItem"
@@ -13,6 +14,7 @@ interface IFoldersProps {}
 
 export const Folders: FC<IFoldersProps> = () => {
 	const t = useTranslations()
+	const tFolders = useTranslations("MODALS.FOLDERS")
 	const { onOpenModal } = useModal()
 	const { onChangeFolderName, currentName: folderName } = useFolder()
 
@@ -30,6 +32,10 @@ export const Folders: FC<IFoldersProps> = () => {
 			)}
 			{isSuccess &&
 				data.map(folder => {
+					const nameOfEditFolder = getFolderName(
+						folder?.name ?? "",
+						tFolders
+					) as string
 					const onChange = () => {
 						onChangeFolderName(folder.name, folder)
 					}
@@ -37,7 +43,7 @@ export const Folders: FC<IFoldersProps> = () => {
 						<FolderItem
 							key={folder.id}
 							imageUrl={folder.imageUrl!}
-							name={folder.name}
+							name={nameOfEditFolder}
 							isActiveFolder={folderName === folder.name}
 							size={25}
 							onChange={onChange}

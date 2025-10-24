@@ -6,6 +6,7 @@
 		"CANCEL": "Йухавалар",
 		"CLOSE": "ДӀакъовла",
 		"SIGN_IN": "Йукъа дала",
+		"SIGN_IN_TO_DISTAHILAR": "Йукъа дала DistaHilar чу",
 		"SIGN_UP": "ДӀайаздала",
 		"USERNAME": "Пайдаэцархочунна цӀе",
 		"PASSWORD": "Билламан дош",
@@ -61,6 +62,7 @@
 			"OPTIONS": {
 				"REPLY": "Жоп дала",
 				"EDIT": "Хийца",
+				"EDIT2": "Хийца",
 				"PIN": "Хаам чӀагӀбан",
 				"UNPIN": "Хаам дӀайаккха",
 				"COPY_TEXT": "Йоза схьаэца",
@@ -149,6 +151,9 @@
 			"CREATE_NEW_FOLDER": "Кхолла керла бохча",
 			"FOLDER_IS_EMPTY": "Бохча даьсса ду",
 			"CHATS_COUNT": "{count} чукереш",
+			"ALL_CHATS": "Массо чукереш",
+			"PERSONAL_FOLDER": "Адам",
+			"COMMUNITY_FOLDER": "Тоба",
 			"MANAGE_FOLDER": {
 				"NEW_FOLDER'S_TITLE": "Керла бохча",
 				"EDIT_FOLDER'S_TITLE": "Бохчанна нисдарш дан",

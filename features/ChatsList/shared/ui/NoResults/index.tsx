@@ -1,4 +1,5 @@
 import { Typography } from "@/shared"
+import { useTranslations } from "next-intl"
 import { FC } from "react"
 
 interface INoResultsProps {
@@ -6,13 +7,14 @@ interface INoResultsProps {
 }
 
 export const NoResults: FC<INoResultsProps> = ({ query }) => {
+	const t = useTranslations("COMMON")
 	return (
 		<div className="w-full flex flex-col justify-center items-center p-2">
 			<Typography tag="h6" className="text-[#677A8B] text-center">
-				No Results
+				{t("NO_RESULTS")}
 			</Typography>
 			<Typography tag="p" className="text-[#677A8B] text-center">
-				{`There were no results for "${query}"`}
+				{t("NO_RESULTS_QUERY", { query })}
 			</Typography>
 		</div>
 	)

@@ -19,20 +19,20 @@ const Auth: NextPage<IAuthProps> = () => {
 		else setType("login")
 	}
 
-	const header = type === "login" ? t("SIGN_IN") : t("SIGN_UP")
+	const header = type === "login" ? t("SIGN_IN_TO_DISTAHILAR") : t("SIGN_UP")
 	const titleForDescription =
 		type === "login" ? t("DONT_HAVE_ACCOUNT") : t("ALREADY_HAVE_ACCOUNT")
 
 	return (
 		<div className="w-full h-screen flex justify-center items-center">
-			<div className="w-[300px] flex flex-col gap-8">
+			<div className="min-w-[300px] flex flex-col gap-8">
 				<div className="flex justify-center rounded-full">
 					<Image src={"/images/icon.png"} alt="icon" width={160} height={160} />
 				</div>
 
 				<div className="flex flex-col gap-3.5 items-center">
 					<Typography tag="h1" className="text-[32px] font-bold">
-						{`${header} to Distahilar`}
+						{`${header}`}
 					</Typography>
 					<Typography tag="p" className="text-[16px] text-[#aaaaaa]">
 						{t("FILL_ALL_FIELDS")}

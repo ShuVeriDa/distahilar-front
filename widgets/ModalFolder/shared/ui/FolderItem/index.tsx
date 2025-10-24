@@ -6,6 +6,7 @@ import { Typography } from "@/shared/ui/Typography/Typography"
 import { useTranslations } from "next-intl"
 import { FC, KeyboardEvent, MouseEvent, MouseEventHandler } from "react"
 import { GoTrash } from "react-icons/go"
+import { getFolderName } from "../../utils/folders-name"
 
 interface IFolderItemProps extends Partial<FolderType> {
 	chatLength?: number
@@ -13,9 +14,16 @@ interface IFolderItemProps extends Partial<FolderType> {
 	onDeleteFolder?: () => Promise<void>
 }
 
-export const FolderItem: FC<IFolderItemProps> = props => {
+export const FolderItem: FC<IFolderItemProps> = ({
+	imageUrl,
+	name,
+	chatLength,
+	onClick,
+	onDeleteFolder,
+}) => {
 	const t = useTranslations("MODALS.FOLDERS")
-	const { imageUrl, name, chatLength, onClick, onDeleteFolder } = props
+
+	const nameOfFolder = getFolderName(name ?? "", t) as string
 
 	const onDeleteChat: MouseEventHandler<HTMLDivElement> = e => {
 		e.stopPropagation()
@@ -46,7 +54,7 @@ export const FolderItem: FC<IFolderItemProps> = props => {
 				</div>
 				<div className="flex flex-col gap-0.5 text-start">
 					<Typography tag="p" className="text-[14px] font-[600]">
-						{name}
+						{nameOfFolder}
 					</Typography>
 
 					<Typography tag="p" className="text-[14px] text-[#858585] font-[400]">

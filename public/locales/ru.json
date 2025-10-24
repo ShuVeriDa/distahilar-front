@@ -6,6 +6,7 @@
 		"CANCEL": "Отмена",
 		"CLOSE": "Закрыть",
 		"SIGN_IN": "Войти",
+		"SIGN_IN_TO_DISTAHILAR": "Войти в DistaHilar",
 		"SIGN_UP": "Зарегистрироваться",
 		"USERNAME": "Имя пользователя",
 		"PASSWORD": "Пароль",
@@ -61,6 +62,7 @@
 			"OPTIONS": {
 				"REPLY": "Ответить",
 				"EDIT": "Редактировать",
+				"EDIT2": "Ред.",
 				"PIN": "Закрепить",
 				"UNPIN": "Открепить",
 				"COPY_TEXT": "Копировать текст",
@@ -149,6 +151,9 @@
 			"CREATE_NEW_FOLDER": "Создать новую папку",
 			"FOLDER_IS_EMPTY": "Папка пуста",
 			"CHATS_COUNT": "{count} чатов",
+			"ALL_CHATS": "Все чаты",
+			"PERSONAL_FOLDER": "Личное",
+			"COMMUNITY_FOLDER": "Сообщество",
 			"MANAGE_FOLDER": {
 				"NEW_FOLDER'S_TITLE": "Новая папка",
 				"EDIT_FOLDER'S_TITLE": "Редактировать папку",
