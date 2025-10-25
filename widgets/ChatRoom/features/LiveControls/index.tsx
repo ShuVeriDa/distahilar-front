@@ -45,7 +45,8 @@ export const LiveControls: FC<ILiveControls> = ({
 	return (
 		<div
 			className={cn(
-				"w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4",
+				// "w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4",
+				"w-full max-w-[390px] pb-1 pt-2  flex self-center items-center justify-between gap-4",
 				className
 			)}
 		>
@@ -184,7 +185,7 @@ export const LiveControls: FC<ILiveControls> = ({
 			<Button
 				variant="clean"
 				aria-label={t("MINIMIZE")}
-				className="flex flex-col gap-1.5"
+				className="flex flex-col gap-1.5 "
 				onClick={handleMinimize}
 			>
 				<div className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-white p-3 rounded-full">

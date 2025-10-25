@@ -86,7 +86,7 @@ export const UnSharingScreenLive: FC<IUnSharingScreenLiveProps> = ({
 	return (
 		<div
 			className={cn(
-				"relative flex flex-col mx-10 justify-between border border-white/10 w-full max-w-[420px] h-full max-h-[580px] rounded-lg overflow-hidden bg-[#1A2026]"
+				"relative flex flex-col mx-10 justify-between border border-white/10 w-full max-w-[430px] h-full max-h-[580px] rounded-lg overflow-hidden bg-[#1A2026]"
 				// !isVideoOff && "max-h-[calc(100vh-40px)] h-auto"
 			)}
 		>
