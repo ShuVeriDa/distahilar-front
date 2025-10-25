@@ -64,14 +64,14 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		setSelectedMessages,
 		clearSelectedMessages,
 	} = useSelectedMessages()
-	const {
-		data: messages,
-		isSuccess: isSuccessMessages,
-		isLoading: isLoadingMessages,
-		// isLoading,
-	} = useMessagesWSQuery(chatId)
+	const messagesQuery = useMessagesWSQuery(chatId)
+	const flatMessages = messagesQuery.flatMessages
+	const isLoadingMessages = messagesQuery.isLoading
+	const hasNextPage = messagesQuery.hasNextPage as boolean
+	const fetchNextPage = messagesQuery.fetchNextPage
+	const isFetchingNextPage = messagesQuery.isFetchingNextPage
 
-	const pinnedMessages = messages?.messages.find(msg => msg.isPinned)
+	const pinnedMessages = flatMessages.find(msg => msg.isPinned)
 
 	const headerSubtitle =
 		(chat?.type === ChatRole.GROUP || chat?.type === ChatRole.CHANNEL) &&
@@ -185,7 +185,12 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					selectedMessages={selectedMessages}
 					hasSelectedMessages={hasSelectedMessages}
 					isLoadingMessages={isLoadingMessages}
-					messages={isSuccessMessages ? messages?.messages : []}
+					messages={flatMessages}
+					onLoadMore={() => {
+						if (hasNextPage && !isFetchingNextPage) fetchNextPage()
+					}}
+					hasNextPage={!!hasNextPage}
+					isFetchingNextPage={isFetchingNextPage}
 					setSelectedMessages={setSelectedMessages}
 					handleEditMessage={handleEditMessage}
 				/>

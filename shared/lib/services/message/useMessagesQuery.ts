@@ -8,18 +8,29 @@ import {
 } from "@/prisma/models"
 import { useSocket } from "@/shared/providers/SocketProvider"
 import { ChatRole } from "@prisma/client"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+	InfiniteData,
+	useInfiniteQuery,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query"
+import { useEffect, useMemo } from "react"
 import { generateTemporaryId } from "../../utils/generateTemporaryId"
 
 export const useMessagesWSQuery = (chatId: string) => {
 	const { socket } = useSocket()
+	const client = useQueryClient()
 
-	return useQuery<
+	const query = useInfiniteQuery<
 		{ messages: MessageType[]; nextCursor: string | null },
 		Error
 	>({
 		queryKey: ["messagesWS", chatId],
-		queryFn: () =>
+		initialPageParam: undefined as string | undefined,
+		getNextPageParam: lastPage => lastPage?.nextCursor ?? null,
+		enabled: !!chatId.trim(),
+		staleTime: 1000 * 30,
+		queryFn: ({ pageParam }) =>
 			new Promise<{ messages: MessageType[]; nextCursor: string | null }>(
 				(resolve, reject) => {
 					if (!socket) {
@@ -29,27 +40,117 @@ export const useMessagesWSQuery = (chatId: string) => {
 
 					const fetchKey = `chat:${chatId}:messages:fetch`
 
+					// Join room once per hook lifecycle (idempotent on server)
 					socket.emit("joinChat", { chatId })
 
-					const handleChats = (
+					const handleOnce = (
 						messages: MessageType[],
 						nextCursor: string | null
 					) => {
 						resolve({ messages, nextCursor })
 					}
 
-					socket.on(fetchKey, handleChats)
+					// Use once to avoid listener leaks
+					socket.once(fetchKey, handleOnce)
 
-					socket.emit("getMessages", { chatId })
-
-					return () => {
-						socket.off(fetchKey, handleChats)
-					}
+					const payload: { chatId: string; cursor?: string } = { chatId }
+					if (pageParam) payload.cursor = String(pageParam)
+					socket.emit("getMessages", payload)
 				}
 			),
-		staleTime: 1000 * 30, // 30 секунд
-		enabled: !!chatId.trim(),
 	})
+
+	// Flatten pages for convenient usage in components
+	const flatMessages = useMemo(
+		() => query.data?.pages.flatMap(p => p.messages) ?? [],
+		[query.data]
+	)
+
+	// Real-time listeners: create, update, delete
+	useEffect(() => {
+		if (!socket || !chatId.trim()) return
+
+		const createKey = `chat:${chatId}:message:create`
+		const updateKey = `chat:${chatId}:message:update`
+		const updatesKey = `chat:${chatId}:messages:update`
+
+		const handleCreate = (message: MessageType) => {
+			client.setQueryData<
+				InfiniteData<{ messages: MessageType[]; nextCursor: string | null }>
+			>(["messagesWS", chatId], old => {
+				if (!old) return old
+				// Avoid duplicates
+				const exists = old.pages.some(p =>
+					p.messages.some(m => m.id === message.id)
+				)
+				if (exists) return old
+				const pages = [...old.pages]
+				if (pages.length === 0) {
+					return {
+						pages: [{ messages: [message], nextCursor: null }],
+						pageParams: [undefined],
+					}
+				}
+				const lastIndex = pages.length - 1
+				pages[lastIndex] = {
+					...pages[lastIndex],
+					messages: [...pages[lastIndex].messages, message],
+				}
+				return { ...old, pages }
+			})
+		}
+
+		const handleUpdate = (message: MessageType) => {
+			client.setQueryData<
+				InfiniteData<{ messages: MessageType[]; nextCursor: string | null }>
+			>(["messagesWS", chatId], old => {
+				if (!old) return old
+				const pages = old.pages.map(p => ({
+					...p,
+					messages: p.messages.map(m => (m.id === message.id ? message : m)),
+				}))
+				return { ...old, pages }
+			})
+		}
+
+		const handleUpdates = (payload: MessageType[] | { count: number }) => {
+			if (Array.isArray(payload)) {
+				const idsToRemove = new Set(
+					(payload as MessageType[])
+						.map((m: MessageType) => m?.id)
+						.filter(Boolean)
+				)
+				client.setQueryData<
+					InfiniteData<{ messages: MessageType[]; nextCursor: string | null }>
+				>(["messagesWS", chatId], old => {
+					if (!old) return old
+					const pages = old.pages.map(p => ({
+						...p,
+						messages: p.messages.filter(m => !idsToRemove.has(m.id)),
+					}))
+					return { ...old, pages }
+				})
+			} else {
+				// When BatchPayload {count} returned, refresh current page
+				client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
+			}
+		}
+
+		socket.on(createKey, handleCreate)
+		socket.on(updateKey, handleUpdate)
+		socket.on(updatesKey, handleUpdates)
+
+		return () => {
+			socket.off(createKey, handleCreate)
+			socket.off(updateKey, handleUpdate)
+			socket.off(updatesKey, handleUpdates)
+		}
+	}, [socket, chatId, client])
+
+	return {
+		...query,
+		flatMessages,
+	}
 }
 
 export interface CreateMessageDto {
@@ -84,61 +185,76 @@ export const useSendMessage = (
 				const temporaryId = generateTemporaryId()
 
 				if (messageData.messageType === MessageEnum.TEXT) {
-					const optimisticMessage = {
-						...messageData,
+					const optimisticMessage: MessageType = {
+						// base fields
 						id: temporaryId,
+						chatId: chatId,
+						userId: userId as string,
+						createdAt: new Date() as unknown as Date,
+						content: messageData.content,
+						messageType: messageData.messageType,
 						status: MessageStatus.PENDING,
-						userId: userId,
-						chatType: chatRole,
-						createdAt: new Date().toISOString(),
-					}
+						isPinned: false,
+						deletedByUsers: [],
+						readByUsers: userId ? [userId] : [],
+						// relations (minimal defaults)
+						media: [],
+						reactions: [],
+						voiceMessages: [],
+						videoMessages: [],
+						replies: [],
+						pinnedChatId: null,
+						pinnedChat: null as unknown as MessageType["pinnedChat"],
+						chat: {
+							id: chatId,
+							type: chatRole,
+						} as unknown as MessageType["chat"],
+						user: undefined as unknown as MessageType["user"],
+						_count: undefined as unknown as MessageType["_count"],
+					} as unknown as MessageType
 
-					client.setQueryData(
-						["messagesWS", chatId],
-						(oldData: {
-							messages: MessageType[]
-							nextCursor: string | null
-						}) => {
-							if (
-								oldData.messages.some(
-									(msg: MessageType) => msg.id === temporaryId
-								)
-							) {
-								return oldData
-							}
-
+					client.setQueryData<
+						InfiniteData<{ messages: MessageType[]; nextCursor: string | null }>
+					>(["messagesWS", chatId], old => {
+						if (!old) {
 							return {
-								...oldData,
-								messages: [...oldData.messages, optimisticMessage],
+								pages: [{ messages: [optimisticMessage], nextCursor: null }],
+								pageParams: [undefined],
 							}
 						}
-					)
+						const exists = old.pages.some(p =>
+							p.messages.some((m: MessageType) => m.id === temporaryId)
+						)
+						if (exists) return old
+						const pages = [...old.pages]
+						const lastIndex = pages.length - 1
+						pages[lastIndex] = {
+							...pages[lastIndex],
+							messages: [...pages[lastIndex].messages, optimisticMessage],
+						}
+						return { ...old, pages }
+					})
 				}
 
 				socket.emit(
 					"createMessage",
 					{ chatId, ...messageData },
 					(response: MessageType) => {
-						client.setQueryData(
-							["messagesWS", chatId],
-							(oldData: {
+						client.setQueryData<
+							InfiniteData<{
 								messages: MessageType[]
 								nextCursor: string | null
-							}) => {
-								const newMessage = {
-									...response,
-									chat: {
-										type: chatRole,
-									},
-								}
-
-								const updatedMessages = oldData.messages.map(
-									(msg: MessageType) =>
-										msg.id === temporaryId ? { ...newMessage } : msg
-								)
-								return { ...oldData, messages: updatedMessages }
-							}
-						)
+							}>
+						>(["messagesWS", chatId], old => {
+							if (!old) return old
+							const pages = old.pages.map(p => ({
+								...p,
+								messages: p.messages.map((m: MessageType) =>
+									m.id === temporaryId ? (response as MessageType) : m
+								),
+							}))
+							return { ...old, pages }
+						})
 						resolve()
 					}
 				)
@@ -147,15 +263,18 @@ export const useSendMessage = (
 			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
 		},
 		onError: error => {
-			client.setQueryData(
-				["messagesWS", chatId],
-				(oldData: { messages: MessageType[]; nextCursor: string | null }) => {
-					const updatedMessages = oldData.messages.filter(
+			client.setQueryData<
+				InfiniteData<{ messages: MessageType[]; nextCursor: string | null }>
+			>(["messagesWS", chatId], old => {
+				if (!old) return old
+				const pages = old.pages.map(p => ({
+					...p,
+					messages: p.messages.filter(
 						(msg: MessageType) => msg.status !== MessageStatus.PENDING
-					)
-					return { ...oldData, messages: updatedMessages }
-				}
-			)
+					),
+				}))
+				return { ...old, pages }
+			})
 			console.error("Message sending failed:", error)
 		},
 	})
@@ -179,11 +298,7 @@ export const useEditMessage = (chatId: string) => {
 					return
 				}
 
-				socket.emit(
-					"editMessage",
-					{ chatId, ...messageData },
-					(response: MessageType) => resolve()
-				)
+				socket.emit("editMessage", { chatId, ...messageData }, () => resolve())
 			}),
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
@@ -210,13 +325,9 @@ export const usePinMessage = (chatId: string) => {
 					return
 				}
 
-				socket.emit(
-					"pinMessage",
-					{ ...pinMessage },
-					(response: MessageType) => {
-						resolve()
-					}
-				)
+				socket.emit("pinMessage", { ...pinMessage }, () => {
+					resolve()
+				})
 			}),
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
@@ -244,13 +355,9 @@ export const useDeleteMessage = (chatId: string) => {
 					return
 				}
 
-				socket.emit(
-					"deleteMessage",
-					{ ...pinMessage },
-					(response: MessageType) => {
-						resolve()
-					}
-				)
+				socket.emit("deleteMessage", { ...pinMessage }, () => {
+					resolve()
+				})
 			}),
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ["messagesWS", chatId] })
