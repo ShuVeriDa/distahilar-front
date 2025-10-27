@@ -1,4 +1,4 @@
-import { FolderWSType } from "@/prisma/models"
+import { FolderType } from "@/prisma/models"
 import { useUser } from "@/shared/hooks"
 import { useSocket } from "@/shared/providers/SocketProvider"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -21,10 +21,10 @@ export const useFetchFoldersWS = () => {
 	const { user } = useUser()
 	const userId = user?.id
 
-	return useQuery<FolderWSType[], Error>({
+	return useQuery<FolderType[], Error>({
 		queryKey: ["fetchFoldersWS", userId], // Ключ запроса
 		queryFn: () =>
-			new Promise<FolderWSType[]>((resolve, reject) => {
+			new Promise<FolderType[]>((resolve, reject) => {
 				if (!socket) {
 					reject(new Error("WebSocket is not connected"))
 					return
@@ -33,7 +33,7 @@ export const useFetchFoldersWS = () => {
 				const fetchKey = `folders:user:${userId}:fetch`
 
 				// Обработчик данных
-				const handleFolders = (data: FolderWSType[]) => {
+				const handleFolders = (data: FolderType[]) => {
 					resolve(data)
 				}
 

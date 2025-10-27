@@ -1,7 +1,10 @@
 "use client"
 
 import { useFolder } from "@/shared/hooks/useFolder"
-import { useFetchChatsQuery } from "@/shared/lib/services/chat/useChatQuery"
+import {
+	useFetchChatsWSQuery,
+	useSearchChatsQuery,
+} from "@/shared/lib/services/chat/useChatQuery"
 import { Search } from "@/widgets/Search"
 import { useTranslations } from "next-intl"
 import { ChangeEvent, FC, useState } from "react"
@@ -17,19 +20,22 @@ export const ChatsList: FC<IChatsProps> = ({ locale }) => {
 
 	// Используем кастомный хук useChatsQuery
 	const {
-		data: chatsData,
-		isLoading: isLoadingChats,
-		isSuccess: isSuccessChats,
-	} = useFetchChatsQuery(query)
+		data: foundChats,
+		isLoading: isLoadingFoundChats,
+		isSuccess: isSuccessFoundChats,
+	} = useSearchChatsQuery(query)
+
+	const { currentFolder } = useFolder()
+
+	const { data: fetchedChats, isLoading: isLoadingFetchedChats } =
+		useFetchChatsWSQuery(currentFolder?.name ?? "All chats")
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
 		setQuery(e.currentTarget.value)
 	}
 
-	const { currentFolder } = useFolder()
-
 	const chats =
-		query.length > 0 && isSuccessChats ? chatsData : currentFolder?.chats
+		query.length > 0 && isSuccessFoundChats ? foundChats : fetchedChats
 
 	return (
 		// min-w-[250px] max-w-[470px]
@@ -46,7 +52,7 @@ export const ChatsList: FC<IChatsProps> = ({ locale }) => {
 
 			<Chats
 				chats={chats}
-				isLoading={isLoadingChats}
+				isLoading={isLoadingFoundChats || isLoadingFetchedChats}
 				query={query}
 				locale={locale}
 			/>

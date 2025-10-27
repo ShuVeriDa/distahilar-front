@@ -11,7 +11,7 @@ export const useFetchChatByIdQuery = (chatId: string) => {
 	})
 }
 
-export const useFetchChatsQuery = (params?: string) => {
+export const useSearchChatsQuery = (params?: string) => {
 	return useQuery({
 		queryFn: async () => await chatService.searchChat(params!),
 		queryKey: ["fetchChats", params],
@@ -43,6 +43,41 @@ export const useJoinChatQuery = (chatId: string) => {
 				queryKey: ["fetchChatById", chatId],
 			})
 		},
+	})
+}
+export const useFetchChatsWSQuery = (folder: string) => {
+	const { socket } = useSocket()
+
+	return useQuery<FoundedChatsType[], Error>({
+		queryKey: ["fetchChatsWS", folder], // Ключ запроса
+		queryFn: () =>
+			new Promise<FoundedChatsType[]>((resolve, reject) => {
+				if (!socket) {
+					reject(new Error("WebSocket is not connected"))
+					return
+				}
+
+				const fetchKey = `chats:${folder}`
+
+				// Обработчик данных
+				const handleChats = (data: FoundedChatsType[]) => {
+					resolve(data)
+				}
+
+				// Подписка на событие
+				socket.on(fetchKey, handleChats)
+
+				// Отправка запроса
+				socket.emit("fetchChats", { folder: folder })
+
+				// Очистка подписки при завершении запроса
+				return () => {
+					socket.off(fetchKey, handleChats)
+				}
+			}),
+		// Запрос выполняется только при наличии значения
+		staleTime: 1000 * 30, // Данные считаются актуальными в течение 30 секунд
+		enabled: !!folder.trim(),
 	})
 }
 

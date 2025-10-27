@@ -1,4 +1,4 @@
-import { FolderWSType } from "@/prisma/models"
+import { FolderType } from "@/prisma/models"
 import { useDispatch } from "react-redux"
 import { setFolder } from "../lib/redux-store/slices/folderSlice/folderSlice"
 import { useAppSelector } from "../lib/redux-store/store"
@@ -8,7 +8,7 @@ export const useFolder = () => {
 
 	const dispatch = useDispatch()
 
-	const onChangeFolderName = (name: string, folder: FolderWSType) => {
+	const onChangeFolderName = (name: string, folder: FolderType) => {
 		dispatch(setFolder({ name, folder }))
 	}
 

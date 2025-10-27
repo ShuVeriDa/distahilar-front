@@ -1,8 +1,8 @@
-import { FolderWSType } from "@/prisma/models"
+import { FolderType } from "@/prisma/models"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export type IFolderSlice = {
-	folder: FolderWSType | null
+	folder: FolderType | null
 	name: "All chats" | string
 }
 
