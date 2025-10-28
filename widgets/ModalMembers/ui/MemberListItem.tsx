@@ -48,7 +48,7 @@ export const MemberListItem: FC<Props> = ({
 	}, [member.user?.name, member.user?.surname, member.user?.username])
 
 	return (
-		<div className="flex items-center justify-between py-2 px-3">
+		<div className="flex items-center justify-between py-2 px-3 hover:bg-[rgba(0,0,0,0.1)] dark:hover:bg-[#292d35] hover:cursor-pointer">
 			<div className="flex items-center gap-2">
 				<div className="h-8 w-8 rounded-full bg-[#E7E7E7] overflow-hidden">
 					<MemberAvatar
@@ -75,7 +75,7 @@ export const MemberListItem: FC<Props> = ({
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					className={cn(
-						"text-[#999999] text-sm px-2 py-1 rounded hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[#232E3C]",
+						"text-[#999999] text-sm px-2 py-1 rounded ",
 						role === MemberRole.OWNER && "hidden"
 					)}
 				>
