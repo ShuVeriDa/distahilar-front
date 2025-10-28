@@ -1,7 +1,8 @@
 import { FoundedChatsType } from "@/prisma/models"
 import { useSocket } from "@/shared/providers/SocketProvider"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { redirect } from "next/navigation"
+import { useLocale } from "next-intl"
+import { useRouter } from "next/navigation"
 import { chatService, IDeleteChatRequest } from "./chat.service"
 
 export const useFetchChatByIdQuery = (chatId: string) => {
@@ -22,6 +23,8 @@ export const useSearchChatsQuery = (params?: string) => {
 
 export const useDeleteChatQuery = (chatId: string) => {
 	const client = useQueryClient()
+	const router = useRouter()
+	const locale = useLocale()
 	return useMutation({
 		mutationFn: (data: IDeleteChatRequest) =>
 			chatService.deleteChat(chatId, data),
@@ -34,7 +37,7 @@ export const useDeleteChatQuery = (chatId: string) => {
 				queryKey: ["fetchChatsWS"],
 			})
 
-			redirect(`/chat/`)
+			router.replace(`/${locale}/chat/`)
 		},
 	})
 }

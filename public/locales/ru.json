@@ -29,6 +29,8 @@
 		"DELETE_CONTACT": "Удалить контакт",
 		"ADD_TO_CONTACTS": "Добавить в контакты",
 		"DELETE_CHAT": "Удалить чат",
+		"DELETE_CHANNEL": "Удалить канал",
+		"DELETE_GROUP": "Удалить группу",
 		"MOBILE": "Мобильный",
 		"LINK": "Ссылка",
 		"BIO_INFO": "О себе",
@@ -56,7 +58,9 @@
 		"SHARE": "Поделиться",
 		"NO_LIVE_SESSION": "Нет активной трансляции. Начните трансляцию для продолжения.",
 		"SPEAKER": "Докладчик",
-		"LISTENER": "Слушатель"
+		"LISTENER": "Слушатель",
+		"LEAVE_GROUP": "Покинуть группу",
+		"LEAVE_CHANNEL": "Покинуть канал"
 	},
 	"PAGES": {
 		"CHAT": {
@@ -176,7 +180,16 @@
 			"CONFIRMATION": "Вы уверены, что хотите удалить всю историю сообщений с {name}?",
 			"CANNOT_UNDONE": "Это действие нельзя отменить.",
 			"ALSO_DELETE_FOR": "Также удалить для {name}",
-			"DELETE_BUTTON": "Удалить"
+			"DELETE_BUTTON": "Удалить",
+			"LEAVE_CHANNEL_TITLE": "Покинуть канал",
+			"LEAVE_GROUP_TITLE": "Покинуть группу",
+			"DELETE_CHANNEL_TITLE": "Удалить канал",
+			"DELETE_GROUP_TITLE": "Удалить группу",
+			"LEAVE_CHANNEL_CONFIRMATION": "Вы уверены, что хотите покинуть канал {name}?",
+			"LEAVE_GROUP_CONFIRMATION": "Вы уверены, что хотите покинуть группу {name}?",
+			"DELETE_CHANNEL_CONFIRMATION": "Вы уверены, что хотите удалить канал {name}?",
+			"DELETE_GROUP_CONFIRMATION": "Вы уверены, что хотите удалить группу {name}?",
+			"LEAVE_BUTTON": "Покинуть"
 		},
 		"ADD_FILE": {
 			"FILES_SELECTED": "Выбрано {count} файлов",

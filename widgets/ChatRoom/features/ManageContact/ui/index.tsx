@@ -10,21 +10,26 @@ import { useTranslations } from "next-intl"
 import { FC, useCallback, useMemo } from "react"
 import { GoTrash } from "react-icons/go"
 import { MdOutlinePersonAddAlt } from "react-icons/md"
+import { TbLogout } from "react-icons/tb"
 
 interface IManageContactProps {
 	interlocutorId: string | undefined
 	interlocutorsName: string | undefined
+	chatName?: string | undefined
 	chatId: string | undefined
 	chatType: ChatRole | undefined
 	interlocutorsAvatar: string | null | undefined
+	isOwner?: boolean
 }
 
 export const ManageContact: FC<IManageContactProps> = ({
 	interlocutorId,
 	interlocutorsName,
+	chatName,
 	chatId,
 	chatType,
 	interlocutorsAvatar,
+	isOwner,
 }) => {
 	const { user } = useUser()
 	const t = useTranslations("COMMON")
@@ -48,9 +53,26 @@ export const ManageContact: FC<IManageContactProps> = ({
 		}
 	}, [addContact, interlocutorId, isContactExist, removeContact])
 
-	const buttons = useMemo(
-		() => [
-			{
+	const buttons = useMemo(() => {
+		const destructiveTitle =
+			chatType === ChatRole.DIALOG
+				? t("DELETE_CHAT")
+				: chatType === ChatRole.CHANNEL
+				? isOwner
+					? t("DELETE_CHANNEL")
+					: t("LEAVE_CHANNEL")
+				: isOwner
+				? t("DELETE_GROUP")
+				: t("LEAVE_GROUP")
+
+		const result = [] as {
+			title: string
+			icon: JSX.Element
+			function: () => void
+		}[]
+
+		if (chatType === ChatRole.DIALOG) {
+			result.push({
 				title: title,
 				icon: isContactExist ? (
 					<GoTrash size={23} className="text-[#444444] dark:text-white" />
@@ -61,35 +83,46 @@ export const ManageContact: FC<IManageContactProps> = ({
 					/>
 				),
 				function: () => handleManageContact(),
+			})
+		}
+
+		result.push({
+			title: destructiveTitle,
+			icon:
+				chatType === ChatRole.DIALOG || isOwner ? (
+					<GoTrash size={23} className="text-[#EC3942]" />
+				) : (
+					<TbLogout size={23} className="text-[#EC3942]" />
+				),
+			function: () => {
+				onOpenModal(EnumModel.DELETE_CHAT, {
+					deleteChat: {
+						chatId: chatId,
+						interlocutorsAvatar: interlocutorsAvatar,
+						interlocutorsName:
+							chatType === ChatRole.DIALOG ? interlocutorsName : undefined,
+						chatName: chatType !== ChatRole.DIALOG ? chatName : undefined,
+						chatType: chatType as ChatRole,
+						isOwner: !!isOwner,
+					},
+				})
 			},
-			{
-				title: t("DELETE_CHAT"),
-				icon: <GoTrash size={23} className="text-[#EC3942]" />,
-				function: () => {
-					onOpenModal(EnumModel.DELETE_CHAT, {
-						deleteChat: {
-							chatId: chatId,
-							interlocutorsAvatar: interlocutorsAvatar,
-							interlocutorsName:
-								chatType === ChatRole.DIALOG ? interlocutorsName : undefined,
-							chatType: chatType as ChatRole,
-						},
-					})
-				},
-			},
-		],
-		[
-			chatId,
-			chatType,
-			handleManageContact,
-			interlocutorsAvatar,
-			interlocutorsName,
-			isContactExist,
-			onOpenModal,
-			title,
-			t,
-		]
-	)
+		})
+
+		return result
+	}, [
+		chatId,
+		chatName,
+		chatType,
+		handleManageContact,
+		interlocutorsAvatar,
+		interlocutorsName,
+		isContactExist,
+		onOpenModal,
+		title,
+		t,
+		isOwner,
+	])
 
 	return (
 		<div className="w-full flex flex-col gap-2 py-3">
@@ -106,7 +139,7 @@ export const ManageContact: FC<IManageContactProps> = ({
 							tag="p"
 							className={cn(
 								"text-[13px]",
-								index === 1
+								index === buttons.length - 1
 									? "text-[#EC3942]"
 									: "text-[#444444] dark:text-white"
 							)}

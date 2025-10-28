@@ -19,7 +19,7 @@ export const SideBar: FC<ISideBarProps> = ({
 	user,
 	onToggleSideBar,
 }) => {
-	const { onlineOrFollowers, nameOfChat, interlocutor } = useChatInfo(
+	const { onlineOrFollowers, nameOfChat, interlocutor, isOwner } = useChatInfo(
 		chat,
 		user
 	)
@@ -45,9 +45,11 @@ export const SideBar: FC<ISideBarProps> = ({
 					<ManageContact
 						interlocutorId={interlocutor?.id}
 						interlocutorsName={interlocutor?.name}
+						chatName={nameOfChat}
 						interlocutorsAvatar={interlocutor?.imageUrl}
 						chatId={chat?.id}
 						chatType={chat?.type as ChatRole}
+						isOwner={isOwner}
 					/>
 				</div>
 			)}

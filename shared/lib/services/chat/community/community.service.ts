@@ -15,4 +15,18 @@ export const communityService = {
 
 		return res.data
 	},
+	async leaveCommunity(communityId: string) {
+		const res = await instance.patch<string>(
+			getCommunityUrl(`/leave/${communityId}`)
+		)
+
+		return res.data
+	},
+	async deleteCommunity(communityId: string) {
+		const res = await instance.delete<string>(
+			getCommunityUrl(`/${communityId}`)
+		)
+
+		return res.data
+	},
 }

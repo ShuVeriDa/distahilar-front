@@ -6,6 +6,7 @@ import { ModalFooter } from "@/entities/ModalFooter"
 import { ChatRole } from "@/prisma/models"
 import { Typography, useModal } from "@/shared"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
+import { useCommunityQuery } from "@/shared/lib/services/chat/community/useCommunityQuery"
 import { useDeleteChatQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
@@ -22,15 +23,29 @@ export const ModalDeleteChat: FC<IModalDeleteChatProps> = () => {
 	const { data } = currentModal
 	const chatId = data?.deleteChat?.chatId
 	const chatType = data?.deleteChat?.chatType
+	const chatName = data?.deleteChat?.chatName
 	const interlocutorsAvatar = data?.deleteChat?.interlocutorsAvatar
 	const interlocutorsName = data?.deleteChat?.interlocutorsName
+	const isOwner = data?.deleteChat?.isOwner
 
 	const { mutateAsync: deleteChat } = useDeleteChatQuery(chatId!)
+	const { leaveCommunityQuery, deleteCommunityQuery } =
+		useCommunityQuery(chatId)
+	const { mutateAsync: leaveCommunity } = leaveCommunityQuery
+	const { mutateAsync: deleteCommunity } = deleteCommunityQuery
 
-	const onDeleteChat = async () => {
+	const onConfirm = async () => {
 		if (!chatId) return
 		try {
-			await deleteChat({ delete_both: isDeleteBoth })
+			if (chatType === ChatRole.DIALOG) {
+				await deleteChat({ delete_both: isDeleteBoth })
+			} else {
+				if (isOwner) {
+					await deleteCommunity()
+				} else {
+					await leaveCommunity()
+				}
+			}
 		} catch (error) {
 			console.error(error)
 		} finally {
@@ -60,12 +75,29 @@ export const ModalDeleteChat: FC<IModalDeleteChatProps> = () => {
 
 					<div>
 						<Typography tag="p" className="text-[18px] ">
-							{t("TITLE")}
+							{chatType === ChatRole.DIALOG
+								? t("TITLE")
+								: chatType === ChatRole.CHANNEL
+								? isOwner
+									? t("DELETE_CHANNEL_TITLE")
+									: t("LEAVE_CHANNEL_TITLE")
+								: isOwner
+								? t("DELETE_GROUP_TITLE")
+								: t("LEAVE_GROUP_TITLE")}
 						</Typography>
 					</div>
 				</div>
 				<Typography tag="p" className="text-[15px] ">
-					{t("CONFIRMATION", { name: interlocutorsName ?? "" })} <br />
+					{chatType === ChatRole.DIALOG
+						? t("CONFIRMATION", { name: interlocutorsName ?? "" })
+						: chatType === ChatRole.CHANNEL
+						? isOwner
+							? t("DELETE_CHANNEL_CONFIRMATION", { name: chatName ?? "" })
+							: t("LEAVE_CHANNEL_CONFIRMATION", { name: chatName ?? "" })
+						: isOwner
+						? t("DELETE_GROUP_CONFIRMATION", { name: chatName ?? "" })
+						: t("LEAVE_GROUP_CONFIRMATION", { name: chatName ?? "" })}
+					<br />
 					<br />
 					{t("CANNOT_UNDONE")}
 				</Typography>
@@ -92,10 +124,16 @@ export const ModalDeleteChat: FC<IModalDeleteChatProps> = () => {
 
 			<ModalFooter
 				onClose={onClose}
-				onSave={onDeleteChat}
+				onSave={onConfirm}
 				isLoading={false}
 				type="button"
-				anotherName={t("DELETE_BUTTON")}
+				anotherName={
+					chatType === ChatRole.DIALOG
+						? t("DELETE_BUTTON")
+						: isOwner
+						? t("DELETE_BUTTON")
+						: t("LEAVE_BUTTON")
+				}
 				className="after:h-0"
 			/>
 		</ModalLayout>

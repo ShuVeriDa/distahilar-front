@@ -29,6 +29,8 @@
 		"DELETE_CONTACT": "Delete Contact",
 		"ADD_TO_CONTACTS": "Add to contacts",
 		"DELETE_CHAT": "Delete chat",
+		"DELETE_CHANNEL": "Delete channel",
+		"DELETE_GROUP": "Delete group",
 		"MOBILE": "Mobile",
 		"LINK": "Link",
 		"BIO_INFO": "Bio",
@@ -56,7 +58,9 @@
 		"SHARE": "Share",
 		"NO_LIVE_SESSION": "No live session. Start one to begin.",
 		"SPEAKER": "Speaker",
-		"LISTENER": "Listener"
+		"LISTENER": "Listener",
+		"LEAVE_GROUP": "Leave group",
+		"LEAVE_CHANNEL": "Leave channel"
 	},
 	"PAGES": {
 		"CHAT": {
@@ -176,7 +180,16 @@
 			"CONFIRMATION": "Are you sure you want to delete all message history with {name}?",
 			"CANNOT_UNDONE": "This action cannot be undone.",
 			"ALSO_DELETE_FOR": "Also delete for {name}",
-			"DELETE_BUTTON": "Delete"
+			"DELETE_BUTTON": "Delete",
+			"LEAVE_CHANNEL_TITLE": "Leave channel",
+			"LEAVE_GROUP_TITLE": "Leave group",
+			"DELETE_CHANNEL_TITLE": "Delete channel",
+			"DELETE_GROUP_TITLE": "Delete group",
+			"LEAVE_CHANNEL_CONFIRMATION": "Are you sure you want to leave the channel {name}?",
+			"LEAVE_GROUP_CONFIRMATION": "Are you sure you want to leave the group {name}?",
+			"DELETE_CHANNEL_CONFIRMATION": "Are you sure you want to delete the channel {name}?",
+			"DELETE_GROUP_CONFIRMATION": "Are you sure you want to delete the group {name}?",
+			"LEAVE_BUTTON": "Leave"
 		},
 
 		"ADD_FILE": {

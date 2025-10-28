@@ -29,6 +29,8 @@
 		"DELETE_CONTACT": "Хуттурга дӀайаккха",
 		"ADD_TO_CONTACTS": "Хуттургаш йукъа кхосса",
 		"DELETE_CHAT": "Чукера дӀайаккха",
+		"DELETE_CHANNEL": "Хьоста дӀайаккха",
+		"DELETE_GROUP": "Тоба дӀайаккха",
 		"MOBILE": "Лоьмар",
 		"LINK": "ТӀехьажорг",
 		"BIO_INFO": "Хьайх лаьцна",
@@ -56,7 +58,9 @@
 		"SHARE": "Гайта",
 		"NO_LIVE_SESSION": "Схьалетта гойтург йац.",
 		"SPEAKER": "Дийцархо̃",
-		"LISTENER": "ЛадогӀархо"
+		"LISTENER": "ЛадогӀархо",
+		"LEAVE_GROUP": "Тоба дӀатаса",
+		"LEAVE_CHANNEL": "Хьоста дӀатаса"
 	},
 	"PAGES": {
 		"CHAT": {
@@ -176,7 +180,16 @@
 			"CONFIRMATION": "Хьуна билггал лаьий {name} дерриге къамел дӀадаккха?",
 			"CANNOT_UNDONE": "ХӀара дар йухадаккха йиш хира йац.",
 			"ALSO_DELETE_FOR": "Иштта дӀайаккха",
-			"DELETE_BUTTON": "ДӀайаккха"
+			"DELETE_BUTTON": "ДӀайаккха",
+			"LEAVE_CHANNEL_TITLE": "Хьоста дӀатаса",
+			"LEAVE_GROUP_TITLE": "Тоба дӀатаса",
+			"DELETE_CHANNEL_TITLE": "Хьоста дӀайаккха",
+			"DELETE_GROUP_TITLE": "Тоба дӀайаккха",
+			"LEAVE_CHANNEL_CONFIRMATION": "Хьуна билггал лаьий хӀара {name} хьоста дӀатаса?",
+			"LEAVE_GROUP_CONFIRMATION": "Хьуна билггал лаьий хӀара {name} тоба дӀатаса?",
+			"DELETE_CHANNEL_CONFIRMATION": "Хьуна билггал лаьий хӀара {name} хьоста дӀайаккха?",
+			"DELETE_GROUP_CONFIRMATION": "Хьуна билггал лаьий хӀара {name} тоба дӀайаккха?",
+			"LEAVE_BUTTON": "ДӀатаса"
 		},
 
 		"ADD_FILE": {

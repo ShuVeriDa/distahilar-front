@@ -1,4 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useLocale } from "next-intl"
+import { useRouter } from "next/navigation"
 import { useMemo } from "react"
 import { communityService, ICreateCommunity } from "./community.service"
 
@@ -15,6 +17,8 @@ export const useCommunityQuery = (communityId?: string) => {
 	// })
 
 	const client = useQueryClient()
+	const router = useRouter()
+	const locale = useLocale()
 
 	const createCommunityQuery = useMutation({
 		mutationFn: (data: ICreateCommunity) =>
@@ -22,5 +26,37 @@ export const useCommunityQuery = (communityId?: string) => {
 		mutationKey: ["createCommunityQuery"],
 	})
 
-	return useMemo(() => ({ createCommunityQuery }), [createCommunityQuery])
+	const leaveCommunityQuery = useMutation({
+		mutationFn: () => communityService.leaveCommunity(communityId!),
+		mutationKey: ["leaveCommunityQuery", communityId],
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ["messagesWS", communityId],
+			})
+			client.invalidateQueries({
+				queryKey: ["fetchChatsWS"],
+			})
+			router.replace(`/${locale}/chat/`)
+		},
+		// No onError handling here; let UI handle
+	})
+
+	const deleteCommunityQuery = useMutation({
+		mutationFn: () => communityService.deleteCommunity(communityId!),
+		mutationKey: ["deleteCommunityQuery", communityId],
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ["messagesWS", communityId],
+			})
+			client.invalidateQueries({
+				queryKey: ["fetchChatsWS"],
+			})
+			router.replace(`/${locale}/chat/`)
+		},
+	})
+
+	return useMemo(
+		() => ({ createCommunityQuery, leaveCommunityQuery, deleteCommunityQuery }),
+		[createCommunityQuery, leaveCommunityQuery, deleteCommunityQuery]
+	)
 }

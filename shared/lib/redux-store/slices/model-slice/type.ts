@@ -42,10 +42,12 @@ export interface IModalData {
 		clearSelectedMessages: () => void
 	}
 	deleteChat?: {
+		chatName?: string
 		interlocutorsName?: string
 		interlocutorsAvatar?: string | null
 		chatId?: string
 		chatType: ChatRole
+		isOwner?: boolean
 	}
 	addFiles?: {
 		files: File[]
