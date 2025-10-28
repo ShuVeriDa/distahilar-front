@@ -6,14 +6,19 @@ import { FC } from "react"
 
 interface ICopyClickBoardProps {
 	className?: string
+	username?: string | undefined
 }
 
-export const CopyClickBoard: FC<ICopyClickBoardProps> = ({ className }) => {
+export const CopyClickBoard: FC<ICopyClickBoardProps> = ({
+	className,
+	username,
+}) => {
 	const { user } = useUser()
+	const userName = username ?? user?.username
 	const { copy } = useClipboard()
 	const { toast } = useToast()
 	const onCopy = () => {
-		copy(`https://d.hilar/${user?.username}`)
+		copy(`https://d.hilar/${userName}`)
 
 		toast({
 			description: "Username copied to clipboard",
@@ -29,7 +34,7 @@ export const CopyClickBoard: FC<ICopyClickBoardProps> = ({ className }) => {
 			)}
 			onClick={onCopy}
 		>
-			@{user?.username}
+			@{userName}
 		</button>
 	)
 }

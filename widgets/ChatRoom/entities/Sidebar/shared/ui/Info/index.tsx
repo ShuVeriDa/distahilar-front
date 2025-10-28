@@ -1,42 +1,36 @@
-import { ChatRole, ChatType, UserType } from "@/prisma/models"
+import { ChatRole, ChatType } from "@/prisma/models"
 import { Typography } from "@/shared"
 import { CopyClickBoard } from "@/widgets/SheetComponent/features/clickboard"
 import { useTranslations } from "next-intl"
 import { FC, useMemo } from "react"
 import { FiInfo } from "react-icons/fi"
 interface IInfoProps {
-	user: UserType | null
 	chat: ChatType | undefined
+	phone: string | undefined
+	bio: string | null | undefined
+	username: string | undefined
 }
 
-export const Info: FC<IInfoProps> = ({ chat, user }) => {
+export const Info: FC<IInfoProps> = ({ chat, bio, phone, username }) => {
 	const isDialog = chat?.type === ChatRole.DIALOG
 	const t = useTranslations("COMMON")
 
 	const infoObj = useMemo(
 		() => [
 			{
-				value: isDialog ? user?.phone : chat?.link,
+				value: isDialog ? phone : chat?.link,
 				description: isDialog ? t("MOBILE") : t("LINK"),
 			},
 			{
-				value: isDialog ? user?.bio : chat?.description,
+				value: isDialog ? bio : chat?.description,
 				description: isDialog ? t("BIO_INFO") : t("DESCRIPTION"),
 			},
 			{
-				value: isDialog ? `@${user?.username}` : undefined,
+				value: isDialog ? `@${username}` : undefined,
 				description: isDialog ? t("USERNAME") : undefined,
 			},
 		],
-		[
-			chat?.description,
-			chat?.link,
-			isDialog,
-			user?.bio,
-			user?.phone,
-			user?.username,
-			t,
-		]
+		[chat?.description, chat?.link, isDialog, bio, phone, username, t]
 	)
 
 	return (
@@ -50,7 +44,10 @@ export const Info: FC<IInfoProps> = ({ chat, user }) => {
 						<div className="flex flex-col gap-0" key={index + infoObj.length}>
 							<div>
 								{index === 2 && isDialog ? (
-									<CopyClickBoard className="text-[#47A2D7] dark:text-[#47A2D7]" />
+									<CopyClickBoard
+										className="text-[#47A2D7] dark:text-[#47A2D7]"
+										username={username}
+									/>
 								) : (
 									<Typography
 										tag="p"

@@ -2,7 +2,9 @@
 
 import { useFetchChatByIdQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { useMessagesWSQuery } from "@/shared/lib/services/message/useMessagesQuery"
-import { FC, useMemo, useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { FC, useEffect, useMemo, useRef, useState } from "react"
 
 import { ChatRole, ChatType, MemberRole, MessageType } from "@/prisma/models"
 import { useUser, useWebRTCCall } from "@/shared"
@@ -29,9 +31,12 @@ interface IChatRoomProps {
 }
 
 export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
+	const router = useRouter()
+	const client = useQueryClient()
 	const { user } = useUser()
 	const { data: chat, isLoading: isChatLoading } = useFetchChatByIdQuery(chatId)
-	const { isLive: isRoomLive } = useLiveStatus(chatId)
+	const resolvedChatId = chat?.id || chatId
+	const { isLive: isRoomLive } = useLiveStatus(resolvedChatId)
 	const [openSideBar, setOpenSideBar] = useState(false)
 	const [editedMessage, setEditedMessage] = useState<MessageType | null>(null)
 	const [callVisible, setCallVisible] = useState(false)
@@ -64,7 +69,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		setSelectedMessages,
 		clearSelectedMessages,
 	} = useSelectedMessages()
-	const messagesQuery = useMessagesWSQuery(chatId)
+	const messagesQuery = useMessagesWSQuery(resolvedChatId)
 	const flatMessages = messagesQuery.flatMessages
 	const isLoadingMessages = messagesQuery.isLoading
 	const hasNextPage = messagesQuery.hasNextPage as boolean
@@ -96,12 +101,34 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		return me.role !== MemberRole.GUEST
 	}, [chat, user?.id])
 
+	// Normalize URL to real chat id if dialog was created from user id param
+	useEffect(() => {
+		if (chat?.id && chatId !== chat.id) {
+			router.replace(`/${locale}/chat/${chat.id}`)
+			// ensure chats list reflects the new chat
+			client.invalidateQueries({ queryKey: ["fetchChatsWS"] })
+		}
+	}, [chat?.id, chatId, router, locale, client])
+
+	// If chat was auto-created for this navigation, refresh chats list
+	// only after the first message appears, so it shows up in the sidebar
+	const didRefreshChatsRef = useRef(false)
+	const isAutoCreated = !!(chat?.id && chatId !== chat.id)
+	useEffect(() => {
+		if (!isAutoCreated) return
+		if (didRefreshChatsRef.current) return
+		if ((flatMessages?.length || 0) > 0) {
+			client.invalidateQueries({ queryKey: ["fetchChatsWS"] })
+			didRefreshChatsRef.current = true
+		}
+	}, [isAutoCreated, flatMessages, client])
+
 	const leaveLive = () => {
 		live.leaveLive()
 	}
 
 	const joinLive = () => {
-		live.joinLive(chatId, {
+		live.joinLive(resolvedChatId, {
 			nameOfChat,
 			chat: chat as ChatType,
 			isPrivilegedMember,
@@ -118,7 +145,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 			return
 		}
 		if (isOwner || isAdmin || isModerator) {
-			live.startLive(chatId, {
+			live.startLive(resolvedChatId, {
 				nameOfChat,
 				chat: chat as ChatType,
 				isPrivilegedMember,
@@ -127,7 +154,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	}
 
 	const handleLeaveClick = () => {
-		live.openOverlay(chatId, {
+		live.openOverlay(resolvedChatId, {
 			nameOfChat,
 			chat: chat as ChatType,
 			isPrivilegedMember,
@@ -204,7 +231,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					/>
 				) : (
 					<RichMessageInput
-						chatId={chatId}
+						chatId={resolvedChatId}
 						chatType={chat?.type}
 						editedMessage={editedMessage}
 						handleEditMessage={handleEditMessage}
@@ -212,7 +239,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 				)}
 				<CallOverlay
 					chat={chat}
-					chatId={chatId}
+					chatId={resolvedChatId}
 					callApi={callApi}
 					callState={callState}
 					peerUserId={peerUserId}

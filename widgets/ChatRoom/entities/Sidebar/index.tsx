@@ -35,7 +35,12 @@ export const SideBar: FC<ISideBarProps> = ({
 						onToggleSideBar={onToggleSideBar}
 					/>
 					<Gap />
-					<Info chat={chat} user={user} />
+					<Info
+						chat={chat}
+						bio={interlocutor?.bio}
+						phone={interlocutor?.phone}
+						username={interlocutor?.username}
+					/>
 					<Gap />
 					<ManageContact
 						interlocutorId={interlocutor?.id}
