@@ -1,5 +1,6 @@
 import { ChatRole, ChatType } from "@/prisma/models"
-import { Typography } from "@/shared"
+import { Button, Typography, useModal } from "@/shared"
+import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { CopyClickBoard } from "@/widgets/SheetComponent/features/clickboard"
 import { useTranslations } from "next-intl"
 import { FC, useMemo } from "react"
@@ -14,6 +15,7 @@ interface IInfoProps {
 export const Info: FC<IInfoProps> = ({ chat, bio, phone, username }) => {
 	const isDialog = chat?.type === ChatRole.DIALOG
 	const t = useTranslations("COMMON")
+	const { onOpenModal } = useModal()
 
 	const infoObj = useMemo(
 		() => [
@@ -65,6 +67,22 @@ export const Info: FC<IInfoProps> = ({ chat, bio, phone, username }) => {
 						</div>
 					)
 				})}
+				{chat &&
+					(chat.type === ChatRole.GROUP || chat.type === ChatRole.CHANNEL) && (
+						<div className="pt-2">
+							<Button
+								variant="clean"
+								className="px-0 text-[#47A2D7] dark:text-[#47A2D7] text-[13px]"
+								onClick={() =>
+									onOpenModal(EnumModel.MEMBERS, {
+										members: { chatId: chat.id },
+									})
+								}
+							>
+								{chat.type === ChatRole.GROUP ? t("MEMBERS") : t("SUBSCRIBERS")}
+							</Button>
+						</div>
+					)}
 			</div>
 		</div>
 	)

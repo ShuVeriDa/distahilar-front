@@ -20,6 +20,7 @@ export enum EnumModel {
 	DELETE_MESSAGES = "DELETE_MESSAGES",
 	DELETE_CHAT = "DELETE_CHAT",
 	ADD_FILES = "ADD_FILES",
+	MEMBERS = "MEMBERS",
 }
 
 export interface IModalData {
@@ -48,6 +49,9 @@ export interface IModalData {
 		chatId?: string
 		chatType: ChatRole
 		isOwner?: boolean
+	}
+	members?: {
+		chatId: string
 	}
 	addFiles?: {
 		files: File[]

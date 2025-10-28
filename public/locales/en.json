@@ -62,6 +62,17 @@
 		"LEAVE_GROUP": "Leave group",
 		"LEAVE_CHANNEL": "Leave channel"
 	},
+	"MEMBERS": {
+		"TITLE": "Members",
+		"SUBSCRIBERS_TITLE": "Subscribers",
+		"MAKE_ADMIN": "Promote to admin",
+		"MAKE_MODERATOR": "Promote to moderator",
+		"REMOVE_ADMIN": "Remove admin",
+		"REMOVE_MODERATOR": "Remove moderator",
+		"REMOVE_FROM_GROUP": "Remove from group",
+		"REMOVE_FROM_CHANNEL": "Remove from channel",
+		"YOU": "You"
+	},
 	"PAGES": {
 		"CHAT": {
 			"OPTIONS": {

@@ -62,6 +62,17 @@
 		"LEAVE_GROUP": "Тоба дӀатаса",
 		"LEAVE_CHANNEL": "Хьоста дӀатаса"
 	},
+	"MEMBERS": {
+		"TITLE": "Декъашхой",
+		"SUBSCRIBERS_TITLE": "Йазвалархой",
+		"MAKE_ADMIN": "Админна хьастора",
+		"MAKE_MODERATOR": "Модераторанна хьастора",
+		"REMOVE_ADMIN": "Админ лахӀотто",
+		"REMOVE_MODERATOR": "Модератор лахӀотто",
+		"REMOVE_FROM_GROUP": "Тобачу дӀайаккха",
+		"REMOVE_FROM_CHANNEL": "Хьостачу дӀайаккха",
+		"YOU": "Хьо"
+	},
 	"PAGES": {
 		"CHAT": {
 			"OPTIONS": {

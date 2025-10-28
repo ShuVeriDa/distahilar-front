@@ -62,6 +62,17 @@
 		"LEAVE_GROUP": "Покинуть группу",
 		"LEAVE_CHANNEL": "Покинуть канал"
 	},
+	"MEMBERS": {
+		"TITLE": "Участники",
+		"SUBSCRIBERS_TITLE": "Подписчики",
+		"MAKE_ADMIN": "Назначить администратором",
+		"MAKE_MODERATOR": "Назначить модератором",
+		"REMOVE_ADMIN": "Снять администратора",
+		"REMOVE_MODERATOR": "Снять модератора",
+		"REMOVE_FROM_GROUP": "Удалить из группы",
+		"REMOVE_FROM_CHANNEL": "Удалить из канала",
+		"YOU": "Вы"
+	},
 	"PAGES": {
 		"CHAT": {
 			"OPTIONS": {

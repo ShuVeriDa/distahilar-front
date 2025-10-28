@@ -1,13 +1,20 @@
 import { ContactType } from "@/prisma/models"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import Image from "next/image"
-import { FC } from "react"
+import { FC, useState } from "react"
 
 interface IContactItemProps {
 	contact: ContactType
 }
 
 export const ContactItem: FC<IContactItemProps> = ({ contact }) => {
+	const fallback = "/images/no-avatar.png"
+	const [imgSrc, setImgSrc] = useState<string>(
+		contact.savedContact.imageUrl && contact.savedContact.imageUrl.trim()
+			? contact.savedContact.imageUrl
+			: fallback
+	)
+
 	const fullName = `${contact.savedContact.name} ${contact.savedContact.surname}`
 	return (
 		<button
@@ -16,11 +23,15 @@ export const ContactItem: FC<IContactItemProps> = ({ contact }) => {
 		>
 			<div className="rounded-full w-[40px] h-[40px]">
 				<Image
-					src={contact.savedContact.imageUrl!}
+					src={imgSrc}
 					alt={`avatar-${contact.savedContact.name}`}
 					className="rounded-full"
 					width={40}
 					height={40}
+					unoptimized
+					onError={() => {
+						if (imgSrc !== fallback) setImgSrc(fallback)
+					}}
 				/>
 			</div>
 			<div className="flex flex-col items-start">

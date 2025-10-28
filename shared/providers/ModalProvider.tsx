@@ -13,6 +13,7 @@ import { ModalDeleteMessages } from "@/widgets/ModalDeleteMessages"
 import { ModalEditFolder } from "@/widgets/ModalEditFolder"
 import { ModalFolder } from "@/widgets/ModalFolder"
 import { ModalFolderIncludeChats } from "@/widgets/ModalFolderIncludeChats/ui/ModalFolderIncludeChats"
+import { ModalMembers } from "@/widgets/ModalMembers"
 import { ModalSettings } from "@/widgets/ModalSettings"
 import { AnimatePresence } from "framer-motion"
 import { usePathname } from "next/navigation"
@@ -33,7 +34,7 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 
 	useEffect(() => {
 		if (pathname === "/auth") onClose()
-	}, [pathname])
+	}, [pathname, onClose])
 
 	if (!isMounted) {
 		return null
@@ -85,6 +86,9 @@ export const ModalProvider: FC<IModalProviderProps> = () => {
 			)}
 			{isModalOpen && currentModal.type === EnumModel.ADD_FILES && (
 				<ModalAddFile key={"modal-chat-add-file"} />
+			)}
+			{isModalOpen && currentModal.type === EnumModel.MEMBERS && (
+				<ModalMembers key={"modal-members"} />
 			)}
 		</AnimatePresence>
 	)
