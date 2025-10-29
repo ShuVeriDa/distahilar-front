@@ -2,15 +2,11 @@
 
 import { useFetchChatByIdQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { useMessagesWSQuery } from "@/shared/lib/services/message/useMessagesQuery"
-import { useQueryClient } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-import { FC, useEffect, useMemo, useRef, useState } from "react"
+import { FC } from "react"
 
-import { ChatRole, ChatType, MemberRole, MessageType } from "@/prisma/models"
+import { ChatRole, MemberRole } from "@/prisma/models"
 import { useUser, useWebRTCCall } from "@/shared"
-import { useLiveStatus } from "@/shared/hooks/useLiveStatus"
 import { useSelectedMessages } from "@/shared/hooks/useSelectedMessages"
-import { useLiveGlobal } from "@/shared/providers/LiveProvider"
 
 import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { CallPhaseEnum } from "@/shared/lib/services/call/call.types"
@@ -19,6 +15,10 @@ import { Header } from "../entities/Header"
 import { SideBar } from "../entities/Sidebar"
 import { RichMessageInput } from "../features"
 import { JoinChat } from "../features/JoinChat"
+import { useChatRoomComputed } from "../shared/hooks/useChatRoomComputed"
+import { useChatRoomLive } from "../shared/hooks/useChatRoomLive"
+import { useChatRoomNavigation } from "../shared/hooks/useChatRoomNavigation"
+import { useChatRoomState } from "../shared/hooks/useChatRoomState"
 import { PinnedMessage } from "../shared/ui/PinnedMessage"
 import { CallOverlay } from "./call-overlay"
 import { LiveBannerJoin } from "./live-banner-join"
@@ -31,19 +31,10 @@ interface IChatRoomProps {
 }
 
 export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
-	const router = useRouter()
-	const client = useQueryClient()
 	const { user } = useUser()
 	const { data: chat, isLoading: isChatLoading } = useFetchChatByIdQuery(chatId)
 	const resolvedChatId = chat?.id || chatId
-	const { isLive: isRoomLive } = useLiveStatus(resolvedChatId)
-	const [openSideBar, setOpenSideBar] = useState(false)
-	const [editedMessage, setEditedMessage] = useState<MessageType | null>(null)
-	const [callVisible, setCallVisible] = useState(false)
 	const [callState, callApi] = useWebRTCCall()
-	const live = useLiveGlobal()
-	const { state: liveState, participants } = live
-	const { room, isSelfMuted } = liveState
 
 	const {
 		onlineOrFollowers,
@@ -54,20 +45,15 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		isOnline,
 	} = useChatInfo(chat, user)
 
-	const peerUserId =
-		chat?.members?.find(m => m.userId !== user?.id)?.userId || null
-
-	const isMember = chat?.members?.some(m => m.userId === user?.id)
-	const typeOfChat = chat?.type
-
-	const onToggleSideBar = () => setOpenSideBar(!openSideBar)
-
-	const handleEditMessage = (message: MessageType | null) =>
-		setEditedMessage(message)
-
-	const startDialogCall = () => setCallVisible(true)
-	const endDialogCall = () => setCallVisible(false)
-	const maximizeWindowsLive = () => live.maximize()
+	const {
+		openSideBar,
+		editedMessage,
+		callVisible,
+		onToggleSideBar,
+		handleEditMessage,
+		startDialogCall,
+		endDialogCall,
+	} = useChatRoomState()
 
 	const {
 		hasSelectedMessages,
@@ -75,6 +61,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 		setSelectedMessages,
 		clearSelectedMessages,
 	} = useSelectedMessages()
+
 	const messagesQuery = useMessagesWSQuery(resolvedChatId)
 	const flatMessages = messagesQuery.flatMessages
 	const isLoadingMessages = messagesQuery.isLoading
@@ -82,96 +69,40 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const fetchNextPage = messagesQuery.fetchNextPage
 	const isFetchingNextPage = messagesQuery.isFetchingNextPage
 
-	const pinnedMessages = flatMessages.find(msg => msg.isPinned)
+	const {
+		isRoomLive,
+		isParticipantLive,
+		participants,
+		isSelfMuted,
+		maximizeWindowsLive,
+		joinLive,
+		startLive,
+		handleLeaveClick,
+	} = useChatRoomLive({
+		chat,
+		user,
+		resolvedChatId,
+		nameOfChat,
+		isOwner,
+		isAdmin,
+		isModerator,
+	})
 
-	const headerSubtitle =
-		(chat?.type === ChatRole.GROUP || chat?.type === ChatRole.CHANNEL) &&
-		isRoomLive
-			? `${onlineOrFollowers} • LIVE`
-			: onlineOrFollowers
-
-	// Is current user a participant of the ongoing live stream in this chat
-	const isParticipantLive = (() => {
-		const uId = user?.id
-		if (!uId || !room?.isLive) return false
-		if (room.hostId === uId) return true
-		if (room.speakers.includes(uId)) return true
-		if (room.listeners.includes(uId)) return true
-		return false
-	})()
-
-	const isPrivilegedMember = useMemo(() => {
-		if (!chat || !user?.id) return false
-		const me = chat.members.find(m => m.userId === user.id)
-		if (!me) return false
-		return me.role !== MemberRole.GUEST
-	}, [chat, user?.id])
-
-	// Normalize URL to real chat id if dialog was created from user id param
-	useEffect(() => {
-		if (chat?.id && chatId !== chat.id) {
-			router.replace(`/${locale}/chat/${chat.id}`)
-			// ensure chats list reflects the new chat
-			client.invalidateQueries({ queryKey: ["fetchChatsWS"] })
-		}
-	}, [chat?.id, chatId, router, locale, client])
-
-	// If chat was auto-created for this navigation, refresh chats list
-	// only after the first message appears, so it shows up in the sidebar
-	const didRefreshChatsRef = useRef(false)
-	const isAutoCreated = !!(chat?.id && chatId !== chat.id)
-	useEffect(() => {
-		if (!isAutoCreated) return
-		if (didRefreshChatsRef.current) return
-		if ((flatMessages?.length || 0) > 0) {
-			client.invalidateQueries({ queryKey: ["fetchChatsWS"] })
-			didRefreshChatsRef.current = true
-		}
-	}, [isAutoCreated, flatMessages, client])
-
-	const leaveLive = () => {
-		live.leaveLive()
-	}
-
-	const joinLive = () => {
-		live.joinLive(resolvedChatId, {
-			nameOfChat,
-			chat: chat as ChatType,
-			isPrivilegedMember,
+	const { peerUserId, isMember, typeOfChat, pinnedMessages, headerSubtitle } =
+		useChatRoomComputed({
+			chat,
+			user,
+			flatMessages,
+			isRoomLive,
+			onlineOrFollowers,
 		})
-	}
 
-	const startLive = () => {
-		if (isRoomLive && isParticipantLive) {
-			maximizeWindowsLive()
-			return
-		}
-		if (isRoomLive && !isParticipantLive) {
-			joinLive()
-			return
-		}
-		if (isOwner || isAdmin || isModerator) {
-			live.startLive(resolvedChatId, {
-				nameOfChat,
-				chat: chat as ChatType,
-				isPrivilegedMember,
-			})
-		}
-	}
-
-	const handleLeaveClick = () => {
-		live.openOverlay(resolvedChatId, {
-			nameOfChat,
-			chat: chat as ChatType,
-			isPrivilegedMember,
-		})
-		if (isPrivilegedMember) {
-			// Global overlay manages confirmation dialog
-			live.setConfirmLeaveOpen(true)
-			return
-		}
-		leaveLive()
-	}
+	useChatRoomNavigation({
+		chatId,
+		chat,
+		locale,
+		flatMessages,
+	})
 
 	const actionsForButtons = [
 		() => {},

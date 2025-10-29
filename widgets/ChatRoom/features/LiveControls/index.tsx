@@ -45,8 +45,8 @@ export const LiveControls: FC<ILiveControls> = ({
 	return (
 		<div
 			className={cn(
-				// "w-full max-w-[380px] pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4",
-				"w-full max-w-[390px] pb-1 pt-2  flex self-center items-center justify-between gap-4",
+				"w-full pb-1 pt-2 px-6 flex self-center items-center justify-between gap-4",
+				isScreenSharing && "max-w-[380px]",
 				className
 			)}
 		>
