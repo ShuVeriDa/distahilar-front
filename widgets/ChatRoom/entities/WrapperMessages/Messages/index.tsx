@@ -125,6 +125,7 @@ export const Messages: FC<IMessagesProps> = ({
 					createdDate={createdDate}
 					message={message}
 					interlocutorsName={interlocutorsName}
+					chat={chat}
 					onSelectMessage={onSelectMessage}
 					handleEditMessage={handleEditMessage}
 				/>

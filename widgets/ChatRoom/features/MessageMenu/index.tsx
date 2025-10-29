@@ -2,11 +2,13 @@
 
 import {
 	ChatRole,
+	ChatType,
+	MemberRole,
 	MessageEnum,
 	MessageStatus,
 	MessageType,
 } from "@/prisma/models"
-import { Typography, useModal } from "@/shared"
+import { Typography, useModal, useUser } from "@/shared"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { useAddReaction } from "@/shared/lib/services/message/useReactionQuery"
@@ -41,6 +43,7 @@ interface IMessageMenuProps {
 	createdDate: string | undefined
 	message: MessageType
 	interlocutorsName: string | undefined
+	chat: ChatType | undefined
 	onSelectMessage: () => void
 	handleEditMessage: (message: MessageType | null) => void
 }
@@ -50,14 +53,31 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	isMyMessage,
 	message,
 	interlocutorsName,
+	chat,
 	onSelectMessage,
 	handleEditMessage,
 }) => {
 	const t = useTranslations()
+	const { user } = useUser()
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
 	const { mutateAsync: addReaction } = useAddReaction()
 	const { onOpenModal } = useModal()
+
+	// Проверяем роль пользователя в чате
+	const userRole = chat?.members?.find(
+		member => member.userId === user?.id
+	)?.role
+
+	// Определяем, является ли чат группой или каналом
+	const isGroupOrChannel =
+		chat?.type === ChatRole.GROUP || chat?.type === ChatRole.CHANNEL
+
+	// Проверяем, имеет ли пользователь права на удаление и закрепление
+	const hasPermissionToDeleteAndPin =
+		userRole === MemberRole.OWNER ||
+		userRole === MemberRole.ADMIN ||
+		userRole === MemberRole.MODERATOR
 
 	// Оставляем только действительно нужные useCallback
 	const handleEmojiClick = useCallback(
@@ -171,10 +191,19 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 			<div className={containerClasses}>
 				<div className="py-1">
 					{options.map((option, i) => {
+						const isEditOption = i === 1
+						const isPinOption = i === 2
+						const isCopyOption = i === 3
+						const isDeleteOption = i === 5
+
 						const shouldHideOption =
 							(message.messageType !== MessageEnum.TEXT &&
-								(i === 1 || i === 3)) ||
-							(!isMyMessage && i === 1)
+								(isEditOption || isCopyOption)) ||
+							(!isMyMessage && isEditOption) ||
+							// Скрываем опции удаления и закрепления в группах и каналах для пользователей без прав
+							(isGroupOrChannel &&
+								!hasPermissionToDeleteAndPin &&
+								(isPinOption || isDeleteOption))
 
 						if (shouldHideOption) return null
 
