@@ -11,27 +11,29 @@ const MotionDiv = dynamic(() =>
 )
 
 interface IHeaderProps {
-	nameOfChat: string | undefined
+	chatType: ChatRole
+	openSideBar: boolean
+	memberRole: MemberRole
 	onlineOrFollowers: string
 	hasSelectedMessages: boolean
+	isOnline: boolean | undefined
+	nameOfChat: string | undefined
 	selectedMessages: MessageType[]
-	openSideBar: boolean
-	clearSelectedMessages: () => void
 	actionsForButtons: (() => void)[]
-	memberRole: MemberRole
-	chatType: ChatRole
+	clearSelectedMessages: () => void
 }
 
 export const Header: FC<IHeaderProps> = ({
-	nameOfChat,
-	onlineOrFollowers,
-	hasSelectedMessages,
-	selectedMessages,
-	openSideBar,
-	clearSelectedMessages,
-	actionsForButtons,
-	memberRole,
+	isOnline,
 	chatType,
+	memberRole,
+	nameOfChat,
+	openSideBar,
+	selectedMessages,
+	onlineOrFollowers,
+	actionsForButtons,
+	hasSelectedMessages,
+	clearSelectedMessages,
 }) => {
 	return (
 		<div className="w-full flex flex-col items-center dark:bg-[#17212B] bg-white min-h-[50px] py-2 px-3 border-b border-b-[#E7E7E7] dark:border-b-[#101921]">
@@ -45,7 +47,11 @@ export const Header: FC<IHeaderProps> = ({
 						transition={{ duration: 0.1 }}
 						className="w-full flex items-center justify-between"
 					>
-						<Info name={nameOfChat} onlineOrFollowers={onlineOrFollowers} />
+						<Info
+							name={nameOfChat}
+							onlineOrFollowers={onlineOrFollowers}
+							isOnline={isOnline}
+						/>
 						<Buttons
 							actionsForButtons={actionsForButtons}
 							openSideBar={openSideBar}

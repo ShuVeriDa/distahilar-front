@@ -1,22 +1,25 @@
 import { ChatRole, ChatType } from "@/prisma/models"
 import { Button, Typography } from "@/shared"
+import { cn } from "@/shared/lib/utils/cn"
 import Image from "next/image"
 import { FC } from "react"
 import { IoCloseOutline } from "react-icons/io5"
 
 interface IHeaderProps {
-	chat: ChatType | undefined
-	nameOfChat: string | undefined
 	onlineOrFollowers: string
+	chat: ChatType | undefined
+	isOnline: boolean | undefined
+	nameOfChat: string | undefined
 	imageUrl: string | null | undefined
 	onToggleSideBar: () => void
 }
 
 export const Header: FC<IHeaderProps> = ({
 	chat,
+	imageUrl,
+	isOnline,
 	nameOfChat,
 	onlineOrFollowers,
-	imageUrl,
 	onToggleSideBar,
 }) => {
 	const isDialog = chat?.type === ChatRole.DIALOG
@@ -60,7 +63,10 @@ export const Header: FC<IHeaderProps> = ({
 					</Typography>
 					<Typography
 						tag="p"
-						className="text-[13px] font-normal text-[#999999]"
+						className={cn(
+							"text-[13px] font-normal text-[#999999]",
+							isOnline && "text-[#5EB5F7]"
+						)}
 					>
 						{onlineOrFollowers}
 					</Typography>

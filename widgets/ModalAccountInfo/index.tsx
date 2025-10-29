@@ -22,6 +22,8 @@ export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 	const tAccountInfo = useTranslations("MODALS.ACCOUNT_INFO")
 	const tMyAccount = useTranslations("MODALS.MY_ACCOUNT")
 
+	console.log({ user })
+
 	return (
 		<ModalLayout
 			onClose={onClose}
@@ -38,9 +40,15 @@ export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 			</div>
 			<div className="w-full flex flex-col gap-5 items-center justify-center pb-1.5">
 				<div className="flex flex-col gap-2 items-center justify-center">
-					<Avatar avatar={user?.imageUrl ? user.imageUrl : ""} />
+					<Avatar
+						avatar={user?.imageUrl ? user.imageUrl : "/images/no-avatar.png"}
+					/>
 
-					<NameAndOnline name={user?.name ? user.name : ""} />
+					<NameAndOnline
+						name={user?.name ? user.name : ""}
+						isOnline={user?.isOnline}
+						lastSeen={user?.lastSeen}
+					/>
 				</div>
 
 				<Bio />

@@ -34,6 +34,7 @@ export const useChatInfo = (
 		: chat?.name
 
 	const lastSeen = useFormatLastSeen(interlocutor?.lastSeen)
+	const isOnline = interlocutor?.isOnline
 
 	const online = interlocutor?.isOnline
 		? t("ONLINE")
@@ -46,6 +47,7 @@ export const useChatInfo = (
 		: `${chat?.members.length} ${t("SUBSCRIBERS")}`
 
 	return {
+		isOnline,
 		nameOfChat,
 		onlineOrFollowers,
 		interlocutor,

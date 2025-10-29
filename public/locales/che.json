@@ -69,8 +69,8 @@
 		"MAKE_MODERATOR": "Модераторанна хьастора",
 		"REMOVE_ADMIN": "Админ лахӀотто",
 		"REMOVE_MODERATOR": "Модератор лахӀотто",
-		"REMOVE_FROM_GROUP": "Тобачу дӀайаккха",
-		"REMOVE_FROM_CHANNEL": "Хьостачу дӀайаккха",
+		"REMOVE_FROM_GROUP": "Тоба дӀайаккха",
+		"REMOVE_FROM_CHANNEL": "Хьоста дӀайаккха",
 		"YOU": "Хьо"
 	},
 	"PAGES": {
@@ -126,7 +126,7 @@
 			"DESCRIPTIONS_PLACEHOLDER": "Хьостах лаьцна йазъйе"
 		},
 		"SETTINGS": {
-			"TITLE": "НИСДАРШ",
+			"TITLE": "Нисдарш",
 			"MY_ACCOUNT": "Сан дӀайаздар",
 			"FOLDERS": "Бохчанаш",
 			"LANGUAGE": "Мотт"

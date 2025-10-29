@@ -33,7 +33,7 @@ export const Link: FC<ILinkProps> = ({ item, tag, onClick, variant, ref }) => {
 	return (
 		<Component
 			className={cn(
-				"group flex px-4  rounded-[3px] justify-between items-center cursor-pointer dark:hover:bg-[#292d35] hover:bg-[rgba(0,0,0,0.06)] relative",
+				"group flex px-4  rounded-[3px] justify-between items-center cursor-pointer hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C] relative",
 				ROOT_CLASSNAME
 			)}
 			onClick={onClick}

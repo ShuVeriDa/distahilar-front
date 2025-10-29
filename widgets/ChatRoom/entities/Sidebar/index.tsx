@@ -19,16 +19,15 @@ export const SideBar: FC<ISideBarProps> = ({
 	user,
 	onToggleSideBar,
 }) => {
-	const { onlineOrFollowers, nameOfChat, interlocutor, isOwner } = useChatInfo(
-		chat,
-		user
-	)
+	const { onlineOrFollowers, nameOfChat, interlocutor, isOwner, isOnline } =
+		useChatInfo(chat, user)
 	return (
 		<>
 			{openSideBar && (
 				<div className="w-[415px] flex flex-col dark:bg-[#17212B] bg-white">
 					<Header
 						chat={chat}
+						isOnline={isOnline}
 						nameOfChat={nameOfChat}
 						imageUrl={interlocutor?.imageUrl}
 						onlineOrFollowers={onlineOrFollowers}

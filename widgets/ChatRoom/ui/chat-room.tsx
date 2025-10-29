@@ -45,8 +45,14 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const { state: liveState, participants } = live
 	const { room, isSelfMuted } = liveState
 
-	const { onlineOrFollowers, nameOfChat, isOwner, isAdmin, isModerator } =
-		useChatInfo(chat, user)
+	const {
+		onlineOrFollowers,
+		nameOfChat,
+		isOwner,
+		isAdmin,
+		isModerator,
+		isOnline,
+	} = useChatInfo(chat, user)
 
 	const peerUserId =
 		chat?.members?.find(m => m.userId !== user?.id)?.userId || null
@@ -189,6 +195,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					/>
 				)}
 				<Header
+					isOnline={isOnline}
 					nameOfChat={nameOfChat}
 					openSideBar={openSideBar}
 					chatType={chat?.type as ChatRole}

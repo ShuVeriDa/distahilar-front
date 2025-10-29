@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
-import { TypedUseSelectorHook, useSelector } from "react-redux"
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import { persistReducer, persistStore, WebStorage } from "redux-persist"
 
 import { modalReducer } from "./slices/model-slice/modalSlice"
@@ -60,3 +60,4 @@ export type RootState = ReturnType<AppStore["getState"]>
 export type AppDispatch = AppStore["dispatch"]
 
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+export const useAppDispatch: () => AppDispatch = useDispatch

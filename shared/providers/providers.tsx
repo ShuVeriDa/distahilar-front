@@ -7,6 +7,7 @@ import { SocketProvider } from "./SocketProvider"
 import StoreProvider from "./StoreProvider"
 import { TanStackQueryProvider } from "./TanStackQueryProvider"
 import { ThemeProvider } from "./ThemeProvider"
+import { UserStatusUpdatesListener } from "./UserStatusUpdatesListener"
 
 interface IProvidersProps {
 	children: ReactNode
@@ -22,6 +23,7 @@ export const Providers: FC<IProvidersProps> = ({ children }) => {
 			<TanStackQueryProvider>
 				<SocketProvider>
 					<StoreProvider>
+						<UserStatusUpdatesListener />
 						<ModalProvider />
 						<LiveGlobalProvider>
 							<MainLayout>{children}</MainLayout>

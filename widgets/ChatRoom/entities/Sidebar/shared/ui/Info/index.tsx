@@ -72,7 +72,7 @@ export const Info: FC<IInfoProps> = ({ chat, bio, phone, username }) => {
 						<div className="pt-2">
 							<Button
 								variant="clean"
-								className="px-0 text-[#47A2D7] dark:text-[#47A2D7] text-[13px]"
+								className="w-full !justify-start gap-8 p-0 flex items-center cursor-pointer px-5 py-2 text-[#47A2D7] dark:text-[#47A2D7] text-[13px] capitalize hover:bg-[rgba(0,0,0,0.1)] hover:dark:bg-[#232E3C]"
 								onClick={() =>
 									onOpenModal(EnumModel.MEMBERS, {
 										members: { chatId: chat.id },
