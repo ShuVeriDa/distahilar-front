@@ -167,6 +167,8 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 						chatLink={chat?.link}
 						chatId={chat?.id}
 					/>
+				) : typeOfChat === ChatRole.CHANNEL && !isOwner && !isAdmin ? (
+					<div className="w-full h-[48px] bg-white dark:bg-[#17212B] border-t border-t-[#E7E7E7] dark:border-t-[#101921] " />
 				) : (
 					<RichMessageInput
 						chatId={resolvedChatId}

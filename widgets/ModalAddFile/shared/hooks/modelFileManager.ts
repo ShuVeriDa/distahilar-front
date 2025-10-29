@@ -4,7 +4,7 @@ import { useSendMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { generateTemporaryId } from "@/shared/lib/utils/generateTemporaryId"
 import { getTypeOfMedia } from "@/shared/lib/utils/getTypeOfMedia"
 import { $Enums } from "@prisma/client"
-import { useQueryClient } from "@tanstack/react-query"
+import { InfiniteData, useQueryClient } from "@tanstack/react-query"
 import { ChangeEvent, useRef, useState } from "react"
 
 export const useModelFileManager = (
@@ -69,19 +69,34 @@ export const useModelFileManager = (
 	const client = useQueryClient()
 
 	const addToCache = (message: MessageType, tempId: string) => {
-		client.setQueryData(
-			["messagesWS", chatId],
-			(oldData: { messages: MessageType[]; nextCursor: string | null }) => {
-				if (oldData.messages.some((msg: MessageType) => msg.id === tempId)) {
-					return oldData
-				}
-
+		client.setQueryData<
+			InfiniteData<{ messages: MessageType[]; nextCursor: string | null }>
+		>(["messagesWS", chatId], old => {
+			if (!old) {
 				return {
-					...oldData,
-					messages: [...oldData.messages, message],
+					pages: [{ messages: [message], nextCursor: null }],
+					pageParams: [undefined],
 				}
 			}
-		)
+			// Avoid duplicates
+			const exists = old.pages.some(p =>
+				p.messages.some((m: MessageType) => m.id === tempId)
+			)
+			if (exists) return old
+			const pages = [...old.pages]
+			if (pages.length === 0) {
+				return {
+					pages: [{ messages: [message], nextCursor: null }],
+					pageParams: [undefined],
+				}
+			}
+			const lastIndex = pages.length - 1
+			pages[lastIndex] = {
+				...pages[lastIndex],
+				messages: [...pages[lastIndex].messages, message],
+			}
+			return { ...old, pages }
+		})
 	}
 	console.log({ files })
 

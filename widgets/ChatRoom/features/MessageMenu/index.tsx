@@ -14,6 +14,7 @@ import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { useAddReaction } from "@/shared/lib/services/message/useReactionQuery"
 import { writeClipboardText } from "@/shared/lib/utils/clipboardText"
 import { cn } from "@/shared/lib/utils/cn"
+import { useEmojiPicker } from "@/shared/providers/EmojiPickerProvider"
 import {
 	ContextMenuContent,
 	ContextMenuItem,
@@ -21,8 +22,7 @@ import {
 import { IsRead, IsReadType } from "@/shared/ui/isRead"
 import { EmojiClickData } from "emoji-picker-react"
 import { useTranslations } from "next-intl"
-import dynamic from "next/dynamic"
-import { FC, useCallback } from "react"
+import { FC, memo, useCallback, useEffect, useRef } from "react"
 import { AiOutlineDelete, AiOutlinePushpin } from "react-icons/ai"
 import { BsReply } from "react-icons/bs"
 import { IoCheckmarkCircleOutline } from "react-icons/io5"
@@ -30,13 +30,6 @@ import { PiPencilSimple } from "react-icons/pi"
 import { RiUnpinLine } from "react-icons/ri"
 import { TbCopy } from "react-icons/tb"
 import { TiArrowForwardOutline } from "react-icons/ti"
-
-const Picker = dynamic(
-	() => {
-		return import("emoji-picker-react")
-	},
-	{ ssr: false }
-)
 
 interface IMessageMenuProps {
 	isMyMessage: boolean
@@ -48,7 +41,7 @@ interface IMessageMenuProps {
 	handleEditMessage: (message: MessageType | null) => void
 }
 
-export const MessageMenu: FC<IMessageMenuProps> = ({
+const MessageMenuComponent: FC<IMessageMenuProps> = ({
 	createdDate,
 	isMyMessage,
 	message,
@@ -63,6 +56,13 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	const { mutateAsync: pinMessage } = usePinMessage(message.chatId)
 	const { mutateAsync: addReaction } = useAddReaction()
 	const { onOpenModal } = useModal()
+	const { openPicker, closePicker } = useEmojiPicker()
+	const closePickerRef = useRef(closePicker)
+
+	// Keep ref updated so cleanup effect doesn't trigger re-renders
+	useEffect(() => {
+		closePickerRef.current = closePicker
+	}, [closePicker])
 
 	// Проверяем роль пользователя в чате
 	const userRole = chat?.members?.find(
@@ -90,6 +90,28 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 		},
 		[addReaction, message.id, message.chatId]
 	)
+
+	// Используем callback ref для гарантированного получения элемента
+	const setAnchorRef = useCallback(
+		(node: HTMLDivElement | null) => {
+			if (node) {
+				// Открываем picker когда элемент отрендерился
+				openPicker(handleEmojiClick, node)
+			} else {
+				// Закрываем picker когда элемент удаляется
+				closePicker()
+			}
+		},
+		[handleEmojiClick, openPicker, closePicker]
+	)
+
+	// Закрываем picker при размонтировании компонента
+	// Use ref to avoid dependency on closePicker which might change
+	useEffect(() => {
+		return () => {
+			closePickerRef.current()
+		}
+	}, [])
 
 	// Упрощаем обработчики - убираем избыточные useCallback
 	const handleEdit = () => {
@@ -175,17 +197,16 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 	)
 
 	return (
-		<ContextMenuContent className="flex flex-col justify-center px-0 gap-2 relative bg-transparent border-none shadow-none">
+		<ContextMenuContent className="!w-[330px] flex flex-col justify-center px-0 gap-2 relative bg-transparent border-none shadow-none">
 			<ContextMenuItem
 				key="emoji-picker"
 				className="focus:bg-white-0 custom-emoji-picker p-0"
+				onSelect={e => {
+					// Предотвращаем закрытие меню при клике на picker
+					e.preventDefault()
+				}}
 			>
-				<Picker
-					reactionsDefaultOpen={true}
-					className="!bg-white dark:!bg-[#17212B] dark:border-[#17212B]"
-					lazyLoadEmojis
-					onEmojiClick={handleEmojiClick}
-				/>
+				<div ref={setAnchorRef} className="w-full h-full min-h-[50px]" />
 			</ContextMenuItem>
 
 			<div className={containerClasses}>
@@ -245,3 +266,25 @@ export const MessageMenu: FC<IMessageMenuProps> = ({
 		</ContextMenuContent>
 	)
 }
+
+// Memoize MessageMenu to prevent unnecessary re-renders
+export const MessageMenu = memo(
+	MessageMenuComponent,
+	(prevProps, nextProps) => {
+		// Only re-render if relevant props changed
+		return (
+			prevProps.message.id === nextProps.message.id &&
+			prevProps.message.content === nextProps.message.content &&
+			prevProps.message.isPinned === nextProps.message.isPinned &&
+			prevProps.message.status === nextProps.message.status &&
+			prevProps.isMyMessage === nextProps.isMyMessage &&
+			prevProps.createdDate === nextProps.createdDate &&
+			prevProps.interlocutorsName === nextProps.interlocutorsName &&
+			prevProps.chat?.id === nextProps.chat?.id &&
+			prevProps.chat?.type === nextProps.chat?.type &&
+			prevProps.chat?.members?.length === nextProps.chat?.members?.length
+		)
+	}
+)
+
+MessageMenu.displayName = "MessageMenu"

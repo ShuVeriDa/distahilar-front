@@ -2,6 +2,7 @@ import { LiveGlobalProvider } from "@/shared/providers/LiveProvider"
 import { FC, ReactNode } from "react"
 import { MainLayout } from "../layout/MainLayout"
 import { Toaster } from "../ui/Toast/toaster"
+import { EmojiPickerProvider } from "./EmojiPickerProvider"
 import { ModalProvider } from "./ModalProvider"
 import { SocketProvider } from "./SocketProvider"
 import StoreProvider from "./StoreProvider"
@@ -23,12 +24,14 @@ export const Providers: FC<IProvidersProps> = ({ children }) => {
 			<TanStackQueryProvider>
 				<SocketProvider>
 					<StoreProvider>
-						<UserStatusUpdatesListener />
-						<ModalProvider />
-						<LiveGlobalProvider>
-							<MainLayout>{children}</MainLayout>
-						</LiveGlobalProvider>
-						<Toaster />
+						<EmojiPickerProvider>
+							<UserStatusUpdatesListener />
+							<ModalProvider />
+							<LiveGlobalProvider>
+								<MainLayout>{children}</MainLayout>
+							</LiveGlobalProvider>
+							<Toaster />
+						</EmojiPickerProvider>
 					</StoreProvider>
 				</SocketProvider>
 			</TanStackQueryProvider>

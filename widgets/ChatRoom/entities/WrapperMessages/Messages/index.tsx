@@ -1,5 +1,5 @@
 import { Typography } from "@/shared"
-import { Dispatch, FC, SetStateAction, useMemo } from "react"
+import { Dispatch, FC, memo, SetStateAction, useCallback, useMemo } from "react"
 
 import {
 	ChatMemberType,
@@ -25,7 +25,7 @@ interface IMessagesProps {
 	handleEditMessage: (message: MessageType | null) => void
 }
 
-export const Messages: FC<IMessagesProps> = ({
+const MessagesComponent: FC<IMessagesProps> = ({
 	index,
 	userId,
 	message,
@@ -74,20 +74,21 @@ export const Messages: FC<IMessagesProps> = ({
 		new Date(message.createdAt).toDateString() !==
 			new Date(previousMessage.createdAt).toDateString()
 
-	const onSelectMessage = () => {
+	const onSelectMessage = useCallback(() => {
+		const messageId = message.id
 		setSelectedMessages(prev => {
-			const isMessageSelected = prev.some(item => item.id === message.id)
+			const isMessageSelected = prev.some(item => item.id === messageId)
 			return isMessageSelected
-				? prev.filter(item => item.id !== message.id)
+				? prev.filter(item => item.id !== messageId)
 				: [...prev, message]
 		})
-	}
+	}, [message, setSelectedMessages])
 
-	const onSelectMessageForMainDiv = () => {
+	const onSelectMessageForMainDiv = useCallback(() => {
 		if (hasSelectedMessages) {
 			onSelectMessage()
 		}
-	}
+	}, [hasSelectedMessages, onSelectMessage])
 
 	return (
 		<div
@@ -134,4 +135,30 @@ export const Messages: FC<IMessagesProps> = ({
 	)
 }
 
-Messages.displayName = "Messages"
+MessagesComponent.displayName = "Messages"
+
+// Memoize Messages component to prevent unnecessary re-renders
+export const Messages = memo(MessagesComponent, (prevProps, nextProps) => {
+	// Check if any props that would affect rendering have changed
+	return (
+		prevProps.message.id === nextProps.message.id &&
+		prevProps.message.content === nextProps.message.content &&
+		prevProps.message.createdAt === nextProps.message.createdAt &&
+		prevProps.message.isPinned === nextProps.message.isPinned &&
+		prevProps.message.status === nextProps.message.status &&
+		prevProps.message.userId === nextProps.message.userId &&
+		prevProps.userId === nextProps.userId &&
+		prevProps.index === nextProps.index &&
+		prevProps.locale === nextProps.locale &&
+		prevProps.hasSelectedMessages === nextProps.hasSelectedMessages &&
+		prevProps.selectedMessages.length === nextProps.selectedMessages.length &&
+		prevProps.selectedMessages.every(
+			(msg, i) => msg.id === nextProps.selectedMessages[i]?.id
+		) &&
+		prevProps.chat?.id === nextProps.chat?.id &&
+		prevProps.chat?.type === nextProps.chat?.type &&
+		prevProps.messages.length === nextProps.messages.length &&
+		prevProps.message.media?.length === nextProps.message.media?.length &&
+		prevProps.message.reactions?.length === nextProps.message.reactions?.length
+	)
+})

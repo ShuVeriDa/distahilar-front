@@ -2,6 +2,7 @@ import { MessageEnum, MessageStatus, MessageType } from "@/prisma/models"
 import { IFormRichMessageInput } from "@/widgets/ChatRoom/features/RichMessageInput"
 import { $Enums } from "@prisma/client"
 import {
+	InfiniteData,
 	MutateOptions,
 	QueryClient,
 	UseMutateAsyncFunction,
@@ -50,19 +51,36 @@ export const useMessageRecorderHandlers = ({
 	const tempId = generateTemporaryId()
 
 	const addToCache = (message: MessageType) => {
-		client.setQueryData(
-			["messagesWS", chatId],
-			(oldData: { messages: MessageType[]; nextCursor: string | null }) => {
-				if (oldData.messages.some((msg: MessageType) => msg.id === tempId)) {
-					return oldData
-				}
+		console.log({ message })
 
+		client.setQueryData<
+			InfiniteData<{ messages: MessageType[]; nextCursor: string | null }>
+		>(["messagesWS", chatId], old => {
+			if (!old) {
 				return {
-					...oldData,
-					messages: [...oldData.messages, message],
+					pages: [{ messages: [message], nextCursor: null }],
+					pageParams: [undefined],
 				}
 			}
-		)
+			// Avoid duplicates
+			const exists = old.pages.some(p =>
+				p.messages.some((m: MessageType) => m.id === tempId)
+			)
+			if (exists) return old
+			const pages = [...old.pages]
+			if (pages.length === 0) {
+				return {
+					pages: [{ messages: [message], nextCursor: null }],
+					pageParams: [undefined],
+				}
+			}
+			const lastIndex = pages.length - 1
+			pages[lastIndex] = {
+				...pages[lastIndex],
+				messages: [...pages[lastIndex].messages, message],
+			}
+			return { ...old, pages }
+		})
 	}
 
 	const uploadAndSend = async (

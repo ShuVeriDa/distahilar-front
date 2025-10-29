@@ -31,7 +31,7 @@ export const Typography = forwardRef(
 
 		return (
 			<Component
-				ref={ref as Ref<any>}
+				ref={ref as Ref<never>}
 				className={twMerge(className, DEFAULT_CLASSES)}
 				{...props}
 			>
