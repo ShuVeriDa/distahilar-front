@@ -54,6 +54,15 @@ export const MessageInfo: FC<IMessageInfoProps> = ({
 		const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
 		const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
 
+		console.log({
+			type: message.messageType,
+			message: message.content,
+			isMoreTwoLine,
+			isFile,
+			isHasReactions,
+			isMessageContent,
+		})
+
 		// Вычисляем классы один раз
 		const mainContainerClasses = getMainContainerClasses({
 			isMoreTwoLine,

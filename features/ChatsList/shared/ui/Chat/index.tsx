@@ -1,7 +1,9 @@
 import { ChatRole, FoundedChatsType, MessageStatus } from "@/prisma/models"
 import { Button, Skeleton, Typography, useUser } from "@/shared"
+import { useMessagePreviewText } from "@/shared/hooks/useMessagePreviewText"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatDateTelegramStyle } from "@/shared/lib/utils/formatDateTelegramStyle"
+
 import { IsRead } from "@/shared/ui/isRead"
 
 import Image from "next/image"
@@ -15,6 +17,7 @@ interface IChatProps {
 export const Chat = ({ chat, locale }: IChatProps) => {
 	const { user } = useUser()
 	const date = formatDateTelegramStyle(chat.lastMessageDate)
+	const previewText = useMessagePreviewText(chat.lastMessage)
 
 	const chatType = chat.type
 
@@ -41,7 +44,7 @@ export const Chat = ({ chat, locale }: IChatProps) => {
 					"text-[13px] text-[#6D7883] truncate overflow-hidden whitespace-nowrap max-w-full"
 				)}
 			>
-				{chat.lastMessage?.content}
+				{previewText}
 			</Typography>
 		) : (
 			<Typography
@@ -54,7 +57,7 @@ export const Chat = ({ chat, locale }: IChatProps) => {
 				<span className="text-[#168ACD]">
 					{chat.lastMessage?.user?.name}: &nbsp;
 				</span>
-				<span className="text-[#6D7883]">{chat.lastMessage?.content}</span>
+				<span className="text-[#6D7883]">{previewText}</span>
 			</Typography>
 		)
 

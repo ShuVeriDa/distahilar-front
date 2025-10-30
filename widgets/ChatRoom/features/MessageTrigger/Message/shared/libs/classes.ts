@@ -26,7 +26,7 @@ export const getMainContainerClasses = ({
 		textMessage:
 			isMoreTwoLine && !isFile && "justify-end absolute bottom-2 right-[12px]",
 		fileMessage:
-			isMoreTwoLine &&
+			(isMoreTwoLine || isMessageContent) &&
 			isFile &&
 			!isHasReactions &&
 			isMessageContent &&

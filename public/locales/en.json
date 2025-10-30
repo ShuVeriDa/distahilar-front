@@ -239,7 +239,14 @@
 		"LIVE": "LIVE",
 		"LEAVE_OR_STOP": "Leave or stop live?",
 		"LEAVE": "Leave",
-		"STOP_LIVE": "Stop live"
+		"STOP_LIVE": "Stop live",
+		"MESSAGE_TYPES": {
+			"VIDEO": "Video",
+			"VOICE": "Voice message",
+			"FILE": "File",
+			"PHOTO": "Photo",
+			"AUDIO": "Audio"
+		}
 	},
 	"CALL": {
 		"START_VIDEO": "Start Video",

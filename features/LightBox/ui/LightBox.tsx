@@ -57,7 +57,7 @@ export const LightboxWrapper: FC<ILightboxWrapperProps> = ({
 				height={0}
 				sizes="100vw"
 				className={cn(
-					"w-auto h-auto max-w-full max-h-full object-contain rounded-2xl hover:cursor-pointer",
+					"w-auto h-auto max-w-full max-h-[400px] object-contain rounded-lg hover:cursor-pointer",
 					(isMessageContent || isHasReactions) && "rounded-b-none"
 				)}
 				onClick={onOpen}

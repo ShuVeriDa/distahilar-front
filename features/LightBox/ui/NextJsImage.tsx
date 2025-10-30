@@ -47,21 +47,35 @@ const NextJsImage: FC<NextJsImageProps> = ({ slide, offset, rect }) => {
 
 	const { currentIndex } = useLightboxState()
 
-	const cover = isImageSlide(slide) && isImageFitCover(slide, imageFit)
+	const hasSize = isNextJsImage(slide)
+	const cover =
+		isImageSlide(slide) && (hasSize ? isImageFitCover(slide, imageFit) : false)
 
-	if (!isNextJsImage(slide)) return undefined
+	const width = hasSize
+		? !cover
+			? Math.round(
+					(slide.width as number) *
+						Math.min(
+							rect.width / (slide.width as number),
+							rect.height / (slide.height as number),
+							1
+						)
+			  )
+			: rect.width
+		: rect.width
 
-	const width = !cover
-		? Math.round(
-				Math.min(rect.width, (rect.height / slide.height) * slide.width) / 2
-		  )
-		: rect.width / 2
-
-	const height = !cover
-		? Math.round(
-				Math.min(rect.height, (rect.width / slide.width) * slide.height) / 2
-		  )
-		: rect.height / 2
+	const height = hasSize
+		? !cover
+			? Math.round(
+					(slide.height as number) *
+						Math.min(
+							rect.width / (slide.width as number),
+							rect.height / (slide.height as number),
+							1
+						)
+			  )
+			: rect.height
+		: rect.height
 
 	return (
 		<div style={{ position: "relative", width, height }}>
