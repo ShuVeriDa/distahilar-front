@@ -119,12 +119,13 @@ export const getTimeContainerClasses = ({
 
 	const backgroundClasses = {
 		circleVideo:
-			isCircleVideo && "bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
+			isCircleVideo &&
+			"dark:bg-[rgba(0,0,0,0.3)] bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
 		mediaWithoutContent:
 			(isImageFile || isVideoFile) &&
 			!isMessageContent &&
 			!isHasReactions &&
-			"bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
+			"dark:bg-[rgba(0,0,0,0.3)] bg-green-900/30 py-0.5 px-1.5 rounded-md absolute",
 	}
 
 	const positionClasses = {
@@ -168,9 +169,12 @@ export const getTimeTextClasses = ({
 	const baseClasses = "text-[12px] leading-5"
 
 	const colorClasses = {
-		myMessage: isMyMessage
-			? "text-[#6DB566] dark:text-[#488DD3]"
-			: "text-[#A0ACB6] dark:text-[#6D7F8F]",
+		myMessage:
+			isMyMessage && (isCircleVideo || isVideoFile || isImageFile)
+				? "text-white"
+				: isMyMessage
+				? "text-[#6DB566] dark:text-[#488DD3]"
+				: "text-[#A0ACB6] dark:text-[#6D7F8F]",
 		circleVideo: isCircleVideo && "text-white",
 		mediaWithoutContent:
 			(isImageFile || isVideoFile) &&

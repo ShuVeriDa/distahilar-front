@@ -12,7 +12,7 @@ const ChatLayout: NextPage<IChatLayoutProps> = async ({ children, params }) => {
 	const { locale } = await params
 
 	return (
-		<div className="w-screen h-screen flex">
+		<div className="w-screen h-screen flex ">
 			<div className="flex">
 				<LeftBar />
 				<ChatsList locale={locale} />

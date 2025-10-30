@@ -104,7 +104,10 @@ export const UnSharingScreenLive: FC<IUnSharingScreenLiveProps> = ({
 			/>
 
 			<div
-				className={cn("overflow-y-auto px-3.5 py-0.5", isVideoOff && "flex-1")}
+				className={cn(
+					"overflow-y-auto telegram-scrollbar px-3.5 py-0.5",
+					isVideoOff && "flex-1"
+				)}
 			>
 				{isLive ? (
 					<div className="flex flex-col gap-1">

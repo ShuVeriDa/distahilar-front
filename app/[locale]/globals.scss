@@ -7,6 +7,7 @@
 
 body {
 	// font-family: "RobotoMono";
+	overflow: hidden;
 }
 
 h1 {
@@ -218,4 +219,114 @@ h6 {
 	body {
 		@apply bg-background text-foreground;
 	}
+}
+
+/* Telegram-like scrollbar: hidden by default, visible on hover/pointer enter */
+.telegram-scrollbar {
+	/* Avoid layout jump: keep gutter stable */
+	scrollbar-gutter: stable both-edges;
+
+	/* Firefox: thin gutter always, transparent by default */
+	scrollbar-width: thin;
+	scrollbar-color: transparent transparent;
+}
+
+.telegram-scrollbar:hover {
+	/* Firefox: show visible thumb on hover */
+	scrollbar-color: rgba(130, 130, 130, 0.45) transparent;
+}
+
+/* WebKit */
+.telegram-scrollbar::-webkit-scrollbar {
+	width: 8px; /* keep width to avoid layout shift */
+}
+
+.telegram-scrollbar::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.telegram-scrollbar::-webkit-scrollbar-thumb {
+	background-color: transparent; /* transparent by default */
+	border-radius: 8px;
+	border: 2px solid transparent; /* spacing from the track */
+}
+
+.telegram-scrollbar:hover::-webkit-scrollbar-thumb {
+	background-color: rgba(130, 130, 130, 0.45); /* show on hover */
+}
+
+/* Hide scrollbar arrows/buttons */
+.telegram-scrollbar::-webkit-scrollbar-button {
+	width: 0;
+	height: 0;
+	display: none;
+}
+
+.telegram-scrollbar::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+/* Dark theme adjustments */
+.dark .telegram-scrollbar:hover {
+	scrollbar-color: rgba(150, 150, 150, 0.5) transparent;
+}
+
+.dark .telegram-scrollbar:hover::-webkit-scrollbar-thumb {
+	background-color: rgba(150, 150, 150, 0.5);
+}
+
+/* Global application: apply Telegram-like scrollbar to all scrollable elements */
+* {
+	/* Firefox: hidden by default, no extra gutter space */
+	scrollbar-width: none;
+	scrollbar-color: transparent transparent;
+}
+
+*:hover {
+	/* Firefox: show thin thumb on hover only */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(130, 130, 130, 0.45) transparent;
+}
+
+/* WebKit global rules */
+*::-webkit-scrollbar {
+	width: 0px; /* no extra space by default */
+	height: 0px;
+}
+
+*:hover::-webkit-scrollbar {
+	width: 8px; /* show on hover */
+	height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: transparent; /* default: invisible */
+	border-radius: 8px;
+	border: 2px solid transparent;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+	background-color: rgba(130, 130, 130, 0.45); /* show on hover */
+}
+
+*::-webkit-scrollbar-button {
+	width: 0;
+	height: 0;
+	display: none; /* hide arrows/buttons */
+}
+
+*::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+.dark *:hover {
+	scrollbar-color: rgba(150, 150, 150, 0.5) transparent;
+}
+
+.dark *:hover::-webkit-scrollbar-thumb {
+	background-color: rgba(150, 150, 150, 0.5);
 }

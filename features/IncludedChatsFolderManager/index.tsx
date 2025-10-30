@@ -43,7 +43,7 @@ export const IncludedChatsFolderManager: FC<
 					</Typography>
 				</Button>
 
-				<div className="flex flex-col gap-3 overflow-y-auto min-h-[200px] max-h-[400px] px-4">
+				<div className="flex flex-col gap-3 overflow-y-auto telegram-scrollbar min-h-[200px] max-h-[400px] px-4">
 					{isLoading ? (
 						<>
 							<ChatItem.Skeleton />

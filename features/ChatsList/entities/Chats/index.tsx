@@ -13,7 +13,7 @@ interface IChatsProps {
 
 export const Chats: FC<IChatsProps> = ({ chats, isLoading, query, locale }) => {
 	return (
-		<div className="w-full h-full flex flex-col overflow-y-auto">
+		<div className="w-full h-full flex flex-col overflow-y-auto telegram-scrollbar">
 			<StatusSearch chats={chats} isLoading={isLoading} query={query} />
 			{isLoading ? (
 				<>

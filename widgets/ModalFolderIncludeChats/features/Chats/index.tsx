@@ -25,7 +25,7 @@ export const Chats: FC<IChatsProps> = ({
 					{t("CHATS")}
 				</Typography>
 			</div>
-			<div className="flex flex-col overflow-y-auto h-[350px]">
+			<div className="flex flex-col overflow-y-auto telegram-scrollbar h-[350px]">
 				{localChats?.map(chat => {
 					const onClickHandler = () => onChatRemoveOrAdd(chat)
 					const isAdded = includeChatIds.includes(chat.chatId)

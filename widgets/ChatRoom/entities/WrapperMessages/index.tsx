@@ -77,7 +77,7 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 	return (
 		<div
 			ref={containerRef}
-			className="w-full h-full overflow-y-auto flex-1 px-5 py-3"
+			className="w-full h-full overflow-y-auto telegram-scrollbar flex-1 px-5 py-3 telegram-scrollbar"
 		>
 			{/* Top sentinel for infinite scroll up (older messages) */}
 			<div ref={topSentinelRef} />

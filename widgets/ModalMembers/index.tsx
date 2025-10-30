@@ -94,7 +94,7 @@ export const ModalMembers: FC = () => {
 				/>
 			</div>
 
-			<div className="flex flex-col max-h-[60vh] overflow-y-auto  pr-1">
+			<div className="flex flex-col max-h-[60vh] overflow-y-auto pr-1 telegram-scrollbar">
 				{filteredMembers.map(member => (
 					<MemberListItem
 						key={member.id}

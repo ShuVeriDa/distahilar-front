@@ -216,7 +216,7 @@ export const SharingScreenLive: FC<ISharingScreenLiveProps> = ({
 				</div>
 				<div
 					className={cn(
-						"max-w-[240px] w-full h-fit overflow-y-auto py-2 bg-[#2C333D] rounded-lg"
+						"max-w-[240px] w-full h-fit overflow-y-auto telegram-scrollbar py-2 bg-[#2C333D] rounded-lg"
 					)}
 				>
 					{isLive ? (

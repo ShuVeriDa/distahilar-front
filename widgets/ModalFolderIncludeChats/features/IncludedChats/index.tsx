@@ -18,7 +18,7 @@ export const IncludedChats: FC<IIncludedChatsProps> = ({
 	return (
 		<div
 			className={cn(
-				"p-2 hidden flex-wrap gap-3 min-h-[40px] max-h-[100px] overflow-y-auto",
+				"p-2 hidden flex-wrap gap-3 min-h-[40px] max-h-[100px] overflow-y-auto telegram-scrollbar",
 				chats.length > 0 && "flex"
 			)}
 		>
