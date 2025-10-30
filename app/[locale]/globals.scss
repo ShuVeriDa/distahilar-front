@@ -223,22 +223,28 @@ h6 {
 
 /* Telegram-like scrollbar: hidden by default, visible on hover/pointer enter */
 .telegram-scrollbar {
-	/* Avoid layout jump: keep gutter stable */
-	scrollbar-gutter: stable both-edges;
+	/* Keep gutter stable to prevent content shift */
+	// scrollbar-gutter: stable both-edges;
 
-	/* Firefox: thin gutter always, transparent by default */
-	scrollbar-width: thin;
-	scrollbar-color: transparent transparent;
+	/* Firefox */
+	scrollbar-width: thin; /* thin like Telegram */
+	scrollbar-color: rgba(120, 120, 120, 0.2) transparent; /* subtle by default */
 }
 
 .telegram-scrollbar:hover {
-	/* Firefox: show visible thumb on hover */
-	scrollbar-color: rgba(130, 130, 130, 0.45) transparent;
+	/* Firefox hover */
+	scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
+}
+
+.telegram-scrollbar:active {
+	/* Firefox active */
+	scrollbar-color: rgba(120, 120, 120, 0.6) transparent;
 }
 
 /* WebKit */
 .telegram-scrollbar::-webkit-scrollbar {
-	width: 8px; /* keep width to avoid layout shift */
+	width: 6px;
+	height: 6px;
 }
 
 .telegram-scrollbar::-webkit-scrollbar-track {
@@ -246,13 +252,17 @@ h6 {
 }
 
 .telegram-scrollbar::-webkit-scrollbar-thumb {
-	background-color: transparent; /* transparent by default */
-	border-radius: 8px;
-	border: 2px solid transparent; /* spacing from the track */
+	background-color: rgba(120, 120, 120, 0.2);
+	border-radius: 6px;
+	border: 2px solid transparent; /* creates an inner gutter */
 }
 
 .telegram-scrollbar:hover::-webkit-scrollbar-thumb {
-	background-color: rgba(130, 130, 130, 0.45); /* show on hover */
+	background-color: rgba(120, 120, 120, 0.4);
+}
+
+.telegram-scrollbar::-webkit-scrollbar-thumb:active {
+	background-color: rgba(120, 120, 120, 0.6);
 }
 
 /* Hide scrollbar arrows/buttons */
@@ -267,12 +277,28 @@ h6 {
 }
 
 /* Dark theme adjustments */
+.dark .telegram-scrollbar {
+	scrollbar-color: rgba(180, 180, 180, 0.2) transparent;
+}
+
 .dark .telegram-scrollbar:hover {
-	scrollbar-color: rgba(150, 150, 150, 0.5) transparent;
+	scrollbar-color: rgba(180, 180, 180, 0.45) transparent;
+}
+
+.dark .telegram-scrollbar:active {
+	scrollbar-color: rgba(180, 180, 180, 0.6) transparent;
+}
+
+.dark .telegram-scrollbar::-webkit-scrollbar-thumb {
+	background-color: rgba(180, 180, 180, 0.2);
 }
 
 .dark .telegram-scrollbar:hover::-webkit-scrollbar-thumb {
-	background-color: rgba(150, 150, 150, 0.5);
+	background-color: rgba(180, 180, 180, 0.45);
+}
+
+.dark .telegram-scrollbar::-webkit-scrollbar-thumb:active {
+	background-color: rgba(180, 180, 180, 0.6);
 }
 
 /* Global application: apply Telegram-like scrollbar to all scrollable elements */
