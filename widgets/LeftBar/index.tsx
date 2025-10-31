@@ -1,7 +1,7 @@
+import { Folders } from "@/entities/Folder"
 import { FC } from "react"
 import { Logout } from "../Logout"
 import { SheetComponent } from "../SheetComponent/SheetComponent"
-import { Folders } from "./entities/folders"
 
 interface ILeftBarProps {}
 

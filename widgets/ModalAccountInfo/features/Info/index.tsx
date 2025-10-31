@@ -4,7 +4,7 @@ import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { IconRenderer } from "@/shared/ui/IconRenderer"
 import { useTranslations } from "next-intl"
 import { FC, useMemo } from "react"
-import { InfoItem } from "../../entities/InfoItem"
+import { InfoItem } from "@/entities/AccountInfo"
 
 interface IInfoProps {
 	user: UserType

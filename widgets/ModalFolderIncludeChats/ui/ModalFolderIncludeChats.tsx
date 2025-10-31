@@ -4,9 +4,8 @@ import { FC } from "react"
 
 import { ModalFooter } from "@/entities/ModalFooter"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
-import { Header } from "../entities/Header"
-import { Chats } from "../features/Chats"
-import { IncludedChats } from "../features/IncludedChats"
+import { FolderIncludeChatsHeader } from "@/entities/FolderIncludeChats"
+import { FolderIncludeChats, IncludedChats } from "@/features/FolderIncludeChats"
 import { useIncludeChats } from "../shared/hooks/useIncludeChats"
 
 interface IModalFolderIncludeChatsProps {}
@@ -34,9 +33,9 @@ export const ModalFolderIncludeChats: FC<
 			isClickOutside={false}
 			translateX={0}
 		>
-			<Header chatsLength={chatsLength} />
+			<FolderIncludeChatsHeader chatsLength={chatsLength} />
 			<IncludedChats chats={includedChats} removeChat={removeChat} />
-			<Chats
+			<FolderIncludeChats
 				localChats={localChats}
 				onChatRemoveOrAdd={onChatRemoveOrAdd}
 				includeChatIds={includeChatIds}

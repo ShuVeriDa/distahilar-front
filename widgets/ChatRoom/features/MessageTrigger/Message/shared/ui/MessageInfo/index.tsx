@@ -1,3 +1,4 @@
+import { ManageReaction } from "@/features/ManageReaction"
 import {
 	ChatRole,
 	MediaType,
@@ -11,7 +12,6 @@ import { useAddReaction } from "@/shared/lib/services/message/useReactionQuery"
 import { cn } from "@/shared/lib/utils/cn"
 import { formatTime } from "@/shared/lib/utils/formatTime"
 import { IsRead } from "@/shared/ui/isRead"
-import { ManageReaction } from "@/widgets/ChatRoom/features/ManageReaction/ui"
 import { FC, useMemo } from "react"
 import { TiPin } from "react-icons/ti"
 import {

@@ -1,3 +1,5 @@
+"use client"
+
 import { FoundedChatsType } from "@/prisma/models"
 import { useSocket } from "@/shared/providers/SocketProvider"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"

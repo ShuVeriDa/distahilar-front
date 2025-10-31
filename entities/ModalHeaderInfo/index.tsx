@@ -1,7 +1,7 @@
+import { CopyClipboard } from "@/features/CopyClipboard"
 import { useUser } from "@/shared/hooks/useUser"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
-import { CopyClickBoard } from "@/widgets/SheetComponent/features/clickboard"
 import Image from "next/image"
 import { FC } from "react"
 import { twMerge } from "tailwind-merge"
@@ -92,7 +92,7 @@ export const ModalHeaderInfo: FC<IModalHeaderInfoProps> = ({
 					</Typography>
 				)}
 
-				<CopyClickBoard />
+				<CopyClipboard />
 			</div>
 		</div>
 	)

@@ -1,8 +1,8 @@
 // CircleVideoRecorder.tsx
 "use client"
 
+import { Recorder } from "@/features/Recorder"
 import { MessageEnum } from "@/prisma/models"
-import { Recorder } from "@/widgets/ChatRoom/features/Recorder"
 import { useEffect, useRef } from "react"
 
 export const CircleVideoRecorder = ({

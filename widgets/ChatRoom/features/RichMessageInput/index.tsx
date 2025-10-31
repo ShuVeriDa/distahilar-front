@@ -1,12 +1,8 @@
 "use client"
 
 import { CircleVideoRecorder } from "@/features/CircleVideoRecorder/ui"
-import {
-	FoundedChatsType,
-	MessageEnum,
-	MessageType,
-	VoiceVideoMessageType,
-} from "@/prisma/models"
+import { Recorder } from "@/features/Recorder"
+import { FoundedChatsType, MessageEnum, MessageType } from "@/prisma/models"
 import { useUser } from "@/shared"
 import { useCircleVideoRecorder } from "@/shared/hooks/useCircleVideoRecorder"
 import { useFileManager } from "@/shared/hooks/useFileManager"
@@ -23,12 +19,8 @@ import { FC, useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { useVoiceRecord } from "../../shared/hooks/useVoiceRecord"
 import { ContentType } from "../../ui/content-type"
-import { Recorder } from "../Recorder"
 
-export interface IFormRichMessageInput {
-	content: string
-	voiceMessages: VoiceVideoMessageType[]
-}
+import { IFormRichMessageInput } from "@/features/SendMessage"
 
 interface IRichMessageInputProps {
 	chatId: string

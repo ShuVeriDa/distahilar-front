@@ -1,9 +1,8 @@
+import { ChatHeaderButtons, HeaderSelectedMessages } from "@/features"
 import { ChatRole, MemberRole, MessageType } from "@/prisma/models"
 import { AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { FC } from "react"
-import { Buttons } from "../../features/Buttons"
-import { HeaderSelectedMessages } from "../../features/HeaderSelectedMessages"
 import { Info } from "../../shared/ui/Info"
 
 const MotionDiv = dynamic(() =>
@@ -52,7 +51,7 @@ export const Header: FC<IHeaderProps> = ({
 							onlineOrFollowers={onlineOrFollowers}
 							isOnline={isOnline}
 						/>
-						<Buttons
+						<ChatHeaderButtons
 							actionsForButtons={actionsForButtons}
 							openSideBar={openSideBar}
 							memberRole={memberRole}

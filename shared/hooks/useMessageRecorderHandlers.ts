@@ -1,5 +1,5 @@
+import { IFormRichMessageInput } from "@/features/SendMessage"
 import { MessageEnum, MessageStatus, MessageType } from "@/prisma/models"
-import { IFormRichMessageInput } from "@/widgets/ChatRoom/features/RichMessageInput"
 import { $Enums } from "@prisma/client"
 import {
 	InfiniteData,

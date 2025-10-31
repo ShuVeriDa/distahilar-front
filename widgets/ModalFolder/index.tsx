@@ -7,8 +7,7 @@ import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { useTranslations } from "next-intl"
-import { Banner } from "./entities/Banner"
-import { MyFolders } from "./entities/MyFolders"
+import { FolderModalBanner, MyFolders } from "@/entities/FolderModal"
 
 interface IModalFolderProps {}
 
@@ -31,7 +30,7 @@ export const ModalFolder: FC<IModalFolderProps> = () => {
 					{t("TITLE")}
 				</Typography>
 			</div>
-			<Banner />
+			<FolderModalBanner />
 			<MyFolders />
 		</ModalLayout>
 	)

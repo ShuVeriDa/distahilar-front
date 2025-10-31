@@ -1,6 +1,5 @@
+import { AccountInfoVariant, DefaultVariant } from "@/entities/PhotoVariant"
 import { ChangeEvent, FC, RefObject } from "react"
-import { AccountInfoVariant } from "./entities/AccountInfoVariant"
-import { DefaultVariant } from "./entities/DefaultVariant"
 import { ChangePhotoNS } from "./shared/hooks/useClassName"
 
 interface IChangePhotoProps {

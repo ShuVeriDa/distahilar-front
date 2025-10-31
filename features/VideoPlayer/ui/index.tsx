@@ -1,3 +1,5 @@
+"use client"
+
 import { IThumbnailsRef } from "@/features/LightBox/ui/LightBox"
 import { cn } from "@/shared/lib/utils/cn"
 import { Media } from "@prisma/client"

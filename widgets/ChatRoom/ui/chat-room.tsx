@@ -8,13 +8,13 @@ import { ChatRole, MemberRole } from "@/prisma/models"
 import { useUser, useWebRTCCall } from "@/shared"
 import { useSelectedMessages } from "@/shared/hooks/useSelectedMessages"
 
+import { JoinChat } from "@/features"
+import { SendMessage } from "@/features/SendMessage"
 import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { CallPhaseEnum } from "@/shared/lib/services/call/call.types"
-import { WrapperMessages } from "../entities"
-import { Header } from "../entities/Header"
-import { SideBar } from "../entities/Sidebar"
-import { RichMessageInput } from "../features"
-import { JoinChat } from "../features/JoinChat"
+import { ChatHeader } from "@/entities/ChatHeader"
+import { ChatMessages } from "@/entities/ChatMessages"
+import { ChatSidebar } from "@/entities/ChatSidebar"
 import { useChatRoomComputed } from "../shared/hooks/useChatRoomComputed"
 import { useChatRoomLive } from "../shared/hooks/useChatRoomLive"
 import { useChatRoomNavigation } from "../shared/hooks/useChatRoomNavigation"
@@ -127,7 +127,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 						maximizeWindowsLive={maximizeWindowsLive}
 					/>
 				)}
-				<Header
+				<ChatHeader
 					isOnline={isOnline}
 					nameOfChat={nameOfChat}
 					openSideBar={openSideBar}
@@ -146,7 +146,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					<LiveBannerJoin participants={participants} joinLive={joinLive} />
 				)}
 
-				<WrapperMessages
+				<ChatMessages
 					chat={chat}
 					locale={locale}
 					selectedMessages={selectedMessages}
@@ -173,7 +173,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 				) : typeOfChat === ChatRole.CHANNEL && !isOwner && !isAdmin ? (
 					<div className="w-full h-[48px] bg-white dark:bg-[#17212B] border-t border-t-[#E7E7E7] dark:border-t-[#101921] " />
 				) : (
-					<RichMessageInput
+					<SendMessage
 						chatId={resolvedChatId}
 						chatType={chat?.type}
 						editedMessage={editedMessage}
@@ -193,7 +193,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 				/>
 				{/* LiveOverlay is rendered globally by LiveGlobalProvider */}
 			</div>
-			<SideBar
+			<ChatSidebar
 				user={user}
 				chat={chat}
 				openSideBar={openSideBar}

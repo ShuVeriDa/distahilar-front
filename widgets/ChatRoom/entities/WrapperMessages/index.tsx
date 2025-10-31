@@ -15,8 +15,8 @@ import {
 	useState,
 } from "react"
 
+import { Message } from "@/features/MessageTrigger"
 import { cn } from "@/shared/lib/utils/cn"
-import { Message } from "../../features"
 import { Messages } from "./Messages"
 
 interface IWrapperMessagesProps {

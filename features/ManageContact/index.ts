@@ -1,0 +1,1 @@
+export { ManageContact } from "./ui"

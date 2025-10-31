@@ -1,6 +1,8 @@
 import { Typography } from "@/shared"
 import { Dispatch, FC, memo, SetStateAction, useCallback, useMemo } from "react"
 
+import { MessageMenu } from "@/features/MessageMenu"
+import { MessageTrigger } from "@/features/MessageTrigger"
 import {
 	ChatMemberType,
 	ChatType,
@@ -9,8 +11,6 @@ import {
 } from "@/prisma/models"
 import { formatTime } from "@/shared/lib/utils/formatTime"
 import { ContextMenu } from "@/shared/ui/ContenxtMenu/context-menu"
-import { MessageMenu } from "@/widgets/ChatRoom/features/MessageMenu"
-import { MessageTrigger } from "@/widgets/ChatRoom/features/MessageTrigger"
 
 interface IMessagesProps {
 	message: MessageType

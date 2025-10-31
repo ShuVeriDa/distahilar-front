@@ -1,3 +1,4 @@
+import { IFormRichMessageInput } from "@/features/SendMessage"
 import { MessageType } from "@/prisma/models"
 import { Button } from "@/shared"
 import { cn } from "@/shared/lib/utils/cn"
@@ -13,7 +14,6 @@ import { ImAttachment } from "react-icons/im"
 import { IoSend } from "react-icons/io5"
 import { PiInstagramLogoLight, PiMicrophone, PiSmiley } from "react-icons/pi"
 import TextareaAutosize from "react-textarea-autosize"
-import { IFormRichMessageInput } from "../features/RichMessageInput"
 
 interface IContentTypeProps {
 	recording: boolean

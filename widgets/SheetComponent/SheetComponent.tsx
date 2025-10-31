@@ -15,7 +15,7 @@ import { FaRegCircleUser, FaRegMoon } from "react-icons/fa6"
 import { IoMdMenu } from "react-icons/io"
 import { IoMegaphoneOutline, IoSettingsOutline } from "react-icons/io5"
 import { RiGroupLine } from "react-icons/ri"
-import { IItem, SheetLinks } from "./entities/Links"
+import { SheetLinks, type IItem } from "@/entities/SheetLinks"
 
 interface ISheetComponentProps {}
 

@@ -1,8 +1,8 @@
+import { ManageContact } from "@/features/ManageContact"
 import { ChatRole, ChatType, UserType } from "@/prisma/models"
 import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { Gap } from "@/shared/ui/Gap"
 import { FC } from "react"
-import { ManageContact } from "../../features/ManageContact/ui"
 import { Header } from "./shared/ui/Header"
 import { Info } from "./shared/ui/Info"
 

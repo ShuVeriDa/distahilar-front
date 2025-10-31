@@ -1,7 +1,7 @@
+import { CopyClipboard } from "@/features/CopyClipboard"
 import { ChatRole, ChatType } from "@/prisma/models"
 import { Button, Typography, useModal } from "@/shared"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
-import { CopyClickBoard } from "@/widgets/SheetComponent/features/clickboard"
 import { useTranslations } from "next-intl"
 import { FC, useMemo } from "react"
 import { FiInfo } from "react-icons/fi"
@@ -46,7 +46,7 @@ export const Info: FC<IInfoProps> = ({ chat, bio, phone, username }) => {
 						<div className="flex flex-col gap-0" key={index + infoObj.length}>
 							<div>
 								{index === 2 && isDialog ? (
-									<CopyClickBoard
+									<CopyClipboard
 										className="text-[#47A2D7] dark:text-[#47A2D7]"
 										username={username}
 									/>

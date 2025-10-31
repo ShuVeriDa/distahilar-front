@@ -1,5 +1,6 @@
 "use client"
 
+import { Chats } from "@/entities/Chat"
 import { useFolder } from "@/shared/hooks/useFolder"
 import {
 	useFetchChatsWSQuery,
@@ -8,7 +9,6 @@ import {
 import { Search } from "@/widgets/Search"
 import { useTranslations } from "next-intl"
 import { ChangeEvent, FC, useState } from "react"
-import { Chats } from "../entities/Chats"
 
 interface IChatsProps {
 	locale: string
