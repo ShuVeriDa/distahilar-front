@@ -1,7 +1,10 @@
 import createMiddleware from "next-intl/middleware"
 import { NextRequest, NextResponse } from "next/server"
 import { locales, routing } from "./i18n/routing"
-import { EnumTokens } from "./shared/lib/services/auth/auth.helper"
+import {
+	EnumTokens,
+	LANGUAGE_COOKIE_NAME,
+} from "./shared/lib/services/auth/auth.helper"
 
 export default createMiddleware(routing)
 
@@ -31,15 +34,36 @@ export async function middleware(request: NextRequest) {
 
 const redirectToLogin = (request: NextRequest) => {
 	return NextResponse.redirect(
-		new URL(`/${getDefaultLanguage(request)}/auth`, request.url)
+		new URL(`/${getLanguageForRedirect(request)}/auth`, request.url)
 	)
 }
 
-const getDefaultLanguage = (request: NextRequest): string => {
-	// Определяем язык по заголовкам запроса или используем 'en' по умолчанию
-	const acceptLanguage = request.headers.get("accept-language")
+const getLanguageForRedirect = (request: NextRequest): string => {
+	// Сначала проверяем сохраненный язык в cookie
+	const savedLanguage = request.cookies.get(LANGUAGE_COOKIE_NAME)?.value
 
-	return acceptLanguage?.split(",")[0].split("-")[0] || "en"
+	if (savedLanguage && locales.includes(savedLanguage)) {
+		return savedLanguage
+	}
+
+	// Если нет сохраненного языка, определяем по заголовкам запроса
+	const acceptLanguage = request.headers.get("accept-language")
+	const browserLanguage = acceptLanguage
+		?.split(",")[0]
+		.split("-")[0]
+		?.toLowerCase()
+
+	// Проверяем, поддерживается ли язык браузера
+	if (browserLanguage && locales.includes(browserLanguage)) {
+		return browserLanguage
+	}
+
+	// Используем 'en' по умолчанию
+	return "en"
+}
+
+const getDefaultLanguage = (request: NextRequest): string => {
+	return getLanguageForRedirect(request)
 }
 
 export const config = {

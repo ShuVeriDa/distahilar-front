@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
-import { passwordPattern } from "@/shared/lib/utils/patterns"
+import { getPasswordPattern } from "@/shared/lib/utils/patterns"
 import { Button } from "@/shared/ui/Button"
 import { Field } from "@/shared/ui/Field"
 import { useTranslations } from "next-intl"
@@ -58,7 +58,7 @@ export const Login: FC<ILoginProps> = () => {
 							value: 6,
 							message: tValidation("PASSWORD_REQUIRED"),
 						},
-						pattern: passwordPattern,
+						pattern: getPasswordPattern(tValidation),
 					})}
 					disabled={isPending}
 					errors={errors.password}

@@ -5,6 +5,8 @@ export enum EnumTokens {
 	"REFRESH_TOKEN" = "refreshToken",
 }
 
+export const LANGUAGE_COOKIE_NAME = "userLanguage"
+
 export const getAccessToken = () => {
 	const accessToken = Cookies.get(EnumTokens.ACCESS_TOKEN)
 	return accessToken || null
@@ -20,4 +22,20 @@ export const saveTokenStorage = (accessToken: string) => {
 
 export const removeFromStorage = () => {
 	Cookies.remove(EnumTokens.ACCESS_TOKEN)
+}
+
+export const saveLanguageToCookie = (language: string) => {
+	Cookies.set(LANGUAGE_COOKIE_NAME, language.toLowerCase(), {
+		domain: "localhost",
+		sameSite: "strict",
+		expires: 365, // Сохраняем на год
+	})
+}
+
+export const getLanguageFromCookie = (): string | null => {
+	return Cookies.get(LANGUAGE_COOKIE_NAME) || null
+}
+
+export const removeLanguageFromCookie = () => {
+	Cookies.remove(LANGUAGE_COOKIE_NAME)
 }

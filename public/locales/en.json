@@ -223,7 +223,9 @@
 	"VALIDATION": {
 		"USERNAME_REQUIRED": "Username is required",
 		"PASSWORD_REQUIRED": "Password must be at least 6 characters",
+		"PASSWORD_PATTERN": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
 		"EMAIL_REQUIRED": "Email is required",
+		"EMAIL_INVALID": "Invalid email address",
 		"NAME_REQUIRED": "Name is required",
 		"NAME_MIN_LENGTH": "Name must be at least 2 characters long",
 		"NAME_MAX_LENGTH": "Name must be no more than 32 characters long",

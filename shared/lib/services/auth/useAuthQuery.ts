@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation"
 import { useMemo } from "react"
 import { useDispatch } from "react-redux"
 import { setUser } from "../../redux-store/slices/user-slice/userSlice"
-import { saveTokenStorage } from "./auth.helper"
+import { store } from "../../redux-store/store"
+import { saveLanguageToCookie, saveTokenStorage } from "./auth.helper"
 import { authService } from "./auth.service"
 import { ILoginFormData, IRegisterFormData } from "./auth.type"
 
@@ -19,7 +20,9 @@ export const useAuthQuery = () => {
 		onSuccess: ({ data }) => {
 			saveTokenStorage(data.accessToken)
 			dispatch(setUser(data.user))
-			push(`/${data.user.settings.language.toLocaleLowerCase()}/chat`)
+			// Сохраняем язык в cookie
+			saveLanguageToCookie(data.user.settings.language)
+			push(`/${data.user.settings.language.toLowerCase()}/chat`)
 		},
 	})
 
@@ -37,9 +40,22 @@ export const useAuthQuery = () => {
 		mutationKey: ["logout"],
 		mutationFn: () => authService.logout(),
 		onSuccess() {
+			// Получаем актуальное состояние пользователя из Redux ПЕРЕД очисткой
+			const currentState = store.getState()
+			const currentUser = currentState.user.user
+			const userLanguage =
+				currentUser?.settings.language?.toLowerCase() || locale
+
+			// Сохраняем язык в cookie для использования в middleware
+			if (currentUser?.settings.language) {
+				saveLanguageToCookie(currentUser.settings.language)
+			}
+
+			// Очищаем состояние пользователя
 			dispatch(setUser(null))
-			// reset()
-			push(`/${locale}/auth`)
+
+			// Редиректим на auth с сохраненным языком
+			push(`/${userLanguage}/auth`)
 		},
 	})
 

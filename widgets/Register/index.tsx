@@ -1,5 +1,8 @@
 import { useAuthQuery } from "@/shared/lib/services/auth/useAuthQuery"
-import { emailPattern, passwordPattern } from "@/shared/lib/utils/patterns"
+import {
+	getEmailPattern,
+	getPasswordPattern,
+} from "@/shared/lib/utils/patterns"
 import { Button } from "@/shared/ui/Button"
 import { Field } from "@/shared/ui/Field"
 import { useTranslations } from "next-intl"
@@ -65,7 +68,7 @@ export const Register: FC<IRegisterProps> = () => {
 							value: 6,
 							message: tValidation("PASSWORD_REQUIRED"),
 						},
-						pattern: passwordPattern,
+						pattern: getPasswordPattern(tValidation),
 					})}
 					disabled={isPending}
 					errors={errors.password}
@@ -76,7 +79,7 @@ export const Register: FC<IRegisterProps> = () => {
 					placeholder={t("EMAIL")}
 					register={register("email", {
 						required: tValidation("EMAIL_REQUIRED"),
-						pattern: emailPattern,
+						pattern: getEmailPattern(tValidation),
 					})}
 					disabled={isPending}
 					errors={errors.email}
