@@ -2,6 +2,7 @@
 
 import { CircleVideoRecorder } from "@/features/CircleVideoRecorder/ui"
 import {
+	FoundedChatsType,
 	MessageEnum,
 	MessageType,
 	VoiceVideoMessageType,
@@ -9,6 +10,7 @@ import {
 import { useUser } from "@/shared"
 import { useCircleVideoRecorder } from "@/shared/hooks/useCircleVideoRecorder"
 import { useFileManager } from "@/shared/hooks/useFileManager"
+import { useMessagePreviewText } from "@/shared/hooks/useMessagePreviewText"
 import { useMessageRecorderHandlers } from "@/shared/hooks/useMessageRecorderHandlers"
 import { useFileQuery } from "@/shared/lib/services/file/usefileQuery"
 import {
@@ -33,6 +35,8 @@ interface IRichMessageInputProps {
 	chatType: $Enums.ChatRole | undefined
 	editedMessage: MessageType | null
 	handleEditMessage: (message: MessageType | null) => void
+	replyMessage?: MessageType | null
+	handleReplyMessage?: (message: MessageType | null) => void
 }
 
 export const RichMessageInput: FC<IRichMessageInputProps> = ({
@@ -40,6 +44,8 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 	chatType,
 	editedMessage,
 	handleEditMessage,
+	replyMessage,
+	handleReplyMessage,
 }) => {
 	const { user } = useUser()
 
@@ -58,6 +64,10 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 		user?.id
 	)
 	const { mutateAsync: editMessage } = useEditMessage(chatId)
+
+	const replyPreviewText = useMessagePreviewText(
+		replyMessage as unknown as FoundedChatsType["lastMessage"]
+	)
 
 	const { uploadFileQuery } = useFileQuery(
 		typeMessage === MessageEnum.VIDEO ? "video-message" : "audio-message"
@@ -146,8 +156,9 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 		await sendMessage({
 			content,
 			messageType: MessageEnum.TEXT,
+			...(replyMessage?.id ? { repliedToId: replyMessage.id } : {}),
 		})
-
+		if (handleReplyMessage) handleReplyMessage(null)
 		reset()
 	}
 
@@ -189,6 +200,18 @@ export const RichMessageInput: FC<IRichMessageInputProps> = ({
 	// relative
 	return (
 		<div className="w-full min-h-[47px] bg-white dark:bg-[#17212B] border-t border-t-[#E7E7E7] dark:border-t-[#101921] ">
+			{replyMessage && (
+				<div className="px-3 py-2 text-sm bg-black/5 dark:bg-white/5 flex items-center justify-between">
+					<div className="truncate max-w-[80%]">{replyPreviewText}</div>
+					<button
+						type="button"
+						onClick={() => handleReplyMessage && handleReplyMessage(null)}
+						className="text-xs opacity-70 hover:opacity-100"
+					>
+						Cancel
+					</button>
+				</div>
+			)}
 			<form
 				className="flex items-center justify-between"
 				onSubmit={handleSubmit(onSubmit)}

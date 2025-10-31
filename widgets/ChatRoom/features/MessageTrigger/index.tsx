@@ -26,6 +26,8 @@ interface IMessageTriggerProps {
 	isLastMessage: boolean
 	allImages: ISlideImage[]
 	allVideos: IVideoLightBox[]
+	handleScrollToReply: (repliedToId: string) => void
+	highlightedMessageId: string | null
 }
 
 export const MessageTrigger: FC<IMessageTriggerProps> = ({
@@ -39,6 +41,8 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	isLastMessage,
 	allImages,
 	allVideos,
+	handleScrollToReply,
+	highlightedMessageId,
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [height, setHeight] = useState<number | null>(null)
@@ -92,6 +96,8 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 					isFirstMessage={isFirstMessage}
 					allImages={allImages}
 					allVideos={allVideos}
+					handleScrollToReply={handleScrollToReply}
+					highlightedMessageId={highlightedMessageId}
 				/>
 			</ContextMenuTrigger>
 			<AnimatePresence>

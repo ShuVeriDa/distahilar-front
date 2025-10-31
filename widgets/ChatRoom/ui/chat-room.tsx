@@ -48,9 +48,11 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const {
 		openSideBar,
 		editedMessage,
+		replyMessage,
 		callVisible,
 		onToggleSideBar,
 		handleEditMessage,
+		handleReplyMessage,
 		startDialogCall,
 		endDialogCall,
 	} = useChatRoomState()
@@ -158,6 +160,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					isFetchingNextPage={isFetchingNextPage}
 					setSelectedMessages={setSelectedMessages}
 					handleEditMessage={handleEditMessage}
+					handleReplyMessage={handleReplyMessage}
 				/>
 				{isChatLoading ? (
 					<JoinChat.Skeleton />
@@ -175,6 +178,8 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 						chatType={chat?.type}
 						editedMessage={editedMessage}
 						handleEditMessage={handleEditMessage}
+						replyMessage={replyMessage}
+						handleReplyMessage={handleReplyMessage}
 					/>
 				)}
 				<CallOverlay

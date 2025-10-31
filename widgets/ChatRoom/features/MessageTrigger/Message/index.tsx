@@ -6,6 +6,8 @@ import { cn } from "@/shared/lib/utils/cn"
 
 import { ISlideImage } from "@/features/LightBox/ui/LightBox"
 import { IVideoLightBox } from "@/features/VideoPlayer/ui"
+import { FoundedChatsType } from "@/prisma/models"
+import { useMessagePreviewText } from "@/shared/hooks/useMessagePreviewText"
 import {
 	getHighlightBorderRadiusClasses,
 	getMessageBackgroundClasses,
@@ -37,6 +39,8 @@ interface IMessageProps {
 	isFirstMessage: boolean
 	allImages: ISlideImage[]
 	allVideos: IVideoLightBox[]
+	handleScrollToReply: (repliedToId: string) => void
+	highlightedMessageId: string | null
 }
 
 export const Message = ({
@@ -57,13 +61,20 @@ export const Message = ({
 	isFirstMessage,
 	allImages,
 	allVideos,
+	handleScrollToReply,
+	highlightedMessageId,
 }: IMessageProps) => {
 	const media = message.media?.length ? message.media[0] : null
 	const isMessageContent = !!message.content
 	const isImageFile = isFile && media?.type === MediaTypeEnum.IMAGE
 	const isVideoFile = isFile && media?.type === MediaTypeEnum.VIDEO
 	const isFileFile = isFile && media?.type === MediaTypeEnum.FILE
+	const hasMessageRepliedTo = !!message.repliedTo
+	const isHighlighted = highlightedMessageId === message.id
 
+	const repliedPreview = useMessagePreviewText(
+		message.repliedTo as unknown as FoundedChatsType["lastMessage"]
+	)
 	const messageClasses = cn(
 		"relative min-w-[80px] w-fit px-3 py-2 flex max-w-[70%] gap-3",
 		getMessageBackgroundClasses(isMyMessage, isCircleVideo),
@@ -96,6 +107,7 @@ export const Message = ({
 					media?.type === MediaTypeEnum.VIDEO) &&
 				isMessageContent,
 			"pb-2": isFile && isHasReactions,
+			"min-w-[200px]": hasMessageRepliedTo,
 		}
 	)
 
@@ -112,6 +124,24 @@ export const Message = ({
 	return (
 		<>
 			<div ref={ref} className={messageClasses}>
+				{message.repliedTo && (
+					<div
+						onClick={e => {
+							e.stopPropagation()
+							if (message.repliedTo?.id) {
+								handleScrollToReply(message.repliedTo.id)
+							}
+						}}
+						className="px-2 py-1 mb-1  rounded border-l-[3px] border-blue-400 bg-black/5 dark:bg-white/5 cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+					>
+						<Typography tag="p" className="text-[12px] truncate">
+							{message.repliedTo.user.name} {message.repliedTo.user.surname}
+						</Typography>
+						<Typography tag="p" className="text-[12px] truncate">
+							{repliedPreview}
+						</Typography>
+					</div>
+				)}
 				<div
 					className={cn(
 						isMessageContent && isFile && "flex flex-col-reverse gap-2 "
@@ -122,7 +152,9 @@ export const Message = ({
 							tag="p"
 							className={cn(
 								"text-[14px] leading-5 flex justify-self-end",
-								(isImageFile || isVideoFile) && isMessageContent && "px-3"
+								hasMessageRepliedTo && "justify-self-start",
+								(isImageFile || isVideoFile) && isMessageContent && "px-3",
+								isHighlighted && "text-blue-400"
 							)}
 						>
 							{message.content}

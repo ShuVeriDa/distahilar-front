@@ -23,6 +23,9 @@ interface IMessagesProps {
 	chat: ChatType | undefined
 	setSelectedMessages: Dispatch<SetStateAction<MessageType[]>>
 	handleEditMessage: (message: MessageType | null) => void
+	handleReplyMessage: (message: MessageType | null) => void
+	handleScrollToReply: (repliedToId: string) => void
+	highlightedMessageId: string | null
 }
 
 const MessagesComponent: FC<IMessagesProps> = ({
@@ -36,6 +39,9 @@ const MessagesComponent: FC<IMessagesProps> = ({
 	chat,
 	setSelectedMessages,
 	handleEditMessage,
+	handleReplyMessage,
+	handleScrollToReply,
+	highlightedMessageId,
 }) => {
 	const isFirstMessage = index === 0
 	const isLastMessage = index === messages.length - 1
@@ -120,6 +126,8 @@ const MessagesComponent: FC<IMessagesProps> = ({
 					isLastMessage={isLastMessage}
 					allImages={allImages}
 					allVideos={allVideos}
+					handleScrollToReply={handleScrollToReply}
+					highlightedMessageId={highlightedMessageId}
 				/>
 				<MessageMenu
 					isMyMessage={isMyMessage}
@@ -129,6 +137,7 @@ const MessagesComponent: FC<IMessagesProps> = ({
 					chat={chat}
 					onSelectMessage={onSelectMessage}
 					handleEditMessage={handleEditMessage}
+					onReply={handleReplyMessage}
 				/>
 			</ContextMenu>
 		</div>
@@ -159,6 +168,8 @@ export const Messages = memo(MessagesComponent, (prevProps, nextProps) => {
 		prevProps.chat?.type === nextProps.chat?.type &&
 		prevProps.messages.length === nextProps.messages.length &&
 		prevProps.message.media?.length === nextProps.message.media?.length &&
-		prevProps.message.reactions?.length === nextProps.message.reactions?.length
+		prevProps.message.reactions?.length ===
+			nextProps.message.reactions?.length &&
+		prevProps.highlightedMessageId === nextProps.highlightedMessageId
 	)
 })

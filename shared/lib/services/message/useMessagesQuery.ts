@@ -162,6 +162,7 @@ export interface CreateMessageDto {
 	name?: string
 	messageType: MessageEnum
 	mediaType?: MediaTypeEnum
+	repliedToId?: string
 }
 
 export const useSendMessage = (

@@ -5,7 +5,15 @@ import { useScrollToLastMessage } from "@/shared/hooks/useScrollToLastMessage"
 
 import { ChatType, MessageType } from "@/prisma/models"
 import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual"
-import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react"
+import {
+	Dispatch,
+	FC,
+	SetStateAction,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
 
 import { cn } from "@/shared/lib/utils/cn"
 import { Message } from "../../features"
@@ -20,6 +28,7 @@ interface IWrapperMessagesProps {
 	selectedMessages: MessageType[]
 	setSelectedMessages: Dispatch<SetStateAction<MessageType[]>>
 	handleEditMessage: (message: MessageType | null) => void
+	handleReplyMessage: (message: MessageType | null) => void
 	onLoadMore?: () => void
 	hasNextPage?: boolean
 	isFetchingNextPage?: boolean
@@ -33,6 +42,7 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 	isLoadingMessages,
 	hasSelectedMessages,
 	handleEditMessage,
+	handleReplyMessage,
 	setSelectedMessages,
 	onLoadMore,
 	hasNextPage,
@@ -40,8 +50,12 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 }) => {
 	const { containerRef } = useScrollToLastMessage(messages)
 	const topSentinelRef = useRef<HTMLDivElement | null>(null)
+	const highlightTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 	const { user } = useUser()
 	const userId = user?.id
+	const [highlightedMessageId, setHighlightedMessageId] = useState<
+		string | null
+	>(null)
 
 	// Virtualizer
 	const rowVirtualizer = useVirtualizer({
@@ -54,6 +68,41 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 	})
 
 	const virtualItems = rowVirtualizer.getVirtualItems()
+
+	// Function to handle scrolling to a replied message
+	const handleScrollToReply = useCallback(
+		(repliedToId: string) => {
+			const messageIndex = messages.findIndex(msg => msg.id === repliedToId)
+			if (messageIndex !== -1) {
+				// Clear previous timeout if it exists
+				if (highlightTimeoutRef.current) {
+					clearTimeout(highlightTimeoutRef.current)
+				}
+				// Set highlight
+				setHighlightedMessageId(repliedToId)
+				// Remove highlight after 2 seconds
+				highlightTimeoutRef.current = setTimeout(() => {
+					setHighlightedMessageId(null)
+					highlightTimeoutRef.current = null
+				}, 2000)
+				// Scroll to message
+				rowVirtualizer.scrollToIndex(messageIndex, {
+					align: "center",
+					behavior: "smooth",
+				})
+			}
+		},
+		[messages, rowVirtualizer]
+	)
+
+	// Cleanup timeout on unmount
+	useEffect(() => {
+		return () => {
+			if (highlightTimeoutRef.current) {
+				clearTimeout(highlightTimeoutRef.current)
+			}
+		}
+	}, [])
 
 	useEffect(() => {
 		if (!onLoadMore || !hasNextPage) return
@@ -77,7 +126,7 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 	return (
 		<div
 			ref={containerRef}
-			className="w-full h-full overflow-y-auto telegram-scrollbar flex-1 px-3 py-3" // вернуть px-5
+			className="w-full h-full overflow-y-auto overflow-x-hidden telegram-scrollbar flex-1 px-3 py-3" // вернуть px-5
 		>
 			{/* Top sentinel for infinite scroll up (older messages) */}
 			<div ref={topSentinelRef} />
@@ -116,6 +165,9 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 									chat={chat}
 									setSelectedMessages={setSelectedMessages}
 									handleEditMessage={handleEditMessage}
+									handleReplyMessage={handleReplyMessage}
+									handleScrollToReply={handleScrollToReply}
+									highlightedMessageId={highlightedMessageId}
 								/>
 							</div>
 						)

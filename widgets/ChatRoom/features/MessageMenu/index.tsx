@@ -39,6 +39,7 @@ interface IMessageMenuProps {
 	chat: ChatType | undefined
 	onSelectMessage: () => void
 	handleEditMessage: (message: MessageType | null) => void
+	onReply: (message: MessageType) => void
 }
 
 const MessageMenuComponent: FC<IMessageMenuProps> = ({
@@ -49,6 +50,7 @@ const MessageMenuComponent: FC<IMessageMenuProps> = ({
 	chat,
 	onSelectMessage,
 	handleEditMessage,
+	onReply,
 }) => {
 	const t = useTranslations()
 	const { user } = useUser()
@@ -157,7 +159,7 @@ const MessageMenuComponent: FC<IMessageMenuProps> = ({
 		{
 			icon: <BsReply size={20} />,
 			title: t("PAGES.CHAT.OPTIONS.REPLY"),
-			function: () => {},
+			function: () => onReply(message),
 		},
 		{
 			icon: <PiPencilSimple size={20} />,
@@ -282,7 +284,8 @@ export const MessageMenu = memo(
 			prevProps.interlocutorsName === nextProps.interlocutorsName &&
 			prevProps.chat?.id === nextProps.chat?.id &&
 			prevProps.chat?.type === nextProps.chat?.type &&
-			prevProps.chat?.members?.length === nextProps.chat?.members?.length
+			prevProps.chat?.members?.length === nextProps.chat?.members?.length &&
+			prevProps.onReply === nextProps.onReply
 		)
 	}
 )

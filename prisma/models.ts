@@ -37,7 +37,28 @@ export type ChatMemberType = Prisma.ChatMemberGetPayload<{
 }
 
 export type MessageType = Prisma.MessageGetPayload<{
-	include: Prisma.MessageInclude
+	include: {
+		user: true
+		chat: true
+		media: true
+		voiceMessages: true
+		videoMessages: true
+		reactions: {
+			include: {
+				users: {
+					include: {
+						user: true
+					}
+				}
+			}
+		}
+		repliedTo: {
+			include: {
+				user: true
+				media: true
+			}
+		}
+	}
 }>
 
 export type MediaType = Prisma.MediaGetPayload<{
