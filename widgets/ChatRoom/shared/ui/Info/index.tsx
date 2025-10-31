@@ -21,7 +21,7 @@ export const Info: FC<IInfoProps> = ({ name, onlineOrFollowers, isOnline }) => {
 					tag="p"
 					className={cn(
 						"text-[13px] !font-normal text-[#999999]",
-						isOnline && "text-[#5BB0F0]"
+						isOnline && "dark:text-[#5BB0F0] text-[#40A7E3]"
 					)}
 				>
 					{onlineOrFollowers}

@@ -205,13 +205,11 @@ export const useSendMessage = (
 						videoMessages: [],
 						replies: [],
 						pinnedChatId: null,
-						pinnedChat: null as unknown as MessageType["pinnedChat"],
 						chat: {
 							id: chatId,
 							type: chatRole,
 						} as unknown as MessageType["chat"],
 						user: undefined as unknown as MessageType["user"],
-						_count: undefined as unknown as MessageType["_count"],
 					} as unknown as MessageType
 
 					client.setQueryData<

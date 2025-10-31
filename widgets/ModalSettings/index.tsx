@@ -4,6 +4,7 @@ import { useModal } from "@/shared/hooks/useModal"
 import { FC } from "react"
 
 import { ModalHeaderInfo } from "@/entities/ModalHeaderInfo"
+import { IItem, SheetLinks } from "@/entities/SheetLinks"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { EnumModel } from "@/shared/lib/redux-store/slices/model-slice/type"
 import { cn } from "@/shared/lib/utils/cn"
@@ -13,7 +14,6 @@ import { useTranslations } from "next-intl"
 import { FaRegCircleUser } from "react-icons/fa6"
 import { HiOutlineFolder } from "react-icons/hi"
 import { IoLanguage } from "react-icons/io5"
-import { IItem, SheetLinks } from "../SheetComponent/entities/Links"
 
 interface IModalSettingsProps {}
 

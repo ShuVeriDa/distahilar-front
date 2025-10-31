@@ -2,7 +2,7 @@ import { ChatRoom } from "@/widgets/ChatRoom"
 import { NextPage } from "next"
 
 interface IChatProps {
-	params: { chatId: string; locale: string }
+	params: Promise<{ chatId: string; locale: string }>
 }
 
 const Chat: NextPage<IChatProps> = async ({ params }) => {

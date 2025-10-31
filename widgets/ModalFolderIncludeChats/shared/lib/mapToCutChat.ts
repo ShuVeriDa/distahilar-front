@@ -9,6 +9,7 @@ export const mapToCutChat = (chat: ChatType) => {
 		imageUrl: chat.imageUrl || "",
 		lastMessage: null,
 		lastMessageDate: null,
+		lengthUnread: null,
 		type: chat.type as ChatRole,
 		members: chat.members as ChatType["members"],
 	}

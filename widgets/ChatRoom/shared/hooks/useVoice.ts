@@ -5,16 +5,23 @@ import { useWavesurfer } from "@wavesurfer/react"
 import { useTheme } from "next-themes"
 import { useCallback, useEffect, useRef } from "react"
 
-export const useVoice = (voice: VoiceVideoMessageType[]) => {
+export const useVoice = (
+	voice: VoiceVideoMessageType[],
+	isMyMessage: boolean
+) => {
 	const { theme } = useTheme()
+
+	console.log("isMyMessage", isMyMessage)
 
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
 	const { wavesurfer, isPlaying, currentTime, isReady } = useWavesurfer({
 		container: containerRef,
 		height: 20,
-		waveColor: theme === "light" ? "#B3E2B4" : "#4B7FB3",
-		progressColor: theme === "light" ? "#5EBD66" : "#62B2FD",
+		waveColor:
+			theme === "light" ? (!isMyMessage ? "#D4DEE6" : "#B3E2B4") : "#4B7FB3",
+		progressColor:
+			theme === "light" ? (!isMyMessage ? "#40A7E3" : "#5EBD66") : "#62B2FD",
 		cursorWidth: 0,
 		// normalize: true,
 		barWidth: 2.4,

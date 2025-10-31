@@ -5,7 +5,7 @@ import { ReactNode } from "react"
 
 interface IChatLayoutProps {
 	children: ReactNode
-	params: { locale: string }
+	params: Promise<{ locale: string }>
 }
 
 const ChatLayout: NextPage<IChatLayoutProps> = async ({ children, params }) => {

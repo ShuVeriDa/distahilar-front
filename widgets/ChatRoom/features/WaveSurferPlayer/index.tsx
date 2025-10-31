@@ -26,7 +26,7 @@ const WaveSurferPlayer: React.FC<WaveSurferPlayerProps> = ({
 				progressColor: "#FF9800",
 				cursorColor: "transparent",
 				barWidth: 2,
-				responsive: true,
+				// responsive: true,
 				height: 40,
 			})
 

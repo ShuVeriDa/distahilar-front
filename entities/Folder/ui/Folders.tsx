@@ -53,7 +53,7 @@ export const Folders: FC<IFoldersProps> = () => {
 
 			<FolderItem
 				imageUrl={"Settings"}
-				name={t("PAGES.CHAT.OPTIONS.EDIT")}
+				name={t("PAGES.CHAT.OPTIONS.EDIT2")}
 				size={30}
 				onChange={onOpen}
 			/>

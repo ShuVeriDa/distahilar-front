@@ -23,7 +23,7 @@ export const MessageVoice: FC<IMessageVoiceProps> = ({
 		isPlaying,
 		isReady,
 		onPlayPause,
-	} = useVoice(voice)
+	} = useVoice(voice, isMyMessage)
 
 	const size = formatBytes((voice ? voice[0]?.size : 0) || 0)
 
