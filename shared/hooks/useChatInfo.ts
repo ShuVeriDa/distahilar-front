@@ -7,6 +7,7 @@ import {
 } from "@/prisma/models"
 import { useTranslations } from "next-intl"
 import { useFormatLastSeen } from "../lib/utils/formatLastSeen"
+import { getName } from "../lib/utils/getName"
 
 export const useChatInfo = (
 	chat: ChatType | undefined,
@@ -30,7 +31,7 @@ export const useChatInfo = (
 		MemberRole.MODERATOR
 
 	const nameOfChat = isDialog
-		? `${interlocutor?.name} ${interlocutor?.surname}`
+		? getName(interlocutor?.name, interlocutor?.surname)
 		: chat?.name
 
 	const lastSeen = useFormatLastSeen(interlocutor?.lastSeen)

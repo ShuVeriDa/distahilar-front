@@ -8,7 +8,7 @@ import {
 	MessageType,
 	VoiceVideoMessageType,
 } from "@/prisma/models"
-import { useUser } from "@/shared"
+import { Button, Typography, useUser } from "@/shared"
 import { useCircleVideoRecorder } from "@/shared/hooks/useCircleVideoRecorder"
 import { useFileManager } from "@/shared/hooks/useFileManager"
 import { useMessagePreviewText } from "@/shared/hooks/useMessagePreviewText"
@@ -18,12 +18,15 @@ import {
 	useEditMessage,
 	useSendMessage,
 } from "@/shared/lib/services/message/useMessagesQuery"
+import { getName } from "@/shared/lib/utils/getName"
 import { useVoiceRecord } from "@/widgets/ChatRoom/shared/hooks/useVoiceRecord"
 import { ContentType } from "@/widgets/ChatRoom/ui/content-type"
 import { $Enums } from "@prisma/client"
 import { useQueryClient } from "@tanstack/react-query"
-import { FC, useEffect, useState } from "react"
+import { FC, useEffect, useMemo, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { BsReplyFill } from "react-icons/bs"
+import { IoCloseOutline } from "react-icons/io5"
 
 export interface IFormRichMessageInput {
 	content: string
@@ -68,6 +71,13 @@ export const SendMessage: FC<ISendMessageProps> = ({
 	const replyPreviewText = useMessagePreviewText(
 		replyMessage as unknown as FoundedChatsType["lastMessage"]
 	)
+
+	const truncatedPreviewText = useMemo(() => {
+		if (!replyPreviewText) return ""
+		return replyPreviewText.length > 70
+			? replyPreviewText.substring(0, 70) + "..."
+			: replyPreviewText
+	}, [replyPreviewText])
 
 	const { uploadFileQuery } = useFileQuery(
 		typeMessage === MessageEnum.VIDEO ? "video-message" : "audio-message"
@@ -196,15 +206,31 @@ export const SendMessage: FC<ISendMessageProps> = ({
 	return (
 		<div className="w-full min-h-[47px] bg-white dark:bg-[#17212B] border-t border-t-[#E7E7E7] dark:border-t-[#101921] ">
 			{replyMessage && (
-				<div className="px-3 py-2 text-sm bg-black/5 dark:bg-white/5 flex items-center justify-between">
-					<div className="truncate max-w-[80%]">{replyPreviewText}</div>
-					<button
-						type="button"
+				<div className="flex items-center justify-between gap-2 px-3 py-2 text-sm bg-white dark:bg-[#17212B] ">
+					<div className="flex gap-3 min-w-0">
+						<BsReplyFill size={30} color="#40A7E3" />
+
+						<div className="flex flex-col">
+							<Typography tag="span" className="flex text-[#168AD6]">
+								В ответ{" "}
+								{getName(replyMessage.user.name, replyMessage.user.surname)}
+							</Typography>
+							<Typography tag="span" className="">
+								{truncatedPreviewText}
+							</Typography>
+						</div>
+					</div>
+					<Button
+						variant="clean"
 						onClick={() => handleReplyMessage && handleReplyMessage(null)}
 						className="text-xs opacity-70 hover:opacity-100"
 					>
-						Cancel
-					</button>
+						<IoCloseOutline
+							size={25}
+							onClick={() => {}}
+							className="text-[#737E87] cursor-pointer hover:text-[#616a72] hover:dark:text-white "
+						/>
+					</Button>
 				</div>
 			)}
 			<form
