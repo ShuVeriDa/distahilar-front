@@ -1,4 +1,4 @@
-import { axiosClassic } from "../../axios/axios"
+import { axiosClassic, instance } from "../../axios/axios"
 import { removeFromStorage, saveTokenStorage } from "./auth.helper"
 import { IAuthResponse, ILoginFormData, IRegisterFormData } from "./auth.type"
 
@@ -33,7 +33,7 @@ export const authService = {
 	},
 
 	async logout() {
-		const response = await axiosClassic.post<boolean>("/auth/logout")
+		const response = await instance.post<boolean>("/auth/logout")
 
 		if (response.data) removeFromStorage()
 

@@ -13,20 +13,30 @@ export const getAccessToken = () => {
 }
 
 export const saveTokenStorage = (accessToken: string) => {
+	const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost"
+	const isSecure = process.env.NEXT_PUBLIC_COOKIE_SECURE === "true"
+
 	Cookies.set(EnumTokens.ACCESS_TOKEN, accessToken, {
-		domain: "localhost",
-		sameSite: "strict", // будет работать только на этом domain
+		domain: cookieDomain,
+		sameSite: isSecure ? "none" : "strict", // будет работать только на этом domain
+		secure: isSecure,
 		expires: new Date(Date.now() + 60 * 60 * 1000), //длительность 1 день, лучше ставить 1 час
 	})
 }
 
 export const removeFromStorage = () => {
-	Cookies.remove(EnumTokens.ACCESS_TOKEN)
+	const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost"
+
+	Cookies.remove(EnumTokens.ACCESS_TOKEN, {
+		domain: cookieDomain,
+	})
 }
 
 export const saveLanguageToCookie = (language: string) => {
+	const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost"
+
 	Cookies.set(LANGUAGE_COOKIE_NAME, language.toLowerCase(), {
-		domain: "localhost",
+		domain: cookieDomain,
 		sameSite: "strict",
 		expires: 365, // Сохраняем на год
 	})
@@ -37,5 +47,9 @@ export const getLanguageFromCookie = (): string | null => {
 }
 
 export const removeLanguageFromCookie = () => {
-	Cookies.remove(LANGUAGE_COOKIE_NAME)
+	const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost"
+
+	Cookies.remove(LANGUAGE_COOKIE_NAME, {
+		domain: cookieDomain,
+	})
 }

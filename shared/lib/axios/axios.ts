@@ -27,10 +27,12 @@ instance.interceptors.response.use(
 	async error => {
 		const originalRequest = error.config
 
+		const message = errorCatch(error)
+
 		if (
 			(error?.response?.status === 401 ||
-				errorCatch(error) === "jwt expired" ||
-				errorCatch(error) === "jwt must be provided") &&
+				message === "jwt expired" ||
+				message === "jwt must be provided") &&
 			error.config &&
 			!error.config._isRetry
 		) {
@@ -39,7 +41,18 @@ instance.interceptors.response.use(
 				await authService.getNewTokens()
 				return instance.request(originalRequest)
 			} catch (error) {
-				if (errorCatch(error) === "jwt expired") removeFromStorage()
+				const refreshErrorMessage = errorCatch(error)
+
+				if (
+					[
+						"jwt expired",
+						"Invalid refresh token",
+						"Refresh token revoked",
+						"Invalid token type",
+						"Refresh token not passed",
+					].includes(refreshErrorMessage)
+				)
+					removeFromStorage()
 			}
 		}
 
