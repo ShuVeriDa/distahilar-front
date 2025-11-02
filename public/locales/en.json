@@ -236,6 +236,7 @@
 		"PINNED_MESSAGE": "Pinned Message",
 		"VOICE_MESSAGE": "Voice message",
 		"VIDEO_MESSAGE": "Video message",
+		"IMAGE_MESSAGE": "Image",
 		"FORWARD": "Forward",
 		"DELETE": "Delete",
 		"LIVE": "LIVE",

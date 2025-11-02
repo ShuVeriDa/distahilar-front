@@ -285,7 +285,7 @@ model AuditLog {
 enum MediaType {
   IMAGE
   VIDEO
-  VOICE
+  AUDIO
   FILE
 }
 

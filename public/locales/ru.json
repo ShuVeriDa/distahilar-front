@@ -235,6 +235,7 @@
 		"PINNED_MESSAGE": "Закрепленное сообщение",
 		"VOICE_MESSAGE": "Голосовое сообщение",
 		"VIDEO_MESSAGE": "Видеосообщение",
+		"IMAGE_MESSAGE": "Фото",
 		"FORWARD": "Переслать",
 		"DELETE": "Удалить",
 		"LIVE": "В ЭФИРЕ",

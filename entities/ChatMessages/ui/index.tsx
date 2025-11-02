@@ -3,8 +3,8 @@
 import { useUser } from "@/shared"
 import { useScrollToLastMessage } from "@/shared/hooks/useScrollToLastMessage"
 
-import { ChatType, MessageType } from "@/prisma/models"
 import { Message } from "@/features/MessageTrigger"
+import { ChatType, MessageType } from "@/prisma/models"
 import { cn } from "@/shared/lib/utils/cn"
 import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual"
 import {
@@ -31,6 +31,9 @@ interface IChatMessagesProps {
 	onLoadMore?: () => void
 	hasNextPage?: boolean
 	isFetchingNextPage?: boolean
+	onScrollToReplyChange?: (
+		handler: ((repliedToId: string) => void) | null
+	) => void
 }
 
 export const ChatMessages: FC<IChatMessagesProps> = ({
@@ -46,6 +49,7 @@ export const ChatMessages: FC<IChatMessagesProps> = ({
 	onLoadMore,
 	hasNextPage,
 	isFetchingNextPage,
+	onScrollToReplyChange,
 }) => {
 	const { containerRef } = useScrollToLastMessage(messages)
 	const topSentinelRef = useRef<HTMLDivElement | null>(null)
@@ -93,6 +97,11 @@ export const ChatMessages: FC<IChatMessagesProps> = ({
 		},
 		[messages, rowVirtualizer]
 	)
+
+	useEffect(() => {
+		onScrollToReplyChange?.(handleScrollToReply)
+		return () => onScrollToReplyChange?.(null)
+	}, [handleScrollToReply, onScrollToReplyChange])
 
 	// Cleanup timeout on unmount
 	useEffect(() => {
@@ -197,4 +206,3 @@ export const ChatMessages: FC<IChatMessagesProps> = ({
 		</div>
 	)
 }
-

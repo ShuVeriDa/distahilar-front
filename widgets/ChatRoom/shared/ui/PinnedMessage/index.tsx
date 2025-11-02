@@ -1,20 +1,33 @@
-import { MessageEnum, MessageType } from "@/prisma/models"
+import { MediaTypeEnum, MessageEnum, MessageType } from "@/prisma/models"
 import { Button, Typography } from "@/shared"
 import { usePinMessage } from "@/shared/lib/services/message/useMessagesQuery"
 import { cn } from "@/shared/lib/utils/cn"
 import { useTranslations } from "next-intl"
-import { FC } from "react"
+import { FC, MouseEvent } from "react"
 import { FiX } from "react-icons/fi"
 
 interface IPinnedMessageProps {
 	pinnedMessages: MessageType | undefined
+	onScrollToMessage?: (messageId: string) => void
 }
 
-export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
+export const PinnedMessage: FC<IPinnedMessageProps> = ({
+	pinnedMessages,
+	onScrollToMessage,
+}) => {
 	const { mutateAsync: pinMessage } = usePinMessage(
 		pinnedMessages?.chatId || ""
 	)
 	const t = useTranslations("CHAT")
+	const firstMediaType = pinnedMessages?.media?.[0]?.type as
+		| MediaTypeEnum
+		| undefined
+
+	const handleOpenPinnedMessage = () => {
+		if (pinnedMessages?.id && onScrollToMessage) {
+			onScrollToMessage(pinnedMessages.id)
+		}
+	}
 
 	const handleUnpin = () => {
 		if (pinnedMessages) {
@@ -25,12 +38,18 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 		}
 	}
 
+	const handleUnpinClick = (event: MouseEvent<HTMLDivElement>) => {
+		event.stopPropagation()
+		handleUnpin()
+	}
+
 	return (
 		<Button
 			variant="default"
 			className={cn(
 				"!w-full min-h-[50px] hidden !justify-between  !items-start bg-white dark:bg-[#1B2734] py-2 px-3 border-b border-b-[#E7E7E7] dark:border-b-[#101921]"
 			)}
+			onClick={handleOpenPinnedMessage}
 		>
 			<div className="flex flex-col">
 				<div>
@@ -53,8 +72,15 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 							pinnedMessages?.content}
 						{pinnedMessages?.messageType === MessageEnum.VOICE &&
 							t("VOICE_MESSAGE")}
-						{pinnedMessages?.messageType === MessageEnum.VIDEO &&
+						{(pinnedMessages?.messageType === MessageEnum.VIDEO ||
+							firstMediaType === MediaTypeEnum.VIDEO) &&
 							t("VIDEO_MESSAGE")}
+						{pinnedMessages?.messageType === MessageEnum.FILE &&
+							firstMediaType === MediaTypeEnum.IMAGE &&
+							t("IMAGE_MESSAGE")}
+						{pinnedMessages?.messageType === MessageEnum.FILE &&
+							firstMediaType === MediaTypeEnum.AUDIO &&
+							t("AUDIO_MESSAGE")}
 					</Typography>
 				</div>
 			</div>
@@ -63,7 +89,7 @@ export const PinnedMessage: FC<IPinnedMessageProps> = ({ pinnedMessages }) => {
 					role="button"
 					tabIndex={0}
 					className="w-full h-full flex items-center justify-center"
-					onClick={handleUnpin}
+					onClick={handleUnpinClick}
 				>
 					<FiX
 						size={20}

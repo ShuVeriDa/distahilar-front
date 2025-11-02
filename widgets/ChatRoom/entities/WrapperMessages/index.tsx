@@ -32,6 +32,9 @@ interface IWrapperMessagesProps {
 	onLoadMore?: () => void
 	hasNextPage?: boolean
 	isFetchingNextPage?: boolean
+	onScrollToReplyChange?: (
+		handler: ((repliedToId: string) => void) | null
+	) => void
 }
 
 export const WrapperMessages: FC<IWrapperMessagesProps> = ({
@@ -47,6 +50,7 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 	onLoadMore,
 	hasNextPage,
 	isFetchingNextPage,
+	onScrollToReplyChange,
 }) => {
 	const { containerRef } = useScrollToLastMessage(messages)
 	const topSentinelRef = useRef<HTMLDivElement | null>(null)
@@ -94,6 +98,11 @@ export const WrapperMessages: FC<IWrapperMessagesProps> = ({
 		},
 		[messages, rowVirtualizer]
 	)
+
+	useEffect(() => {
+		onScrollToReplyChange?.(handleScrollToReply)
+		return () => onScrollToReplyChange?.(null)
+	}, [handleScrollToReply, onScrollToReplyChange])
 
 	// Cleanup timeout on unmount
 	useEffect(() => {

@@ -2,19 +2,19 @@
 
 import { useFetchChatByIdQuery } from "@/shared/lib/services/chat/useChatQuery"
 import { useMessagesWSQuery } from "@/shared/lib/services/message/useMessagesQuery"
-import { FC } from "react"
+import { FC, useCallback, useState } from "react"
 
 import { ChatRole, MemberRole } from "@/prisma/models"
 import { useUser, useWebRTCCall } from "@/shared"
 import { useSelectedMessages } from "@/shared/hooks/useSelectedMessages"
 
+import { ChatHeader } from "@/entities/ChatHeader"
+import { ChatMessages } from "@/entities/ChatMessages"
+import { ChatSidebar } from "@/entities/ChatSidebar"
 import { JoinChat } from "@/features"
 import { SendMessage } from "@/features/SendMessage"
 import { useChatInfo } from "@/shared/hooks/useChatInfo"
 import { CallPhaseEnum } from "@/shared/lib/services/call/call.types"
-import { ChatHeader } from "@/entities/ChatHeader"
-import { ChatMessages } from "@/entities/ChatMessages"
-import { ChatSidebar } from "@/entities/ChatSidebar"
 import { useChatRoomComputed } from "../shared/hooks/useChatRoomComputed"
 import { useChatRoomLive } from "../shared/hooks/useChatRoomLive"
 import { useChatRoomNavigation } from "../shared/hooks/useChatRoomNavigation"
@@ -35,6 +35,16 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 	const { data: chat, isLoading: isChatLoading } = useFetchChatByIdQuery(chatId)
 	const resolvedChatId = chat?.id || chatId
 	const [callState, callApi] = useWebRTCCall()
+	const [scrollToMessage, setScrollToMessage] = useState<
+		((messageId: string) => void) | undefined
+	>(undefined)
+
+	const handleScrollToReplyChange = useCallback(
+		(handler: ((messageId: string) => void) | null) => {
+			setScrollToMessage(() => handler ?? undefined)
+		},
+		[]
+	)
 
 	const {
 		onlineOrFollowers,
@@ -141,7 +151,12 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					}
 					clearSelectedMessages={clearSelectedMessages}
 				/>
-				{pinnedMessages && <PinnedMessage pinnedMessages={pinnedMessages} />}
+				{pinnedMessages && (
+					<PinnedMessage
+						pinnedMessages={pinnedMessages}
+						onScrollToMessage={scrollToMessage}
+					/>
+				)}
 				{isRoomLive && !isParticipantLive && (
 					<LiveBannerJoin participants={participants} joinLive={joinLive} />
 				)}
@@ -161,6 +176,7 @@ export const ChatRoom: FC<IChatRoomProps> = ({ chatId, locale }) => {
 					setSelectedMessages={setSelectedMessages}
 					handleEditMessage={handleEditMessage}
 					handleReplyMessage={handleReplyMessage}
+					onScrollToReplyChange={handleScrollToReplyChange}
 				/>
 				{isChatLoading ? (
 					<JoinChat.Skeleton />

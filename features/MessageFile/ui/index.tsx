@@ -21,13 +21,14 @@ export const MessageFile: FC<IMessageFileProps> = ({
 	isMessageContent,
 	isHasReactions,
 }) => {
-	const media = message.media[0]
+	console.log({ message, media: message.media })
+	const media = message.media ? message.media[0] : null
 
 	const isPending: boolean = message.status === MessageStatus.PENDING
 
 	return (
 		<>
-			{media.type === MediaTypeEnum.FILE ? (
+			{media?.type === MediaTypeEnum.FILE ? (
 				<>
 					<FileItem
 						name={media.name ?? "название файла"}
@@ -36,7 +37,7 @@ export const MessageFile: FC<IMessageFileProps> = ({
 						variant="message"
 					/>
 				</>
-			) : media.type === MediaTypeEnum.IMAGE ? (
+			) : media?.type === MediaTypeEnum.IMAGE ? (
 				!isPending ? (
 					<LightboxWrapper
 						allImages={allImages}
@@ -47,7 +48,7 @@ export const MessageFile: FC<IMessageFileProps> = ({
 				) : (
 					<Skeleton className="w-[300px] h-[200px] bg-[#F1F1F1] dark:bg-[#202B38]" />
 				)
-			) : media.type === MediaTypeEnum.VIDEO ? (
+			) : media?.type === MediaTypeEnum.VIDEO ? (
 				<VideoPlayer
 					allVideos={allVideos}
 					media={media}
@@ -55,9 +56,9 @@ export const MessageFile: FC<IMessageFileProps> = ({
 				/>
 			) : (
 				<FileItem
-					name={media.name ?? "название файла"}
-					size={media.size ?? 0}
-					type={(media.type as MediaTypeEnum) ?? MediaTypeEnum.FILE}
+					name={media?.name ?? "название файла"}
+					size={media?.size ?? 0}
+					type={(media?.type as MediaTypeEnum) ?? MediaTypeEnum.FILE}
 					variant="message"
 				/>
 			)}
