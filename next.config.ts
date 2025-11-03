@@ -5,6 +5,16 @@ import createNextIntlPlugin from "next-intl/plugin"
 const withNextIntl = createNextIntlPlugin()
 
 const nextConfig: NextConfig = {
+	// Enable React strict mode for production
+	reactStrictMode: true,
+
+	// Production optimizations
+	poweredByHeader: false, // Remove X-Powered-By header
+	compress: true, // Enable gzip compression
+
+	// Standalone output for Docker
+	output: "standalone",
+
 	webpack: config => {
 		config.module.rules.push({
 			test: /\.svg$/,

@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  # Frontend Next.js App
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: distanhilar-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      # Add your environment variables here
+      # Or use env_file: .env.local
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:9555
+      NEXT_PUBLIC_WS_BACKEND_URL: http://localhost:9555
+      NEXT_PUBLIC_COOKIE_DOMAIN: localhost
+      NEXT_PUBLIC_COOKIE_SECURE: "false"
+    networks:
+      - distanhilar-network
+
+networks:
+  distanhilar-network:
+    driver: bridge
