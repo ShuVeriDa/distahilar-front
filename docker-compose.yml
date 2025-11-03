@@ -14,10 +14,10 @@ services:
       NODE_ENV: production
       # Add your environment variables here
       # Or use env_file: .env.local
-      NEXT_PUBLIC_BACKEND_URL: http://localhost:9555
-      NEXT_PUBLIC_WS_BACKEND_URL: http://localhost:9555
-      NEXT_PUBLIC_COOKIE_DOMAIN: localhost
-      NEXT_PUBLIC_COOKIE_SECURE: "false"
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:9555}
+      NEXT_PUBLIC_WS_BACKEND_URL: ${NEXT_PUBLIC_WS_BACKEND_URL:-http://localhost:9555}
+      NEXT_PUBLIC_COOKIE_DOMAIN: ${NEXT_PUBLIC_COOKIE_DOMAIN:-localhost}
+      NEXT_PUBLIC_COOKIE_SECURE: ${NEXT_PUBLIC_COOKIE_SECURE:-false}
     networks:
       - distanhilar-network
 
