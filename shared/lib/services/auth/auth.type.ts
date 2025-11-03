@@ -16,6 +16,6 @@ export interface IRegisterFormData {
 	email: string
 	name: string
 	surname: string
-	phone: string
+	phone?: string
 	bio?: string
 }

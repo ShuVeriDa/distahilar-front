@@ -18,7 +18,7 @@ interface IFormInput {
 	name: string
 	surname: string
 	email: string
-	phone: string
+	phone?: string
 	bio?: string
 }
 
@@ -120,7 +120,7 @@ export const Register: FC<IRegisterProps> = () => {
 				<Controller
 					control={control}
 					name="phone"
-					rules={{ required: tValidation("PHONE_REQUIRED") }}
+					rules={{ required: false }}
 					render={({ field }) => (
 						<PhoneInput
 							country={"ru"}
