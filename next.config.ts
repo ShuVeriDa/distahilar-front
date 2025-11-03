@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false, // Remove X-Powered-By header
 	compress: true, // Enable gzip compression
 
-	// Standalone output for Docker
+	// Standalone output for optimized production builds
 	output: "standalone",
 
 	webpack: config => {
