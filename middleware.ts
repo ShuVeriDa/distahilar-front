@@ -24,7 +24,7 @@ export default async function middleware(request: NextRequest) {
 	// Получаем access token из cookies
 	const accessToken = request.cookies.get(EnumTokens.ACCESS_TOKEN)?.value
 
-	// Проверяем, является ли путь страницей авторизации
+	// Проверяем, является ли путь страницей авторизации (с учетом локализации)
 	const isAuthPage = locales.some(
 		lang => pathname === `/${lang}/auth` || pathname === `/${lang}/auth/`
 	)
@@ -36,19 +36,15 @@ export default async function middleware(request: NextRequest) {
 
 	// Если пользователь авторизован и пытается зайти на auth или корень - редиректим в chat
 	if (accessToken && (isRootPath || isAuthPage)) {
-		const redirectUrl = new URL(
-			`/${getDefaultLanguage(request)}/chat`,
-			request.url
-		)
+		const lang = getDefaultLanguage(request)
+		const redirectUrl = new URL(`/${lang}/chat`, request.url)
 		return NextResponse.redirect(redirectUrl, { status: 302 })
 	}
 
 	// Если пользователь не авторизован и пытается зайти не на auth - редиректим на auth
 	if (!accessToken && !isAuthPage && !isRootPath) {
-		const redirectUrl = new URL(
-			`/${getLanguageForRedirect(request)}/auth`,
-			request.url
-		)
+		const lang = getLanguageForRedirect(request)
+		const redirectUrl = new URL(`/${lang}/auth`, request.url)
 		return NextResponse.redirect(redirectUrl, { status: 302 })
 	}
 
