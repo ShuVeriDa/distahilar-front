@@ -6,50 +6,36 @@ import {
 	LANGUAGE_COOKIE_NAME,
 } from "./shared/lib/services/auth/auth.helper"
 
-const intlMiddleware = createMiddleware(routing)
+export default createMiddleware(routing)
 
-export default async function middleware(request: NextRequest) {
-	const pathname = request.nextUrl.pathname
+export async function middleware(request: NextRequest) {
+	const refreshToken = request.cookies.get(EnumTokens.ACCESS_TOKEN)?.value
 
-	// Пропускаем API routes, статические файлы и служебные пути
 	if (
-		pathname.startsWith("/api") ||
-		pathname.startsWith("/_next") ||
-		pathname.startsWith("/_vercel") ||
-		pathname.includes(".")
+		refreshToken &&
+		(request.nextUrl.pathname === "/" ||
+			locales.some(lang => request.nextUrl.pathname === `/${lang}/auth`) ||
+			locales.some(lang => request.nextUrl.pathname === `/${lang}`))
 	) {
-		return NextResponse.next()
+		return NextResponse.redirect(
+			new URL(`/${getDefaultLanguage(request)}/chat`, request.url)
+		)
 	}
 
-	// Получаем access token из cookies
-	const accessToken = request.cookies.get(EnumTokens.ACCESS_TOKEN)?.value
+	if (
+		!refreshToken &&
+		!locales.some(lang => request.nextUrl.pathname === `/${lang}/auth`)
+	) {
+		return redirectToLogin(request)
+	}
 
-	// Проверяем, является ли путь страницей авторизации (с учетом локализации)
-	const isAuthPage = locales.some(
-		lang => pathname === `/${lang}/auth` || pathname === `/${lang}/auth/`
+	return NextResponse.next()
+}
+
+const redirectToLogin = (request: NextRequest) => {
+	return NextResponse.redirect(
+		new URL(`/${getLanguageForRedirect(request)}/auth`, request.url)
 	)
-
-	// Проверяем, является ли путь корневым или локализованным корневым
-	const isRootPath =
-		pathname === "/" ||
-		locales.some(lang => pathname === `/${lang}` || pathname === `/${lang}/`)
-
-	// Если пользователь авторизован и пытается зайти на auth или корень - редиректим в chat
-	if (accessToken && (isRootPath || isAuthPage)) {
-		const lang = getDefaultLanguage(request)
-		const redirectUrl = new URL(`/${lang}/chat`, request.url)
-		return NextResponse.redirect(redirectUrl, { status: 302 })
-	}
-
-	// Если пользователь не авторизован и пытается зайти не на auth - редиректим на auth
-	if (!accessToken && !isAuthPage && !isRootPath) {
-		const lang = getLanguageForRedirect(request)
-		const redirectUrl = new URL(`/${lang}/auth`, request.url)
-		return NextResponse.redirect(redirectUrl, { status: 302 })
-	}
-
-	// Применяем middleware от next-intl для обработки локализации
-	return intlMiddleware(request)
 }
 
 const getLanguageForRedirect = (request: NextRequest): string => {
