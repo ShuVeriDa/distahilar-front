@@ -22,7 +22,10 @@ export const useAuthQuery = () => {
 			dispatch(setUser(data.user))
 			// Сохраняем язык в cookie
 			saveLanguageToCookie(data.user.settings.language)
-			push(`/${data.user.settings.language.toLowerCase()}/chat`)
+			// Используем window.location для полной перезагрузки страницы,
+			// чтобы cookie была гарантированно доступна в middleware
+			const lang = data.user.settings.language.toLowerCase()
+			window.location.href = `/${lang}/chat`
 		},
 	})
 
