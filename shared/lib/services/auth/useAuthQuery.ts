@@ -26,9 +26,7 @@ export const useAuthQuery = () => {
 			// Используем window.location для полной перезагрузки страницы,
 			// чтобы cookie была гарантированно доступна в middleware
 			const lang = data.user.settings.language.toLowerCase()
-			setTimeout(() => {
-				window.location.href = `/${lang}/chat`
-			}, 0)
+			push(`/${lang}/chat`)
 		},
 	})
 
