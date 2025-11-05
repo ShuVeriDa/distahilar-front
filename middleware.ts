@@ -6,30 +6,47 @@ import {
 	LANGUAGE_COOKIE_NAME,
 } from "./shared/lib/services/auth/auth.helper"
 
-export default createMiddleware(routing)
+const intlMiddleware = createMiddleware(routing)
 
-export async function middleware(request: NextRequest) {
-	const refreshToken = request.cookies.get(EnumTokens.ACCESS_TOKEN)?.value
+export default async function middleware(request: NextRequest) {
+	const accessToken = request.cookies.get(EnumTokens.ACCESS_TOKEN)?.value
+	const pathname = request.nextUrl.pathname
 
-	if (
-		refreshToken &&
-		(request.nextUrl.pathname === "/" ||
-			locales.some(lang => request.nextUrl.pathname === `/${lang}/auth`) ||
-			locales.some(lang => request.nextUrl.pathname === `/${lang}`))
-	) {
-		return NextResponse.redirect(
-			new URL(`/${getDefaultLanguage(request)}/chat`, request.url)
-		)
+	// Извлекаем locale из пути, если он есть
+	const pathnameHasLocale = locales.some(
+		lang => pathname === `/${lang}` || pathname.startsWith(`/${lang}/`)
+	)
+	const locale = pathnameHasLocale
+		? locales.find(lang => pathname.startsWith(`/${lang}`)) || "en"
+		: null
+
+	// Если пользователь авторизован и пытается зайти на главную или страницу авторизации
+	if (accessToken) {
+		const isRoot = pathname === "/"
+		const isAuthPageWithLocale =
+			pathnameHasLocale &&
+			locale &&
+			(pathname === `/${locale}/auth` || pathname === `/${locale}`)
+
+		if (isRoot || isAuthPageWithLocale) {
+			const language = locale || getDefaultLanguage(request)
+			return NextResponse.redirect(new URL(`/${language}/chat`, request.url))
+		}
 	}
 
-	if (
-		!refreshToken &&
-		!locales.some(lang => request.nextUrl.pathname === `/${lang}/auth`)
-	) {
-		return redirectToLogin(request)
+	// Если пользователь не авторизован и пытается зайти на защищенные страницы
+	if (!accessToken) {
+		const isRoot = pathname === "/"
+		const isAuthPage =
+			pathnameHasLocale && locale && pathname === `/${locale}/auth`
+
+		if (!isAuthPage && !isRoot) {
+			return redirectToLogin(request)
+		}
 	}
 
-	return NextResponse.next()
+	// Применяем next-intl middleware для обработки локализации
+	return intlMiddleware(request)
 }
 
 const redirectToLogin = (request: NextRequest) => {
@@ -48,14 +65,16 @@ const getLanguageForRedirect = (request: NextRequest): string => {
 
 	// Если нет сохраненного языка, определяем по заголовкам запроса
 	const acceptLanguage = request.headers.get("accept-language")
-	const browserLanguage = acceptLanguage
-		?.split(",")[0]
-		.split("-")[0]
-		?.toLowerCase()
+	if (acceptLanguage) {
+		const browserLanguage = acceptLanguage
+			.split(",")[0]
+			.split("-")[0]
+			.toLowerCase()
 
-	// Проверяем, поддерживается ли язык браузера
-	if (browserLanguage && locales.includes(browserLanguage)) {
-		return browserLanguage
+		// Проверяем, поддерживается ли язык браузера
+		if (browserLanguage && locales.includes(browserLanguage)) {
+			return browserLanguage
+		}
 	}
 
 	// Используем 'en' по умолчанию
