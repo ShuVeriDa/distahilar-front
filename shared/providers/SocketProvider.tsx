@@ -36,15 +36,25 @@ export const SocketProvider: FC<ISocketProviderProps> = ({ children }) => {
 	const token = getAccessToken()
 
 	useEffect(() => {
+		if (!process.env.NEXT_PUBLIC_WS_BACKEND_URL) {
+			console.error("NEXT_PUBLIC_WS_BACKEND_URL is not defined")
+			return
+		}
+
 		const socketInstance = io(process.env.NEXT_PUBLIC_WS_BACKEND_URL, {
 			withCredentials: true,
-			transports: ["websocket"],
+			transports: ["websocket", "polling"], // Добавляем polling как fallback
+			upgrade: true, // Позволяет автоматически обновляться с polling на websocket
 			auth: {
 				token: token,
 			},
 			extraHeaders: {
 				Authorization: `Bearer ${token}`,
-			}, // Обеспечивает использование только WebSocket
+			},
+			reconnection: true,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 5000,
+			reconnectionAttempts: 5,
 		})
 
 		setSocket(socketInstance)
