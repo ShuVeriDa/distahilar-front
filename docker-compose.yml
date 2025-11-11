@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: node:18
+    container_name: distahilar-frontend
+    working_dir: /usr/src/app
+    command: sh -c "npm install && npm run dev"
+    env_file:
+      - .env.local
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:9555/api}
+      NEXT_PUBLIC_WS_BACKEND_URL: ${NEXT_PUBLIC_WS_BACKEND_URL:-http://localhost:9555}
+      NEXT_PUBLIC_COOKIE_DOMAIN: ${NEXT_PUBLIC_COOKIE_DOMAIN:-localhost}
+      NEXT_PUBLIC_COOKIE_SECURE: ${NEXT_PUBLIC_COOKIE_SECURE:-false}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./:/usr/src/app
+    stdin_open: true
+    tty: true

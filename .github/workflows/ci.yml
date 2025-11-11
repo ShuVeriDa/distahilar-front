@@ -1,0 +1,40 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-build:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:9555/api
+      NEXT_PUBLIC_WS_BACKEND_URL: http://localhost:9555
+      NEXT_PUBLIC_COOKIE_DOMAIN: localhost
+      NEXT_PUBLIC_COOKIE_SECURE: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: front/package-lock.json
+
+      - name: Install dependencies
+        working-directory: front
+        run: npm ci
+
+      - name: Generate Prisma client (shared enums)
+        working-directory: front
+        run: npm run prisma:generate
+
+      - name: Lint
+        working-directory: front
+        run: npm run lint
+
+      - name: Build
+        working-directory: front
+        run: npm run build
+
