@@ -23,7 +23,7 @@ export const ManageReaction: FC<IManageReactionProps> = ({
 	userId,
 	addReaction,
 }) => {
-	const imageUrl = reaction.users[0].user.imageUrl
+	const imageUrl = reaction.users[0]?.user?.imageUrl
 	const isMyReaction = reaction.users.some(user => user.userId === userId)
 
 	const onHandleClick = () => {

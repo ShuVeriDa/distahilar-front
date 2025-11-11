@@ -1,4 +1,3 @@
-import { MessageType } from "@/prisma/models"
 import { useSocket } from "@/shared/providers/SocketProvider"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
@@ -22,9 +21,7 @@ export const useAddReaction = () => {
 					return
 				}
 
-				socket.emit("createReaction", { ...data }, (response: MessageType) =>
-					resolve()
-				)
+				socket.emit("createReaction", { ...data }, () => resolve())
 			}),
 
 		onSuccess: () => {
