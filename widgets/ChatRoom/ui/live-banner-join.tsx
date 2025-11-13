@@ -28,16 +28,18 @@ export const LiveBannerJoin: FC<ILiveBannerJoinProps> = ({
 					<div
 						key={p.userId}
 						className={cn(
-							"w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center text-sm font-medium border-2 border-white dark:border-[#17212B] shrink-0"
+							"w-fit h-fit rounded-full bg-white/10 text-white flex items-center justify-center text-sm font-medium border-2 border-white dark:border-[#17212B] shrink-0"
 						)}
-						style={{ zIndex: participants.length - index }}
+						style={{
+							zIndex: participants.length - index,
+						}}
 					>
 						<Image
 							src={p?.imageUrl ?? "/images/no-avatar.png"}
 							alt={p?.name ?? ""}
 							width={40}
 							height={40}
-							className="rounded-full object-cover"
+							className="rounded-full object-cover w-[40px] h-[40px]  "
 						/>
 					</div>
 				))}

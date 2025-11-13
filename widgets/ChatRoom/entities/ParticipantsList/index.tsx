@@ -93,13 +93,15 @@ export const ParticipantsList: FC<IParticipantsListProps> = ({
 						}}
 					>
 						{p.imageUrl ? (
-							<Image
-								src={p.imageUrl}
-								alt={p.name || p.userId}
-								width={40}
-								height={40}
-								className="rounded-full object-cover"
-							/>
+							<div className="w-[40px] h-[40px] rounded-full">
+								<Image
+									src={p.imageUrl}
+									alt={p.name || p.userId}
+									width={40}
+									height={40}
+									className="w-full h-full rounded-full object-cover"
+								/>
+							</div>
 						) : (
 							<div className="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center text-sm font-medium border border-white/20">
 								{(p.name || p.userId).slice(0, 2).toUpperCase()}

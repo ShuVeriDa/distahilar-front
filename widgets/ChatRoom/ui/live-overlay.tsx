@@ -21,6 +21,7 @@ interface ILiveOverlayProps {
 	isMinimized: boolean
 	isSelfMuted: boolean
 	liveApi: UseLiveRoomApi
+	isAnySharing?: boolean
 	isScreenSharing?: boolean
 	confirmLeaveOpen: boolean
 	room: LiveRoomState | null
@@ -49,6 +50,7 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 	isMinimized,
 	participants,
 	remoteStreams,
+	isAnySharing,
 	isSelfVideoOff,
 	isScreenSharing,
 	confirmLeaveOpen,
@@ -125,6 +127,13 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 		return null
 	}, [remoteStreams])
 
+	console.log({
+		remoteStreams,
+		remoteVideoStream,
+		localStream,
+		isScreenSharing,
+	})
+
 	if (!visible && !isMinimized) return null
 	return (
 		<>
@@ -150,7 +159,7 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 						if (e.target === e.currentTarget) handleMinimize()
 					}}
 				>
-					{isScreenSharing ? (
+					{isAnySharing ? (
 						<SharingScreenLive
 							title={title}
 							isLive={isLive}
@@ -160,7 +169,8 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 							liveApi={liveApi}
 							localStream={localStream}
 							isSelfMuted={isSelfMuted}
-							isScreenSharing={isScreenSharing}
+							isScreenSharing={isAnySharing}
+							realScreenSharing={isScreenSharing}
 							isSelfVideoOff={isSelfVideoOff}
 							participants={participants}
 							remoteStreams={remoteStreams}
@@ -174,9 +184,7 @@ export const LiveOverlay: FC<ILiveOverlayProps> = ({
 							isLive={isLive}
 							statusText={statusText}
 							description={description}
-							remoteVideoStream={remoteVideoStream}
 							liveApi={liveApi}
-							localStream={localStream}
 							isSelfMuted={isSelfMuted}
 							isScreenSharing={isScreenSharing}
 							isSelfVideoOff={isSelfVideoOff}

@@ -18,6 +18,7 @@ interface ISharingScreenLiveProps {
 	isLive: boolean | undefined
 	remoteVideoStream: MediaStream | null
 	isScreenSharing: boolean | undefined
+	realScreenSharing?: boolean
 	isSelfVideoOff: boolean | undefined
 	localStream: MediaStream | null
 	isVideoOff: boolean | undefined
@@ -38,6 +39,7 @@ export const SharingScreenLive: FC<ISharingScreenLiveProps> = ({
 	isScreenSharing,
 	isSelfVideoOff,
 	localStream,
+	realScreenSharing,
 	isSelfMuted,
 	participants,
 	remoteStreams,
@@ -198,7 +200,7 @@ export const SharingScreenLive: FC<ISharingScreenLiveProps> = ({
 								onToggleVideo={liveApi.toggleSelfVideo}
 								onToggleMute={liveApi.toggleSelfMute}
 								onLeave={handleLeaveClick}
-								isScreenSharing={isScreenSharing}
+								isScreenSharing={realScreenSharing}
 								onToggleScreenShare={liveApi.toggleScreenShare}
 								handleMinimize={handleMinimize}
 								className="bg-[#1A2026]/90 backdrop-blur-sm rounded-2xl py-3"

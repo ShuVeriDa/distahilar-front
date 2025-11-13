@@ -37,7 +37,7 @@ export const LiveBannerJoined: FC<ILiveBannerJoinedProps> = ({
 							<div
 								key={p.userId}
 								className={cn(
-									"w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center text-sm font-medium shrink-0"
+									"w-full h-full max-w-[28px] max-h-[28px] rounded-full bg-white/10 text-white flex items-center justify-center text-sm font-medium shrink-0"
 								)}
 								style={{ zIndex: participants.length - index }}
 							>
@@ -46,7 +46,7 @@ export const LiveBannerJoined: FC<ILiveBannerJoinedProps> = ({
 									alt={p?.name ?? ""}
 									width={28}
 									height={28}
-									className="rounded-full object-cover"
+									className="w-[28px] h-[28px]  rounded-full object-cover"
 								/>
 							</div>
 						))}

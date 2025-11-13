@@ -3,11 +3,10 @@ import { UseLiveRoomApi } from "@/shared/hooks/useLiveRoom"
 import { LiveParticipantType } from "@/shared/lib/services/call/call.types"
 import { cn } from "@/shared/lib/utils/cn"
 import { useTranslations } from "next-intl"
-import { FC, useMemo } from "react"
+import { FC } from "react"
 import { LiveControls } from "../../features/LiveControls"
 import { HeaderOfLiveStream } from "../HeaderOfLiveStream"
 import { ParticipantsList } from "../ParticipantsList"
-import { Preview } from "../Preview"
 
 interface IUnSharingScreenLiveProps {
 	statusText: string
@@ -15,10 +14,8 @@ interface IUnSharingScreenLiveProps {
 	liveApi: UseLiveRoomApi
 	title: string | undefined
 	isLive: boolean | undefined
-	remoteVideoStream: MediaStream | null
 	isScreenSharing: boolean | undefined
 	isSelfVideoOff: boolean | undefined
-	localStream: MediaStream | null
 	isVideoOff: boolean | undefined
 	isSelfMuted: boolean
 	participants: LiveParticipantType[]
@@ -27,19 +24,13 @@ interface IUnSharingScreenLiveProps {
 	handleMinimize: () => void
 }
 
-type ExtendedMediaTrackSettings = MediaTrackSettings & {
-	displaySurface?: string
-}
-
 export const UnSharingScreenLive: FC<IUnSharingScreenLiveProps> = ({
 	title,
 	description,
 	statusText,
 	isLive,
-	remoteVideoStream,
 	isScreenSharing,
 	isVideoOff,
-	localStream,
 	isSelfVideoOff,
 	isSelfMuted,
 	participants,
@@ -49,40 +40,6 @@ export const UnSharingScreenLive: FC<IUnSharingScreenLiveProps> = ({
 	handleMinimize,
 }) => {
 	const t = useTranslations("COMMON")
-	const selectCameraOnlyStream = (stream: MediaStream | null) => {
-		if (!stream) return null
-		const videoTracks = stream.getVideoTracks ? stream.getVideoTracks() : []
-		const cameraTrack = videoTracks.find(t => {
-			try {
-				const settings = (t.getSettings?.() || {}) as ExtendedMediaTrackSettings
-				// If displaySurface present, it's a display capture; skip it
-				if (settings.displaySurface) return false
-				// If facingMode exists, it's likely camera
-				if (settings.facingMode) return true
-			} catch {}
-			const label = (t.label || "").toLowerCase()
-			return (
-				!label.includes("screen") &&
-				!label.includes("display") &&
-				!label.includes("window") &&
-				!label.includes("tab")
-			)
-		})
-		if (!cameraTrack) return null
-		const out = new MediaStream()
-		out.addTrack(cameraTrack)
-		return out
-	}
-
-	const cameraRemoteStream = useMemo(
-		() => selectCameraOnlyStream(remoteVideoStream),
-		[remoteVideoStream]
-	)
-	const cameraLocalStream = useMemo(
-		() => selectCameraOnlyStream(localStream),
-		[localStream]
-	)
-
 	return (
 		<div
 			className={cn(
@@ -94,13 +51,6 @@ export const UnSharingScreenLive: FC<IUnSharingScreenLiveProps> = ({
 				title={title}
 				description={description}
 				statusText={statusText}
-			/>
-
-			{/* Unified preview - show camera video only */}
-			<Preview
-				isLive={isLive}
-				stream={cameraRemoteStream || cameraLocalStream}
-				muted={!!cameraLocalStream && !cameraRemoteStream}
 			/>
 
 			<div

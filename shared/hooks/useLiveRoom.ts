@@ -1036,6 +1036,16 @@ export const useLiveRoom = ({
 	// Derived: true if we are sharing OR any remote stream has a live video track
 	const isAnyScreenSharing = useMemo(() => {
 		if (state.isScreenSharing) return true
+		// Local camera/video considered as "sharing" for layout purposes
+		const localHasLiveVideo = (() => {
+			const s = state.localStream
+			if (!s) return false
+			const tracks = s.getVideoTracks ? s.getVideoTracks() : []
+			return tracks.some(
+				t => t.readyState === "live" && !t.muted && (t.enabled ?? true)
+			)
+		})()
+		if (localHasLiveVideo) return true
 		for (const stream of state.remoteStreams.values()) {
 			const tracks = stream.getVideoTracks ? stream.getVideoTracks() : []
 			if (
@@ -1047,7 +1057,7 @@ export const useLiveRoom = ({
 			}
 		}
 		return false
-	}, [state.isScreenSharing, state.remoteStreams])
+	}, [state.isScreenSharing, state.localStream, state.remoteStreams])
 
 	const stateWithDerived: UseLiveRoomState = useMemo(
 		() => ({ ...state, isAnyScreenSharing }),

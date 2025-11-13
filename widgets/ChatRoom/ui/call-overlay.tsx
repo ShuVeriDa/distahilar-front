@@ -126,12 +126,21 @@ export const CallOverlay: FC<Props> = ({
 						!isCamOff && "pt-0 h-full"
 					)}
 				>
-					<div className="flex flex-col items-center justify-center ">
-						<Avatar
-							src={peerAvatarUrl}
-							name={peerName}
-							size={isVideo && !isCamOff ? 100 : 160}
-						/>
+					<div className={"flex flex-col items-center justify-center "}>
+						<div
+							className={cn(
+								"w-full h-full rounded-full",
+								isVideo && !isCamOff
+									? "max-w-[100px] max-h-[100px]"
+									: "max-w-[160px] max-h-[160px]"
+							)}
+						>
+							<Avatar
+								src={peerAvatarUrl}
+								name={peerName}
+								size={isVideo && !isCamOff ? 100 : 160}
+							/>
+						</div>
 						<div
 							className={cn(
 								"max-w-[450px] flex flex-col justify-center items-center gap-1 mt-10 mb-[90px]",
@@ -344,7 +353,7 @@ const Avatar: FC<{ src?: string; name?: string; size?: number }> = ({
 		<Image
 			src={src}
 			alt={name || "avatar"}
-			className="rounded-full object-cover border border-white/20"
+			className="rounded-full object-cover border border-white/20 w-full h-full"
 			width={size}
 			height={size}
 		/>
