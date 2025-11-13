@@ -50,7 +50,7 @@ export const ChatSidebarHeader: FC<IChatSidebarHeaderProps> = ({
 						alt="chat-avatar"
 						width={70}
 						height={70}
-						className="rounded-full"
+						className="w-full h-full rounded-full object-cover"
 					/>
 				</div>
 
@@ -75,4 +75,3 @@ export const ChatSidebarHeader: FC<IChatSidebarHeaderProps> = ({
 		</div>
 	)
 }
-

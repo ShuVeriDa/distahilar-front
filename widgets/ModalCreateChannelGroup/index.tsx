@@ -26,10 +26,16 @@ interface IModalCreateChannelGroupProps {}
 export const ModalCreateChannelGroup: FC<
 	IModalCreateChannelGroupProps
 > = () => {
-	const t = useTranslations("MODALS.CREATE_CHANNEL_GROUP")
-	const tCommon = useTranslations("COMMON")
 	const { onClose, currentModal } = useModal()
 	const { type } = currentModal
+	const t = useTranslations(
+		type === EnumModel.CHANNEL
+			? "MODALS.CREATING_CHANNEL"
+			: "MODALS.CREATING_GROUP"
+	)
+	const tCommon = useTranslations("COMMON")
+
+	const fieldName = type === EnumModel.CHANNEL ? t("NAME") : t("NAME")
 
 	const { file, inputRef, handleClickInput, onChangeImage, imageUrl } =
 		useChangePhoto()
@@ -56,9 +62,6 @@ export const ModalCreateChannelGroup: FC<
 		onClose()
 	}
 
-	const fieldName =
-		type === EnumModel.CHANNEL ? t("CHANNEL_NAME") : t("GROUP_NAME")
-
 	return (
 		<ModalLayout onClose={onClose} isClickOutside>
 			<form onSubmit={handleSubmit(onSubmit)}>
@@ -75,11 +78,7 @@ export const ModalCreateChannelGroup: FC<
 
 							<Field
 								type="text"
-								placeholder={
-									type === EnumModel.CHANNEL
-										? t("CHANNEL_PLACEHOLDER")
-										: t("GROUP_PLACEHOLDER")
-								}
+								placeholder={t("NAMES_PLACEHOLDER")}
 								register={register("name", {
 									required: t("NAME_REQUIRED"),
 								})}
@@ -95,12 +94,8 @@ export const ModalCreateChannelGroup: FC<
 							register={register("description")}
 							errors={errors.description}
 							maxLength={70}
-							placeholder={
-								type === EnumModel.CHANNEL
-									? t("CHANNEL_DESCRIPTION_PLACEHOLDER")
-									: t("GROUP_DESCRIPTION_PLACEHOLDER")
-							}
-							label={t("DESCRIPTION_OPTIONAL")}
+							placeholder={t("DESCRIPTIONS_PLACEHOLDER")}
+							label={t("DESCRIPTION")}
 							classNameLabel="text-[13px]  dark:text-[#6F8398] text-blue-500 font-medium"
 						/>
 					</div>
