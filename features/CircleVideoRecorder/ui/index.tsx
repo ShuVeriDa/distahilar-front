@@ -42,7 +42,7 @@ export const CircleVideoRecorder = ({
 					className="w-full h-full rounded-full object-cover"
 				/>
 			</div>
-			<div className="absolute bottom-0 h-[47px] w-full bg-white">
+			<div className="absolute bottom-0 h-[47px] w-full bg-white dark:bg-[#17212B]">
 				<Recorder
 					recording={recording}
 					shadowColor={shadowColor}

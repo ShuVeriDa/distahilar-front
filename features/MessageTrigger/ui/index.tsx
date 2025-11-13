@@ -26,6 +26,7 @@ interface IMessageTriggerProps {
 	isLastMessage: boolean
 	allImages: ISlideImage[]
 	allVideos: IVideoLightBox[]
+	isChannel: boolean
 	handleScrollToReply: (repliedToId: string) => void
 	highlightedMessageId: string | null
 }
@@ -43,6 +44,7 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 	allVideos,
 	handleScrollToReply,
 	highlightedMessageId,
+	isChannel,
 }) => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [height, setHeight] = useState<number | null>(null)
@@ -53,15 +55,25 @@ export const MessageTrigger: FC<IMessageTriggerProps> = ({
 		}
 	}, [message.id])
 
-	const isMyMessage = message.userId === userId
-	const isNextMessageMine = nextMessage?.userId === userId
-	const isDifferentSenderPrevious = previousMessage?.userId !== message.userId
+	const isMyMessage = isChannel ? false : message.userId === userId
+	const isLastMessageInDay =
+		!nextMessage ||
+		new Date(message.createdAt).toDateString() !==
+			new Date(nextMessage.createdAt).toDateString()
+	const isNextMessageMine = isChannel
+		? isLastMessageInDay
+		: nextMessage?.userId === userId
+	const isDifferentSenderPrevious = isChannel
+		? false
+		: previousMessage?.userId !== message.userId
+	const isDifferentSenderNext = isChannel
+		? false
+		: nextMessage?.userId !== message.userId
 	const isMoreTwoLine = height ? height > 36 : false
 	const isVoice = message.messageType === MessageEnum.VOICE
 	const isCircleVideo = message.messageType === MessageEnum.VIDEO
 	const isFile = message.messageType === MessageEnum.FILE
 	const isHasReactions = message.reactions?.length > 0
-	const isDifferentSenderNext = nextMessage?.userId !== message.userId
 
 	const containerClasses = cn(
 		"flex w-full",

@@ -5,6 +5,7 @@ import { MessageMenu } from "@/features/MessageMenu"
 import { MessageTrigger } from "@/features/MessageTrigger"
 import {
 	ChatMemberType,
+	ChatRole,
 	ChatType,
 	MediaTypeEnum,
 	MessageType,
@@ -43,6 +44,8 @@ const ChatMessagesListComponent: FC<IChatMessagesListProps> = ({
 	handleScrollToReply,
 	highlightedMessageId,
 }) => {
+	console.log("ChatMessagesListComponent")
+
 	const isFirstMessage = index === 0
 	const isLastMessage = index === messages.length - 1
 	const isSameMessage = selectedMessages.some(item => item.id === message.id)
@@ -51,6 +54,7 @@ const ChatMessagesListComponent: FC<IChatMessagesListProps> = ({
 	const nextMessage = messages[index + 1]
 	const formattedDate = formatTime(message.createdAt, "Month number", locale)
 	const createdDate = formatTime(message.createdAt, "forMessage", locale)
+	const isChannel = chat?.type === ChatRole.CHANNEL
 
 	const { allImages, allVideos, interlocutorsName } = useMemo(() => {
 		const images = messages
@@ -128,6 +132,7 @@ const ChatMessagesListComponent: FC<IChatMessagesListProps> = ({
 					allVideos={allVideos}
 					handleScrollToReply={handleScrollToReply}
 					highlightedMessageId={highlightedMessageId}
+					isChannel={isChannel}
 				/>
 				<MessageMenu
 					isMyMessage={isMyMessage}
@@ -176,4 +181,3 @@ export const ChatMessagesList = memo(
 		)
 	}
 )
-

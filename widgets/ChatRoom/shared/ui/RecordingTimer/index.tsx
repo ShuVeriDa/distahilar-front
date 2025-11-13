@@ -44,7 +44,7 @@ export const RecordingTimer = ({
 					isBlinking ? "bg-red-500" : "bg-transparent"
 				} transition-colors`}
 			></div>
-			<Typography tag="span" className="text-black text-[13px]">
+			<Typography tag="span" className="text-black dark:text-white text-[13px]">
 				{formatRecordingTime(displayTime)}
 			</Typography>
 		</div>
