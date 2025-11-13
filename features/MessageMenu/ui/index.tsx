@@ -60,6 +60,7 @@ const MessageMenuComponent: FC<IMessageMenuProps> = ({
 	const { onOpenModal } = useModal()
 	const { openPicker, closePicker } = useEmojiPicker()
 	const closePickerRef = useRef(closePicker)
+	const anchorElementRef = useRef<HTMLDivElement | null>(null)
 
 	// Keep ref updated so cleanup effect doesn't trigger re-renders
 	useEffect(() => {
@@ -97,10 +98,22 @@ const MessageMenuComponent: FC<IMessageMenuProps> = ({
 	const setAnchorRef = useCallback(
 		(node: HTMLDivElement | null) => {
 			if (node) {
+				// Сохраняем ref элемента
+				anchorElementRef.current = node
 				// Открываем picker когда элемент отрендерился
 				openPicker(handleEmojiClick, node)
 			} else {
-				// Закрываем picker когда элемент удаляется
+				// Проверяем, действительно ли элемент был удален из DOM
+				// Если элемент все еще существует в DOM, не закрываем picker
+				if (
+					anchorElementRef.current &&
+					document.contains(anchorElementRef.current)
+				) {
+					// Элемент все еще в DOM, просто обновляем ref
+					return
+				}
+				// Элемент действительно удален, закрываем picker
+				anchorElementRef.current = null
 				closePicker()
 			}
 		},
