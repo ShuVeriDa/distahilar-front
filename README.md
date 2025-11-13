@@ -2,6 +2,8 @@
 
 English | [Русский ниже](#русский)
 
+Need the server? Visit the [DistaHilar Backend](../back/README.md).
+
 ## Overview
 
 DistaHilar Frontend is a modern, Telegram‑inspired web messenger UI built with Next.js App Router. It features real‑time messaging, chat folders, reactions, media preview, WebRTC calls/live rooms, and full i18n support.
