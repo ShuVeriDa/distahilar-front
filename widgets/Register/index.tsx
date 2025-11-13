@@ -39,7 +39,10 @@ export const Register: FC<IRegisterProps> = () => {
 	} = useForm<IFormInput>()
 
 	const onSubmit: SubmitHandler<IFormInput> = async data => {
-		await mutateAsync(data)
+		await mutateAsync({
+			...data,
+			phone: data.phone ? `+${data.phone}` : undefined,
+		})
 		reset()
 	}
 
