@@ -3,12 +3,12 @@
 import { useModal } from "@/shared/hooks/useModal"
 import { FC } from "react"
 
+import { NameAndOnline } from "@/entities/AccountInfo"
 import { useUser } from "@/shared/hooks/useUser"
 import { ModalLayout } from "@/shared/layout/ModalLayout"
 import { cn } from "@/shared/lib/utils/cn"
 import { Typography } from "@/shared/ui/Typography/Typography"
 import { useTranslations } from "next-intl"
-import { InfoItem, NameAndOnline } from "@/entities/AccountInfo"
 import { Avatar } from "./features/Avatar"
 import { Bio } from "./features/Bio"
 import { Info } from "./features/Info"
@@ -21,8 +21,6 @@ export const ModalAccountInfo: FC<IModalAccountInfoProps> = () => {
 	const { user } = useUser()
 	const tAccountInfo = useTranslations("MODALS.ACCOUNT_INFO")
 	const tMyAccount = useTranslations("MODALS.MY_ACCOUNT")
-
-	console.log({ user })
 
 	return (
 		<ModalLayout

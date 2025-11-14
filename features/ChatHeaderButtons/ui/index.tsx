@@ -22,7 +22,6 @@ export const ChatHeaderButtons: FC<IButtonsProps> = ({
 	chatType,
 	memberRole,
 }) => {
-	console.log({ memberRole, chatType, is: chatType })
 	const btns = useMemo(
 		() => [
 			{
